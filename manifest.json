@@ -13,11 +13,13 @@
     },
     "content_scripts": [
         {
+            "run_at": "document_end",
             "matches": [
                 "<all_urls>"
             ],
             "all_frames": true,
             "js": [
+                "jquery-3.4.1.min.js",
                 "addButton.js"
             ]
         }
