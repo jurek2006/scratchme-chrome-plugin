@@ -19,9 +19,10 @@
             ],
             "all_frames": true,
             "js": [
-                "jquery-3.4.1.min.js",
-                "addButton.js"
-            ]
+                "scripts/jquery-3.4.1.js",
+                "scripts/addButtons.js"
+            ],
+            "css": ["css/style.css"]
         }
     ]
 }

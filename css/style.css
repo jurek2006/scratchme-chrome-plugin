@@ -1,0 +1,33 @@
+.scratch-me-btn {
+    position: absolute; 
+    top: 0; 
+    right: 35px; 
+    width: 70px; 
+    margin-top: 7px; 
+    padding: 5px; 
+    background-color: rgba(255,255,255,.9); 
+    color: #616770;
+    border: none;
+    outline: none; 
+    box-shadow: 0 0 0 1px #eee; 
+    cursor: pointer;
+    z-index: 0;
+}
+
+.scratch-me-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #eee;
+    box-shadow: 0 0 3px 0 #aaa, 0 0 0 1px #eee; 
+    opacity: 0;
+    z-index: -1;
+    transition: opacity .3s linear;
+}
+
+.scratch-me-btn:hover::before {
+    opacity: 1;
+}
