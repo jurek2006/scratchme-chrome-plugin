@@ -1,0 +1,10 @@
+{
+    "manifest_version": 2,
+    "name": "Scratch Me",
+    "description": "Save any Facebook Post to simple JSON form",
+    "version": "1.0",
+    "homepage_url": "https://github.com/bravelab/scratchme-chrome-plugin",
+    "permissions": [
+        "activeTab"
+    ]
+}
