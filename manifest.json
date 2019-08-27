@@ -22,7 +22,7 @@
                 "scripts/jquery-3.4.1.js",
                 "scripts/addButtons.js"
             ],
-            "css": ["css/style.css"]
+            "css": ["css/main.min.css"]
         }
     ]
 }

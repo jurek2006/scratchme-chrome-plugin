@@ -1,14 +1,13 @@
-const showMessage = function (e) {
+const showMessage = (e) => {
     const element = e.srcElement.offsetParent.offsetParent;
     
     const authorAndUrl = element.querySelector('.fwn .fcg');
     const timestamp = element.querySelector('a._5pcq').children[0];
 
-    let id = element.id.slice(10);
-    id = id.slice(-id.length, -4);
+    let id = element.id.slice(10, -4);
 
     const author = authorAndUrl.children[0].textContent || '';
-    const url = `${element.baseURI}/permalink/${id}`;
+    const url = `${element.baseURI}permalink/${id}`;
     const content = element.querySelector('.userContent').innerHTML || '';
     const time = timestamp.title || '';
     const uTime = timestamp.dataset.utime || '';
@@ -21,11 +20,11 @@ const showMessage = function (e) {
     console.log(dataJSON);
 }
 
-const addButtons = function () {
+const addButtons = () => {
     const uiPopovers = document.querySelectorAll('div._6a.uiPopover._5pbi._cmw._b1e');
     console.log('Added buttons');
 
-    [].forEach.call(uiPopovers, function (uiPopover) {
+    [].forEach.call(uiPopovers, (uiPopover) => {
         if (!uiPopover.nextElementSibling && uiPopover.offsetParent) {
 
             let saveButton = document.createElement("button");
@@ -39,11 +38,11 @@ const addButtons = function () {
     });
 }
 
-$(document).ready(function () {
+$(document).ready( () => {
     addButtons();
     let timer;
 
-    $(window).scroll(function () {
+    $(window).scroll( () => {
         if (timer) {
             window.clearTimeout(timer);
         }
