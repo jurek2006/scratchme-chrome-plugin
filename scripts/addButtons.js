@@ -8,9 +8,18 @@ const showMessage = (e) => {
 
     const author = authorAndUrl.children[0].textContent || '';
     const url = `${element.baseURI}permalink/${id}`;
-    const content = element.querySelector('.userContent').innerHTML || '';
     const time = timestamp.title || '';
     const uTime = timestamp.dataset.utime || '';
+    
+    const stripTags = (str) => {
+        const reg = /<([^>]+>)/ig;
+        return str.replace(reg, '');
+    }
+    
+    let content = element.querySelector('.userContent').innerHTML || '';
+    content = stripTags(content);
+    // or const content = element.querySelector('.userContent').textContent || '';
+
 
     const dataJSON = JSON.stringify({
         author, url, content, time, uTime
