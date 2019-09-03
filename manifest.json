@@ -15,14 +15,17 @@
         {
             "run_at": "document_end",
             "matches": [
-                "<all_urls>"
+                "https://www.facebook.com/*",
+                "http://www.facebook.com/*"
             ],
             "all_frames": true,
             "js": [
                 "scripts/jquery-3.4.1.js",
                 "scripts/addButtons.js"
             ],
-            "css": ["css/main.min.css"]
+            "css": [
+                "css/main.min.css"
+            ]
         }
     ]
 }
