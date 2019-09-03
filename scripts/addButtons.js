@@ -3,9 +3,9 @@ const showMessage = (e) => {
 
     const authorAndUrl = element.querySelector('.fwn .fcg');
     const timestamp = element.querySelector('._5ptz');
-    
+
     let time, uTime;
-    
+
     if (timestamp) {
         time = timestamp.title || '';
         uTime = timestamp.dataset.utime || '';
@@ -52,6 +52,11 @@ const addButtons = () => {
             saveButton.addEventListener('click', showMessage)
         };
     });
+
+    // chrome.runtime.sendMessage({
+    //     status: 'Ready',
+    //     count: uiPopovers.length
+    // });
 }
 
 $(document).ready(() => {
