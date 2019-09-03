@@ -1,21 +1,28 @@
 const showMessage = (e) => {
     const element = e.srcElement.offsetParent.offsetParent;
-    
+
     const authorAndUrl = element.querySelector('.fwn .fcg');
-    const timestamp = element.querySelector('a._5pcq').children[0];
+    const timestamp = element.querySelector('._5ptz');
+    
+    let time, uTime;
+    
+    if (timestamp) {
+        time = timestamp.title || '';
+        uTime = timestamp.dataset.utime || '';
+    } else {
+        time = '';
+        uTime = '';
+    }
 
     let id = element.id.slice(10, -4);
-
     const author = authorAndUrl.children[0].textContent || '';
     const url = `${element.baseURI}permalink/${id}`;
-    const time = timestamp.title || '';
-    const uTime = timestamp.dataset.utime || '';
-    
+
     const stripTags = (str) => {
         const reg = /<([^>]+>)/ig;
         return str.replace(reg, '');
     }
-    
+
     let content = element.querySelector('.userContent').innerHTML || '';
     content = stripTags(content);
     // or const content = element.querySelector('.userContent').textContent || '';
@@ -47,11 +54,11 @@ const addButtons = () => {
     });
 }
 
-$(document).ready( () => {
+$(document).ready(() => {
     addButtons();
     let timer;
 
-    $(window).scroll( () => {
+    $(window).scroll(() => {
         if (timer) {
             window.clearTimeout(timer);
         }
