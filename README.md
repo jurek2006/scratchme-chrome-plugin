@@ -12,7 +12,6 @@ Save any Facebook Post to simple JSON form
 ## Screenshot
 ![Screenshot](./img/screenshot-home.png)
 
-
 ### Gitflow
 Branches naming convention:
 * **feat**: Branch with new functionalities
