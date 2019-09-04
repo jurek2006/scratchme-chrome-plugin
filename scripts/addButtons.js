@@ -1,3 +1,5 @@
+'use strict';
+
 const showMessage = (e) => {
     const element = e.srcElement.offsetParent.offsetParent;
 
@@ -59,15 +61,21 @@ const addButtons = () => {
     // });
 }
 
-$(document).ready(() => {
+const scrollWindow = () => {
     addButtons();
     let timer;
 
-    $(window).scroll(() => {
+    window.addEventListener('scroll', () => {
         if (timer) {
             window.clearTimeout(timer);
         }
 
-        timer = window.setTimeout(addButtons, 500);
+        timer = window.setTimeout(addButtons, 100);
     });
-});
+}
+
+
+if (document.readyState === 'loading')
+    document.addEventListener('DOMContentLoaded', scrollWindow);
+else
+    scrollWindow();

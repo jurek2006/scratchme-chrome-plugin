@@ -2,7 +2,7 @@
 
 (() => {
     document.addEventListener('DOMContentLoaded', () => {
-        const status = document.getElementById('status');
+        // const status = document.getElementById('status');
         // status.textContent = "Waiting";
 
         // chrome.runtime.onMessage.addListener((msg, sender, response) => {
