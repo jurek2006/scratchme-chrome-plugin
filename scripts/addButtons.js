@@ -27,20 +27,20 @@ const showMessage = (e) => {
 
     let content = element.querySelector('.userContent').innerHTML || '';
     content = stripTags(content);
-    // or const content = element.querySelector('.userContent').textContent || '';
 
 
     const dataJSON = JSON.stringify({
         author, url, content, time, uTime
     });
 
+    // ####################################
+    // It will be changed. This is a temporary solution.
     alert(dataJSON);
-    console.log(dataJSON);
+    // ####################################
 }
 
 const addButtons = () => {
     const uiPopovers = document.querySelectorAll('div._6a.uiPopover._5pbi._cmw._b1e');
-    console.log('Added buttons');
 
     [].forEach.call(uiPopovers, (uiPopover) => {
         if (!uiPopover.nextElementSibling && uiPopover.offsetParent) {
@@ -55,10 +55,13 @@ const addButtons = () => {
         };
     });
 
+    // ####################################
+    // TODO it will be used in the future
     // chrome.runtime.sendMessage({
     //     status: 'Ready',
     //     count: uiPopovers.length
     // });
+    // ####################################
 }
 
 const scrollWindow = () => {

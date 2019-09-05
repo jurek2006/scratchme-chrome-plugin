@@ -1,7 +1,11 @@
 'use strict';
 
-(() => {
-    document.addEventListener('DOMContentLoaded', () => {
+// ####################################
+// TODO it will be used in the future
+// ####################################
+
+// (() => {
+//     document.addEventListener('DOMContentLoaded', () => {
         // const status = document.getElementById('status');
         // status.textContent = "Waiting";
 
@@ -19,5 +23,7 @@
         //         console.log("Success");
         //     });
         // });
-    });
-})();
+//     });
+// })();
+
+// ####################################
