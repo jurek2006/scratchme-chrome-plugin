@@ -40,15 +40,23 @@ const showMessage = (e) => {
 }
 
 const addButtons = () => {
-    const uiPopovers = document.querySelectorAll('div._6a.uiPopover._5pbi._cmw._b1e');
+    const uiPopovers = document.querySelectorAll('._4r_y div._6a.uiPopover._5pbi._cmw._b1e');
 
     [].forEach.call(uiPopovers, (uiPopover) => {
         if (!uiPopover.nextElementSibling && uiPopover.offsetParent) {
 
             let saveButton = document.createElement("button");
             saveButton.classList.add('scratch-me-btn');
-            saveButton.innerText = "ScratchMe";
             saveButton.setAttribute('title', "ScratchMe")
+            
+            const strongText = document.createElement("strong");
+            strongText.innerText = "Scratch";
+            strongText.classList.add('strong-text');
+
+            const lightText = document.createTextNode("Me");
+
+            saveButton.appendChild(strongText);
+            saveButton.appendChild(lightText);
             uiPopover.offsetParent.appendChild(saveButton);
 
             saveButton.addEventListener('click', showMessage)
