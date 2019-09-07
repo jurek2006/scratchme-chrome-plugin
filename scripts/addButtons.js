@@ -1,11 +1,7 @@
 'use strict';
 
-const showMessage = (e) => {
-    const element = e.srcElement.offsetParent.offsetParent;
-
-    const authorAndUrl = element.querySelector('.fwn .fcg');
+const showMessage = (element) => {
     const timestamp = element.querySelector('._5ptz');
-
     let time, uTime;
 
     if (timestamp) {
@@ -16,17 +12,28 @@ const showMessage = (e) => {
         uTime = '';
     }
 
-    let id = element.id.slice(10, -4);
-    const author = authorAndUrl.children[0].textContent || '';
-    const url = `${element.baseURI}permalink/${id}`;
+    const {origin, pathname} = document.location;
 
-    const stripTags = (str) => {
-        const reg = /<([^>]+>)/ig;
-        return str.replace(reg, '');
+    let url = document.location.origin;
+    let postId = Number(element.offsetParent.id.slice(10, -4));
+
+    if(!!postId) {
+        url = `${origin}${pathname}permalink/${postId}`;
     }
 
-    let content = element.querySelector('.userContent').innerHTML || '';
-    content = stripTags(content);
+    const author = element.querySelector('span.fcg a').textContent || '';
+
+    const stripTags = (str) => {
+        if(!str) 
+            return "";
+        else {
+            const reg = /<([^>]+>)/ig;
+            return str.replace(reg, '');
+        }
+    }
+
+    let content = element.querySelector('.userContent') || '';
+    content = stripTags(content.innerHTML);
 
 
     const dataJSON = JSON.stringify({
@@ -40,10 +47,13 @@ const showMessage = (e) => {
 }
 
 const addButtons = () => {
-    const uiPopovers = document.querySelectorAll('._4r_y div._6a.uiPopover._5pbi._cmw._b1e');
+    // const uiPopovers = document.querySelectorAll('._4r_y div._6a.uiPopover._5pbi._cmw._b1e');
+    const posts = document.querySelectorAll('._1dwg._1w_m._q7o');
 
-    [].forEach.call(uiPopovers, (uiPopover) => {
-        if (!uiPopover.nextElementSibling && uiPopover.offsetParent) {
+    [].forEach.call(posts, (post) => {
+        const uiPopoverParrent = post.querySelector('div._4r_y');
+
+        if (uiPopoverParrent) {
 
             let saveButton = document.createElement("button");
             saveButton.classList.add('scratch-me-btn');
@@ -57,9 +67,9 @@ const addButtons = () => {
 
             saveButton.appendChild(strongText);
             saveButton.appendChild(lightText);
-            uiPopover.offsetParent.appendChild(saveButton);
+            uiPopoverParrent.appendChild(saveButton);
 
-            saveButton.addEventListener('click', showMessage)
+            saveButton.addEventListener('click', () => showMessage(post));
         };
     });
 
