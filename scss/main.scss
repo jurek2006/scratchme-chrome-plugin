@@ -1,4 +1,5 @@
 @import './colors';
+@import './fonts';
 
 .scratch-me-btn {
     position: absolute;
@@ -6,7 +7,10 @@
     right: 35px; 
     width: 70px; 
     margin-top: 7px; 
-    padding: 5px; 
+    padding: 5px;
+    font-family: 'Alegreya Sans', sans-serif!important; 
+    font-weight: 300;
+    font-size: 11px;
     background-color: $btn-bg; 
     color: $btn-color;
     border: none;
@@ -14,6 +18,10 @@
     box-shadow: 0 0 0 1px $btn-shadow; 
     cursor: pointer;
     z-index: 0;
+
+    .strong-text {
+        font-weight: 700;
+    }
 }
 
 .scratch-me-btn::before {
