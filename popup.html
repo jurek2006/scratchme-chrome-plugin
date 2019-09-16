@@ -1,19 +1,117 @@
 <!DOCTYPE html>
 <html>
+
 <head>
+    <meta charset="utf-8">
     <link rel="stylesheet" href="/css/popup.min.css">
 </head>
+
 <body>
     <style>
     </style>
     <div class="popup">
-      <div class="page-header">
-          <h3>Scratch Me <span id="status"></span></h3>
-          <p>Save any Facebook Post to simple JSON form</p>
-          <a class="link" href="https://github.com/bravelab/scratchme-chrome-plugin" target="_blank" rel="noopener noreferrer">About</a>
+
+        <header class="popup-header">
+            <h3>Scratch Me <span id="status"></span></h3>
+        </header>
+
+        <div class="popup-form">
+            <form action="">
+                <!-- Author input -->
+                <div class="popup-form-item">
+                    <label for="author">Author: </label>
+                    <input type="text" id="author" name="author" required>
+                </div>
+
+                <!-- Date input -->
+                <div class="popup-form-item">
+                    <label for="date">Date: </label>
+                    <input type="datetime-local" id="date" name="date" value="2018-07-22" required>
+                </div>
+
+                <!-- Title input -->
+                <div class="popup-form-item">
+                    <label for="title">Title: </label>
+                    <input type="text" id="title" name="title" required>
+                </div>
+
+                <!-- Content textarea -->
+                <div class="popup-form-item">
+                    <label for="content">Content:</label>
+                    <textarea id="content" name="content" rows="5" cols="33">Content</textarea>
+                </div>
+
+                <!-- Url input -->
+                <div class="popup-form-item">
+                    <label for="url">Post URL:</label>
+                    <input type="url" id="url" name="url" placeholder="https://example.com" pattern="https://.*"
+                        size="30" required>
+                </div>
+
+                <!-- PostID input -->
+                <div class="popup-form-item">
+                    <label for="post-id">Post ID: </label>
+                    <input type="text" id="post-id" name="post-id" required>
+                </div>
+
+                <!-- Access Token input -->
+                <div class="popup-form-item">
+                    <label for="access-token">Access Token: </label>
+                    <input type="text" id="access-token" name="access-token" required>
+                </div>
+
+                <!-- Application name input -->
+                <div class="popup-form-item">
+                    <label for="application-name">Application name: </label>
+                    <input type="text" id="application-name" name="application-name" required>
+                </div>
+
+                <!-- User application email input -->
+                <div class="popup-form-item">
+                    <label for="user-application-email">Application name: </label>
+                    <input type="text" id="user-application-email" name="user-application-email" required>
+                </div>
+
+                <div class="popup-form-item">
+                    <button>Configure</button>
+                    <button>Test connection</button>
+                </div>
+
+                <!-- Choose format input -->
+                <div class="popup-form-item">
+                    <label for="data-format">Choose a format:</label>
+                    <select id="data-format">
+                        <option value="">-- Please choose a format --</option>
+                        <option value="cooper">Cooper CRM</option>
+                        <option value="json">JSON</option>
+                        <option value="curl">Curl</option>
+                    </select>
+                </div>
+
+                <!-- JSON or curl code textarea -->
+                <div class="popup-form-item">
+                    <label for="content">JSON / Curl code:</label>
+                    <textarea id="content" name="content" rows="5" cols="33">JSON / Curl code</textarea>
+                </div>
+
+                <!-- Send button -->
+                <div class="popup-form-item">
+                    <button>Send</button>
+                </div>
+            </form>
         </div>
+
+
+        <!-- <footer class="popup-header">
+            <h3>Scratch Me <span id="status"></span></h3>
+            <p>Save any Facebook Post to simple JSON form</p>
+            <a class="link" href="https://github.com/bravelab/scratchme-chrome-plugin" target="_blank"
+                rel="noopener noreferrer">About</a>
+        </footer> -->
     </div>
+
 
     <script src="/popup.js" type="text/javascript"></script>
 </body>
+
 </html>

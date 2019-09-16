@@ -1,2 +1,2 @@
-.popup{width:200px;padding:5px 15px}.link{text-decoration:none}
+.popup{width:350px;padding:5px 15px}.link{text-decoration:none}.popup-form{margin:20px 0}.popup-form-item{display:-webkit-box;display:-ms-flexbox;display:flex;-ms-flex-wrap:wrap;flex-wrap:wrap;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin:10px 0;width:100%;background:#fbfbfb}.popup-form-item textarea{width:100%}
 /*# sourceMappingURL=popup.min.css.map */

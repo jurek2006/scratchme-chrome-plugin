@@ -1,8 +1,25 @@
 .popup {
-    width: 200px;
+    width: 350px;
     padding:  5px 15px;
 }
 
 .link {
     text-decoration: none;
+}
+
+.popup-form {
+    margin: 20px 0;
+}
+
+.popup-form-item {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    margin: 10px 0;
+    width: 100%;
+    background: #fbfbfb;
+}
+
+.popup-form-item textarea {
+    width: 100%;
 }
