@@ -16,42 +16,53 @@
         </header>
 
         <div class="popup-form">
-            <form action="">
+            <form action="" id="scratch-me-form">
                 <!-- Author input -->
                 <div class="popup-form-item">
-                    <label for="author">Author: </label>
-                    <input type="text" id="author" name="author" required>
+                    <label for="post-author">Author: </label>
+                    <input type="text" id="post-author" name="post-author" required>
                 </div>
 
                 <!-- Date input -->
                 <div class="popup-form-item">
-                    <label for="date">Date: </label>
-                    <input type="datetime-local" id="date" name="date" value="2018-07-22" required>
+                    <label for="post-datetime">Date: </label>
+                    <input type="datetime-local" id="post-datetime" name="post-datetime" required>
                 </div>
 
                 <!-- Title input -->
                 <div class="popup-form-item">
-                    <label for="title">Title: </label>
-                    <input type="text" id="title" name="title" required>
+                    <label for="post-title">Title: </label>
+                    <input type="text" id="post-title" name="post-title" required>
                 </div>
 
                 <!-- Content textarea -->
                 <div class="popup-form-item">
-                    <label for="content">Content:</label>
-                    <textarea id="content" name="content" rows="5" cols="33">Content</textarea>
+                    <label for="post-content">Content:</label>
+                    <textarea id="post-content" name="post-content" rows="5" cols="33">Content</textarea>
                 </div>
 
                 <!-- Url input -->
                 <div class="popup-form-item">
-                    <label for="url">Post URL:</label>
-                    <input type="url" id="url" name="url" placeholder="https://example.com" pattern="https://.*"
-                        size="30" required>
+                    <label for="post-url">Post URL:</label>
+                    <input type="url" id="post-url" name="post-url" placeholder="https://example.com"
+                        pattern="https://.*" size="30" required>
                 </div>
 
                 <!-- PostID input -->
                 <div class="popup-form-item">
                     <label for="post-id">Post ID: </label>
                     <input type="text" id="post-id" name="post-id" required>
+                </div>
+
+                <!-- Choose format input -->
+                <div class="popup-form-item">
+                    <label for="data-format">Choose a format:</label>
+                    <select id="select-data-format">
+                        <option value="">-- Please choose a format --</option>
+                        <option value="cooper">Cooper CRM</option>
+                        <option value="json">JSON</option>
+                        <option value="curl">Curl</option>
+                    </select>
                 </div>
 
                 <!-- Access Token input -->
@@ -73,30 +84,19 @@
                 </div>
 
                 <div class="popup-form-item">
-                    <button>Configure</button>
-                    <button>Test connection</button>
-                </div>
-
-                <!-- Choose format input -->
-                <div class="popup-form-item">
-                    <label for="data-format">Choose a format:</label>
-                    <select id="data-format">
-                        <option value="">-- Please choose a format --</option>
-                        <option value="cooper">Cooper CRM</option>
-                        <option value="json">JSON</option>
-                        <option value="curl">Curl</option>
-                    </select>
+                    <button id="configure-connection" disabled>Configure</button>
+                    <button id="test-connection" disabled>Test connection</button>
                 </div>
 
                 <!-- JSON or curl code textarea -->
                 <div class="popup-form-item">
-                    <label for="content">JSON / Curl code:</label>
-                    <textarea id="content" name="content" rows="5" cols="33">JSON / Curl code</textarea>
+                    <label for="code-area">JSON / Curl code:</label>
+                    <textarea id="code-area" name="code-area" rows="5" cols="33">JSON / Curl code</textarea>
                 </div>
 
                 <!-- Send button -->
                 <div class="popup-form-item">
-                    <button>Send</button>
+                    <button type="submit" id="send-form" disabled>Send</button>
                 </div>
             </form>
         </div>

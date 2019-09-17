@@ -1,29 +1,61 @@
 'use strict';
 
-// ####################################
-// TODO it will be used in the future
-// ####################################
+// chrome.storage.onChanged.addListener((changes, namespace) => {
+//     console.log('Zmiana storage');
+// });
 
-// (() => {
-//     document.addEventListener('DOMContentLoaded', () => {
-        // const status = document.getElementById('status');
-        // status.textContent = "Waiting";
+(() => {
+    document.addEventListener('DOMContentLoaded', () => {
+        // Form
+        const scratchMeForm = document.getElementById('scratch-me-form');
 
-        // chrome.runtime.onMessage.addListener((msg, sender, response) => {
-        //     if(msg.count > 0)
-        //         status.textContent = `(${msg.status})`;
-        // });
+        // Facebook data
+        const postAuthorInput = document.getElementById('post-author');
+        const postDatetimeInput = document.getElementById('post-datetime');
+        const postTitleInput = document.getElementById('post-title');
+        const postContentTextarea = document.getElementById('post-content');
+        const postUrlInput = document.getElementById('post-url');
+        const postIdInput = document.getElementById('post-id');
 
-        // chrome.tabs.query({
-        //     active: true,
-        //     currentWindow: true
-        // }, (tabs) => {
-        //     chrome.tabs.sendMessage(tabs[0].id, {data: "success"}, (resp) => {
-        //         status.textContent = "Loading...";
-        //         console.log("Success");
-        //     });
-        // });
-//     });
-// })();
+        // System CRM data
+        const sysAccessToken = document.getElementById('access-token');
+        const sysAppName = document.getElementById('application-name');
+        const sysUserAppEmail = document.getElementById('user-application-email');
 
-// ####################################
+        // Select and display format e.g JSON/Cooper/Curl
+        const selectDataFormat = document.getElementById('select-data-format');
+        const codeArea = document.getElementById('code-area');
+
+        // Buttons
+        const sysConfigureConnectionBtn = document.getElementById('configure-connection');
+        const sysTestConnectionBtn = document.getElementById('test-connection');
+        const sendFormBtn = document.getElementById('send-form');
+
+        const setDateTimeValue = (unixTime) => {
+            const date = new Date(unixTime * 1000);
+            
+            const month = ("0" + (date.getMonth() + 1)).slice(-2);
+            const dayMonth = ("0" + date.getDate()).slice(-2);
+            const minutes = (date.getMinutes() < 10 ? '0' : '') + date.getMinutes();
+
+            return `${date.getFullYear()}-${month}-${dayMonth}T${date.getHours()}:${minutes}`
+        };
+
+        const setInputsValue = (postData) => {
+            const { postId, author, url, content, time, uTime } = postData;
+
+            console.log(setDateTimeValue(uTime));
+
+            postAuthorInput.value = author;
+            postDatetimeInput.value = setDateTimeValue(uTime);
+            postTitleInput.value = `${postId ? postId + " - " : ""}${content.slice(0, 15)}... - ${author}`;
+            postContentTextarea.value = content;
+            postUrlInput.value = url;
+            postIdInput.value = postId || "0";
+        }
+
+        chrome.storage.sync.get(['postData'], (storage) => {
+            setInputsValue(storage.postData);
+        });
+    });
+})();
