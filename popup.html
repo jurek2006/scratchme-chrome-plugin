@@ -16,11 +16,11 @@
         </header>
 
         <div class="popup-form">
-            <form action="" id="scratch-me-form">
+            <form action="" id="scratch-me-form" class="validate">
                 <!-- Author input -->
                 <div class="popup-form-item">
                     <label for="post-author">Author: </label>
-                    <input type="text" id="post-author" name="post-author" required>
+                    <input type="text" id="post-author" name="post-author" minlength="3" maxlength="40" pattern="[^()/><\][\\\x22,;|]+" required>
                 </div>
 
                 <!-- Date input -->
@@ -32,26 +32,26 @@
                 <!-- Title input -->
                 <div class="popup-form-item">
                     <label for="post-title">Title: </label>
-                    <input type="text" id="post-title" name="post-title" required>
+                    <input type="text" id="post-title" name="post-title" minlength="3" maxlength="40" required>
                 </div>
 
                 <!-- Content textarea -->
                 <div class="popup-form-item">
                     <label for="post-content">Content:</label>
-                    <textarea id="post-content" name="post-content" rows="12" cols="35">Content</textarea>
+                    <textarea id="post-content" name="post-content" rows="12" cols="35" minlength="3">Content</textarea>
                 </div>
 
                 <!-- Url input -->
                 <div class="popup-form-item">
                     <label for="post-url">Post URL:</label>
-                    <input type="url" id="post-url" name="post-url" placeholder="https://example.com"
-                        pattern="https://.*" size="30">
+                    <input type="url" id="post-url" name="post-url" placeholder="https://example.com" minlength="2"
+                        pattern="^(?:(?:https?|HTTPS?|ftp|FTP):\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-zA-Z\u00a1-\uffff0-9]-*)*[a-zA-Z\u00a1-\uffff0-9]+)(?:\.(?:[a-zA-Z\u00a1-\uffff0-9]-*)*[a-zA-Z\u00a1-\uffff0-9]+)*)(?::\d{2,})?(?:[\/?#]\S*)?$" size="30">
                 </div>
 
                 <!-- PostID input -->
                 <div class="popup-form-item">
                     <label for="post-id">Post ID: </label>
-                    <input type="text" id="post-id" name="post-id" required>
+                    <input type="text" id="post-id" name="post-id" pattern="[-+]?[0-9]*[.,]?[0-9]+" required>
                 </div>
 
                 <!-- Choose format input -->
@@ -80,7 +80,7 @@
 
                     <!-- User application email input -->
                     <div class="popup-form-item">
-                        <label for="user-application-email">Application name: </label>
+                        <label for="user-application-email">User e-mail: </label>
                         <input type="text" id="user-application-email" name="user-application-email">
                     </div>
 
