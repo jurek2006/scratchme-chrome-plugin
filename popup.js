@@ -17,14 +17,15 @@
         const postUrlInput = document.getElementById('post-url');
         const postIdInput = document.getElementById('post-id');
 
+        // Select and display format e.g JSON/Cooper/Curl
+        const selectDataFormat = document.getElementById('select-data-format');
+        const codeArea = document.getElementById('code-area');
+        const codeAreaTextarea = document.getElementById('code-area-textarea');
+
         // System CRM data
         const sysAccessToken = document.getElementById('access-token');
         const sysAppName = document.getElementById('application-name');
         const sysUserAppEmail = document.getElementById('user-application-email');
-
-        // Select and display format e.g JSON/Cooper/Curl
-        const selectDataFormat = document.getElementById('select-data-format');
-        const codeArea = document.getElementById('code-area');
 
         // Buttons
         const sysConfigureConnectionBtn = document.getElementById('configure-connection');
@@ -33,7 +34,7 @@
 
         const setDateTimeValue = (unixTime) => {
             const date = new Date(unixTime * 1000);
-            
+
             const month = ("0" + (date.getMonth() + 1)).slice(-2);
             const dayMonth = ("0" + date.getDate()).slice(-2);
             const minutes = (date.getMinutes() < 10 ? '0' : '') + date.getMinutes();
@@ -43,8 +44,6 @@
 
         const setInputsValue = (postData) => {
             const { postId, author, url, content, time, uTime } = postData;
-
-            console.log(setDateTimeValue(uTime));
 
             postAuthorInput.value = author;
             postDatetimeInput.value = setDateTimeValue(uTime);
@@ -57,5 +56,16 @@
         chrome.storage.sync.get(['postData'], (storage) => {
             setInputsValue(storage.postData);
         });
+
+        selectDataFormat.addEventListener('change', (e) => {
+            const contentOfSelectedOption = document.querySelectorAll('.content-of-selected-option');
+
+            for (const content of contentOfSelectedOption)
+                content.classList.add('disabled');
+
+            const selectedContent = document.getElementById(e.target.value);
+            if (selectedContent)
+                selectedContent.classList.remove('disabled');
+        })
     });
 })();

@@ -38,14 +38,14 @@
                 <!-- Content textarea -->
                 <div class="popup-form-item">
                     <label for="post-content">Content:</label>
-                    <textarea id="post-content" name="post-content" rows="5" cols="33">Content</textarea>
+                    <textarea id="post-content" name="post-content" rows="12" cols="35">Content</textarea>
                 </div>
 
                 <!-- Url input -->
                 <div class="popup-form-item">
                     <label for="post-url">Post URL:</label>
                     <input type="url" id="post-url" name="post-url" placeholder="https://example.com"
-                        pattern="https://.*" size="30" required>
+                        pattern="https://.*" size="30">
                 </div>
 
                 <!-- PostID input -->
@@ -60,43 +60,51 @@
                     <select id="select-data-format">
                         <option value="">-- Please choose a format --</option>
                         <option value="cooper">Cooper CRM</option>
-                        <option value="json">JSON</option>
-                        <option value="curl">Curl</option>
+                        <option value="json-code-area">JSON</option>
+                        <option value="curl-code-area">Curl</option>
                     </select>
                 </div>
 
-                <!-- Access Token input -->
-                <div class="popup-form-item">
-                    <label for="access-token">Access Token: </label>
-                    <input type="text" id="access-token" name="access-token" required>
+                <div id="cooper" class="content-of-selected-option disabled">
+                    <!-- Access Token input -->
+                    <div class="popup-form-item">
+                        <label for="access-token">Access Token: </label>
+                        <input type="text" id="access-token" name="access-token">
+                    </div>
+
+                    <!-- Application name input -->
+                    <div class="popup-form-item">
+                        <label for="application-name">Application name: </label>
+                        <input type="text" id="application-name" name="application-name">
+                    </div>
+
+                    <!-- User application email input -->
+                    <div class="popup-form-item">
+                        <label for="user-application-email">Application name: </label>
+                        <input type="text" id="user-application-email" name="user-application-email">
+                    </div>
+
+                    <div class="popup-form-item">
+                        <button id="configure-connection" disabled>Configure</button>
+                        <button id="test-connection" disabled>Test connection</button>
+                    </div>
                 </div>
 
-                <!-- Application name input -->
-                <div class="popup-form-item">
-                    <label for="application-name">Application name: </label>
-                    <input type="text" id="application-name" name="application-name" required>
+                <!-- JSON code textarea -->
+                <div id="json-code-area" class="popup-form-item content-of-selected-option disabled">
+                    <label for="json-code-area-textarea">JSON / Curl code:</label>
+                    <textarea id="json-code-area-textarea" name="json-code-area-textarea" rows="5" cols="33">JSON / Curl code</textarea>
                 </div>
 
-                <!-- User application email input -->
-                <div class="popup-form-item">
-                    <label for="user-application-email">Application name: </label>
-                    <input type="text" id="user-application-email" name="user-application-email" required>
-                </div>
-
-                <div class="popup-form-item">
-                    <button id="configure-connection" disabled>Configure</button>
-                    <button id="test-connection" disabled>Test connection</button>
-                </div>
-
-                <!-- JSON or curl code textarea -->
-                <div class="popup-form-item">
-                    <label for="code-area">JSON / Curl code:</label>
-                    <textarea id="code-area" name="code-area" rows="5" cols="33">JSON / Curl code</textarea>
+                <!-- Curl code textarea -->
+                <div id="curl-code-area" class="popup-form-item content-of-selected-option disabled">
+                    <label for="curl-code-area-textarea">JSON / Curl code:</label>
+                    <textarea id="curl-code-area-textarea" name="curl-code-area-textarea" rows="5" cols="33">JSON / Curl code</textarea>
                 </div>
 
                 <!-- Send button -->
                 <div class="popup-form-item">
-                    <button type="submit" id="send-form" disabled>Send</button>
+                    <button type="submit" id="send-form">Send</button>
                 </div>
             </form>
         </div>

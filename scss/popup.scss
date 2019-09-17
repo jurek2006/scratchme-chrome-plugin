@@ -20,6 +20,10 @@
     background: #fbfbfb;
 }
 
+.content-of-selected-option.disabled {
+    display: none;
+}
+
 .popup-form-item textarea {
     width: 100%;
 }
