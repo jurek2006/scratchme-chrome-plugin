@@ -28,7 +28,7 @@ const showFormScratchMe = () => {
     const sysUserAppEmail = document.getElementById('user-application-email');
 
     // Buttons
-    const sysConfigureConnectionBtn = document.getElementById('configure-connection');
+    const sysSaveConnectionBtn = document.getElementById('save-connection');
     const sysTestConnectionBtn = document.getElementById('test-connection');
     const sendFormBtn = document.getElementById('send-form');
 
@@ -66,11 +66,11 @@ const showFormScratchMe = () => {
         if (selectedContent)
             selectedContent.classList.remove('disabled');
 
-        if(e.target.value === 'cooper') {
+        if (e.target.value === 'cooper') {
             sysAccessToken.required = true;
             sysAppName.required = true;
             sysUserAppEmail.required = true;
-            sysUserAppEmail.pattern = "^([^\\x00-\\x20\\x22\\x28\\x29\\x2c\\x2e\\x3a-\\x3c\\x3e\\x40\\x5b-\\x5d\\x7f-\\xff]+|\\x22([^\\x0d\\x22\\x5c\\x80-\\xff]|\\x5c[\\x00-\\x7f])*\\x22)(\\x2e([^\\x00-\\x20\\x22\\x28\\x29\\x2c\\x2e\\x3a-\\x3c\\x3e\\x40\\x5b-\\x5d\\x7f-\\xff]+|\\x22([^\\x0d\\x22\\x5c\\x80-\\xff]|\\x5c[\\x00-\\x7f])*\\x22))*\\x40([^\\x00-\\x20\\x22\\x28\\x29\\x2c\\x2e\\x3a-\\x3c\\x3e\\x40\\x5b-\\x5d\\x7f-\\xff]+|\\x5b([^\\x0d\\x5b-\\x5d\\x80-\\xff]|\\x5c[\\x00-\\x7f])*\\x5d)(\\x2e([^\\x00-\\x20\\x22\\x28\\x29\\x2c\\x2e\\x3a-\\x3c\\x3e\\x40\\x5b-\\x5d\\x7f-\\xff]+|\\x5b([^\\x0d\\x5b-\\x5d\\x80-\\xff]|\\x5c[\\x00-\\x7f])*\\x5d))*(\\.\w{2,})+$";
+            sysUserAppEmail.pattern = "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$";
         } else {
             sysAccessToken.required = false;
             sysAppName.required = false;
@@ -88,6 +88,9 @@ const showFormScratchMe = () => {
         const validity = field.validity;
 
         if (validity.valid) return;
+
+        sysTestConnectionBtn.disabled = true;
+        sendFormBtn.disabled = true;
 
         // If field is required and empty
         if (validity.valueMissing) return 'Please fill out this field.';
@@ -123,7 +126,6 @@ const showFormScratchMe = () => {
 
     // Show an error message
     const showError = (field, error) => {
-
         // Add error class to field
         field.classList.add('error');
 
@@ -156,11 +158,14 @@ const showFormScratchMe = () => {
         // Show error message
         message.style.display = 'block';
         message.style.visibility = 'visible';
-
     };
 
     // Remove the error message
     const removeError = (field) => {
+        if(sysAccessToken.value && sysAppName.value && sysUserAppEmail.value) {
+            sysTestConnectionBtn.disabled = false;
+            sendFormBtn.disabled = false;
+        }
 
         // Remove error class to field
         field.classList.remove('error');
@@ -169,11 +174,11 @@ const showFormScratchMe = () => {
         field.removeAttribute('aria-describedby');
 
         // Get field id or name
-        var id = field.id || field.name;
+        const id = field.id || field.name;
         if (!id) return;
 
         // Check if an error message is in the DOM
-        var message = field.form.querySelector('.error-message#error-for-' + id + '');
+        let message = field.form.querySelector('.error-message#error-for-' + id + '');
         if (!message) return;
 
         // If so, hide it
@@ -183,23 +188,45 @@ const showFormScratchMe = () => {
     };
 
     // Listen to all blur events
-    document.addEventListener('blur', function (event) {
-        // Only run if the field is in a form to be validated
-        if (!event.target.form.classList.contains('validate')) return;
-
+    scratchMeForm.addEventListener('blur', (e) => {
         // Validate the field
-        var error = hasError(event.target);
+        let error = hasError(e.target);
 
         // If there's an error, show it
         if (error) {
-            showError(event.target, error);
+            showError(e.target, error);
             return;
         }
 
         // Otherwise, remove any existing error message
-        removeError(event.target);
+        removeError(e.target);
 
     }, true);
+
+    sendFormBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+
+        const fields = scratchMeForm.elements;
+
+        // Validate each field
+        // Store the first field with an error to a variable so we can bring it into focus later
+        let error, hasErrors;
+        for (let i = 0; i < fields.length; i++) {
+            error = hasError(fields[i]);
+            if (error) {
+                showError(fields[i], error);
+                if (!hasErrors) {
+                    hasErrors = fields[i];
+                }
+            }
+        }
+
+        // If there are errrors, don't submit form and focus on first element with error
+        if (hasErrors) {
+            event.preventDefault();
+            hasErrors.focus();
+        }
+    });
 }
 
 if (document.readyState === 'loading')
