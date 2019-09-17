@@ -19,8 +19,7 @@ const showFormScratchMe = () => {
 
     // Select and display format e.g JSON/Cooper/Curl
     const selectDataFormat = document.getElementById('select-data-format');
-    const codeArea = document.getElementById('code-area');
-    const codeAreaTextarea = document.getElementById('code-area-textarea');
+    const codeAreaContent = document.getElementById('code-area-content');
 
     // System CRM data
     const sysAccessToken = document.getElementById('access-token');
@@ -56,21 +55,92 @@ const showFormScratchMe = () => {
         setInputsValue(storage.postData);
     });
 
+    const generateCode = (codeName) => {
+        const data = {
+            postId: postIdInput.value,
+            postTitle: postTitleInput.value,
+            author: postAuthorInput.value,
+            content: postContentTextarea.value,
+            datetime: postDatetimeInput.value,
+            postUrl: postUrlInput.value
+        };
+
+        const syntaxHighlight = (json) => {
+            json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, (match) => {
+                let cls = 'number';
+                if (/^"/.test(match)) {
+                    if (/:$/.test(match)) {
+                        cls = 'key';
+                    } else {
+                        cls = 'string';
+                    }
+                } else if (/true|false/.test(match)) {
+                    cls = 'boolean';
+                } else if (/null/.test(match)) {
+                    cls = 'null';
+                }
+                return `<span class="${cls}">${match}</span>`;
+            });
+        }
+
+        document.getElementById('copy-to-clip').addEventListener('onMouseOut', () => {
+            const tooltip = document.getElementById("myTooltip");
+            tooltip.innerHTML = "Copy to clipboard";
+        })
+
+        document.getElementById('copy-to-clip').addEventListener('click', (e) => {
+            e.preventDefault();
+            const proba = document.getElementById('copy-to-text');
+            proba.value = codeAreaContent.textContent;
+            proba.select();
+            document.execCommand("copy");
+
+            const tooltip = document.getElementById("myTooltip");
+            tooltip.innerHTML = "Copied";
+
+            setTimeout(() => {
+                tooltip.innerHTML = "Copy to clipboard"
+            }, 1000);
+        }, false);
+
+        switch (codeName) {
+            case 'json':
+                const dataJSON = JSON.stringify(data, null, 4);
+                codeAreaContent.innerHTML = syntaxHighlight(dataJSON);
+                break;
+
+            case 'curl':
+                codeAreaContent.innerHTML = `<pre>
+<span class="s1">curl --location --request GET</span><span class="s2">"https://api.prosperworks.com/developer_api/v1/account"</span><span class="se">\</span>
+--header <span class="s2">"X-PW-AccessToken: ${sysAccessToken.value}"</span> <span class="se">\</span>
+--header <span class="s2">"X-PW-Application: ${sysAppName.value}"</span> <span class="se">\</span>
+--header <span class="s2">"X-PW-UserEmail: ${sysUserAppEmail.value}"</span> <span class="se">\</span>
+--header <span class="s2">"Content-Type: application/json"</span>
+</pre>`;
+                break;
+        }
+    }
+
     selectDataFormat.addEventListener('change', (e) => {
+        const targetValue = e.target.value;
         const contentOfSelectedOption = document.querySelectorAll('.content-of-selected-option');
 
         for (const content of contentOfSelectedOption)
             content.classList.add('disabled');
 
-        const selectedContent = document.getElementById(e.target.value);
+        const selectedContent = targetValue.slice(0, 4) === 'code' ? document.getElementById('code-area') : document.getElementById(targetValue);
+
         if (selectedContent)
             selectedContent.classList.remove('disabled');
 
-        if (e.target.value === 'cooper') {
+        if (targetValue === 'cooper') {
             sysAccessToken.required = true;
             sysAppName.required = true;
             sysUserAppEmail.required = true;
             sysUserAppEmail.pattern = "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$";
+        } else if (targetValue.slice(0, 4) === 'code') {
+            generateCode(targetValue.slice(5));
         } else {
             sysAccessToken.required = false;
             sysAppName.required = false;
@@ -162,7 +232,7 @@ const showFormScratchMe = () => {
 
     // Remove the error message
     const removeError = (field) => {
-        if(sysAccessToken.value && sysAppName.value && sysUserAppEmail.value) {
+        if (sysAccessToken.value && sysAppName.value && sysUserAppEmail.value) {
             sysTestConnectionBtn.disabled = false;
             sendFormBtn.disabled = false;
         }

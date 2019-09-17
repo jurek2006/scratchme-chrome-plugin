@@ -20,7 +20,8 @@
                 <!-- Author input -->
                 <div class="popup-form-item">
                     <label for="post-author">Author: </label>
-                    <input type="text" id="post-author" name="post-author" minlength="3" maxlength="40" pattern="[^()/><\][\\\x22,;|]+" required>
+                    <input type="text" id="post-author" name="post-author" minlength="3" maxlength="40"
+                        pattern="[^()/><\][\\\x22,;|]+" required>
                 </div>
 
                 <!-- Date input -->
@@ -45,7 +46,8 @@
                 <div class="popup-form-item">
                     <label for="post-url">Post URL:</label>
                     <input type="url" id="post-url" name="post-url" placeholder="https://example.com" minlength="2"
-                        pattern="^(?:(?:https?|HTTPS?|ftp|FTP):\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-zA-Z\u00a1-\uffff0-9]-*)*[a-zA-Z\u00a1-\uffff0-9]+)(?:\.(?:[a-zA-Z\u00a1-\uffff0-9]-*)*[a-zA-Z\u00a1-\uffff0-9]+)*)(?::\d{2,})?(?:[\/?#]\S*)?$" size="30">
+                        pattern="^(?:(?:https?|HTTPS?|ftp|FTP):\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-zA-Z\u00a1-\uffff0-9]-*)*[a-zA-Z\u00a1-\uffff0-9]+)(?:\.(?:[a-zA-Z\u00a1-\uffff0-9]-*)*[a-zA-Z\u00a1-\uffff0-9]+)*)(?::\d{2,})?(?:[\/?#]\S*)?$"
+                        size="30">
                 </div>
 
                 <!-- PostID input -->
@@ -60,8 +62,8 @@
                     <select id="select-data-format">
                         <option value="">-- Please choose a format --</option>
                         <option value="cooper">Cooper CRM</option>
-                        <option value="json-code-area">JSON</option>
-                        <option value="curl-code-area">Curl</option>
+                        <option value="code-json">JSON</option>
+                        <option value="code-curl">Curl</option>
                     </select>
                 </div>
 
@@ -91,22 +93,17 @@
                     </div>
                 </div>
 
-                <!-- JSON code textarea -->
-                <div id="json-code-area" class="popup-form-item content-of-selected-option disabled">
-                    <label for="json-code-area-textarea">JSON code:</label>
-                    <textarea id="json-code-area-textarea" name="json-code-area-textarea" rows="5" cols="33">JSON / Curl code</textarea>
+                <!-- Code area -->
+                <div id="code-area" class="popup-form-item content-of-selected-option disabled">
+                    <div class="tooltip">
+                        <button id="copy-to-clip">
+                            <span class="tooltiptext" id="myTooltip">Copy to clipboard</span>
+                            Copy to clipboard
+                        </button>
+                    </div>
+                    <pre id="code-area-content"></pre>
+                    <textarea name="copy-to-text" id="copy-to-text" cols="30" rows="10"></textarea>
                 </div>
-
-                <!-- Curl code textarea -->
-                <div id="curl-code-area" class="popup-form-item content-of-selected-option disabled">
-                    <label for="curl-code-area-textarea">Curl code:</label>
-                    <textarea id="curl-code-area-textarea" name="curl-code-area-textarea" rows="5" cols="33">JSON / Curl code</textarea>
-                </div>
-
-                <!-- Send button -->
-                <!-- <div class="popup-form-item">
-                    <button type="submit" id="send-form">Send</button>
-                </div> -->
             </form>
         </div>
 
