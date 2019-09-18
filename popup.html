@@ -12,7 +12,9 @@
     <div class="popup">
 
         <header class="popup-header">
-            <h1><a href="#" title="ScratchMe"><img src="img/icon48.png" alt="scratch-me-logo" /></a></h3>
+            <h1><a href="#" title="ScratchMe"><img src="img/icon48.png" alt="scratch-me-logo" /></a></h1>
+            <a class="link" href="https://github.com/bravelab/scratchme-chrome-plugin"
+                title="Github - link to repositorium" target="_blank" rel="noopener noreferrer">GitHub</a>
         </header>
 
         <div class="popup-form">
@@ -22,7 +24,8 @@
                 <!-- Author input -->
                 <div class="popup-form-item">
                     <label for="post-author">Author: </label>
-                    <input type="text" id="post-author" placeholder="Enter the author of the post" name="post-author" minlength="3" maxlength="40" pattern="[^()/><\][\\\x22,;|]+" required>
+                    <input type="text" id="post-author" placeholder="Enter the author of the post" name="post-author"
+                        minlength="3" maxlength="40" pattern="[^()/><\][\\\x22,;|]+" required>
                 </div>
 
                 <!-- Date input -->
@@ -34,13 +37,15 @@
                 <!-- Title input -->
                 <div class="popup-form-item">
                     <label for="post-title">Title: </label>
-                    <input type="text" id="post-title" placeholder="Enter the post title" name="post-title" minlength="3" maxlength="40" required>
+                    <input type="text" id="post-title" placeholder="Enter the post title" name="post-title"
+                        minlength="3" maxlength="40" required>
                 </div>
 
                 <!-- Content textarea -->
                 <div class="popup-form-item">
                     <label for="post-content">Content:</label>
-                    <textarea id="post-content" name="post-content" rows="12" cols="35" minlength="3" placeholder="Enter the content of the post"></textarea>
+                    <textarea id="post-content" name="post-content" rows="10" cols="35" minlength="3"
+                        placeholder="Enter the content of the post"></textarea>
                 </div>
 
                 <!-- Url input -->
@@ -54,7 +59,8 @@
                 <!-- PostID input -->
                 <div class="popup-form-item">
                     <label for="post-id">Post ID: </label>
-                    <input type="text" id="post-id" name="post-id" pattern="[-+]?[0-9]*[.,]?[0-9]+" placeholder="Enter the post id" required>
+                    <input type="text" id="post-id" name="post-id" pattern="[-+]?[0-9]*[.,]?[0-9]+"
+                        placeholder="Enter the post id" required>
                 </div>
 
 
@@ -89,7 +95,8 @@
                     <!-- User application email input -->
                     <div class="popup-form-item">
                         <label for="user-application-email">X-PW-UserEmail:</label>
-                        <input type="text" id="user-application-email" placeholder="YOUR_EMAIL_HERE" name="user-application-email">
+                        <input type="text" id="user-application-email" placeholder="YOUR_EMAIL_HERE"
+                            name="user-application-email">
                     </div>
 
                     <div class="popup-form-item btn-wrapper">
@@ -113,12 +120,15 @@
         </div>
 
 
-        <!-- <footer class="popup-header">
-            <h3>Scratch Me <span id="status"></span></h3>
-            <p>Save any Facebook Post to simple JSON form</p>
-            <a class="link" href="https://github.com/bravelab/scratchme-chrome-plugin" target="_blank"
-                rel="noopener noreferrer">About</a>
-        </footer> -->
+        <footer class="popup-footer">
+            <!-- <h3>Scratch Me</h3> -->
+            <p>
+                <a class="link" href="https://github.com/bravelab/scratchme-chrome-plugin"
+                    title="GitHub - link to repository" target="_blank" rel="noopener noreferrer">ScratchMe</a>
+                save any Facebook Post to simple JSON form.
+            </p>
+            <p>&copy; <a href="#" title="Bravelab website">Bravelab</a> 2019: Wszystkie prawa zastrzeżone.</p>
+        </footer>
     </div>
 
 

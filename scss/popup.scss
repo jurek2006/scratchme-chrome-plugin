@@ -9,21 +9,54 @@ html * {
 
 .popup {
   width: 420px;
-  padding: 10px;
+  padding: 20px;
   font-family: Cantarell, Arial, sans-serif;
   color: $form-color;
   background: #fafafa;
 }
 
+.popup-header, .popup-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  
+  a {
+    font-size: 12px;
+    text-decoration: none;
+    color: #333333;
+    font-weight: 700;
+    opacity: 1;
+    transition: opacity .3s ease-in;
+    
+    &:hover {
+      opacity: .8;
+    }
+  }
+}
+
+.popup-header {
+  margin-bottom: 10px;
+}
+
+.popup-footer {
+  flex-direction: column;
+  align-items: baseline;
+  font-size: 11px;
+  line-height: 1.6;
+  margin-top: 15px;
+}
+
 .popup-form {
   padding: 15px;
-  background: #fdfdfd;
-  // box-shadow: 0 0 10px $form-shadow;
+  background: #fefefe;
+  box-shadow: 0 0 5px $form-shadow;
   border-radius: 5px;
+  // border: 2px solid rgba(230,230,230,0.4);
 }
 
 .popup-form-item {
-  margin-top: 10px;
+  margin-top: 14px;
 }
 
 .popup-form-item label {
@@ -31,7 +64,7 @@ html * {
   font-family: 'Alegreya Sans', Cantarell, Arial, sans-serif;
   font-size: 14px;
   font-weight: 700;
-  margin-bottom: 3px;
+  margin-bottom: 6px;
   color: $form-label-color;
 }
 
@@ -42,7 +75,7 @@ html * {
 
 .popup-form-item input, .popup-form-item textarea, .popup-form-item select {
   padding: 5px 8px;
-  margin: 5px 0;
+  margin-bottom: 5px;
   background: #ffffff;
   color: $form-color;
   font-family: Cantarell, Arial, sans-serif;
@@ -67,6 +100,14 @@ html * {
   &:active {
     box-shadow: 0 0 10px $form-shadow-focus-color, 0 0 0 2px $form-border-color;
   }
+}
+
+.popup-form-item input.error::-webkit-input-placeholder {
+  color: $form-error-color;
+}
+
+.popup-form-item input.error {
+  box-shadow: 0 0 8px $form-error-color, 0 0 0 2px $form-error-color;
 }
 
 .popup-form-item select {
@@ -95,12 +136,36 @@ html * {
 }
 
 .btn {
+  position: relative;
   border: none;
   outline: none;
   margin: 10px 0;
   font-size: 13px;
   font-weight: 700;
   cursor: pointer;
+  z-index: 0;
+}
+
+.btn::before {
+  content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: $form-shadow-hover-color;
+    box-shadow: 0 0 3px 0 $btn-shadow-hover, 0 0 0 1px $btn-bg-hover; 
+    opacity: 0;
+    z-index: -1;
+    transition: opacity .3s ease-in;
+}
+
+.btn:hover:not(:disabled)::before {
+  opacity: 1;
+}
+
+.btn:focus:not(:disabled)::before {
+  opacity: 1;
 }
 
 .btn-1:first-child {
@@ -123,7 +188,7 @@ html * {
   margin-left: auto;
   background: $form-btn-2-bg;
   color: #ffffff;
-  padding: 10px 20px;
+  padding: 10px 15px;
 }
 
 .btn-2:disabled {
@@ -151,8 +216,10 @@ pre#code-area-content {
   overflow-x: scroll;
   background: $form-code-area-bg;
   color: #ffffff;
-  line-height: 1.6;
+  box-shadow: 0 0 10px $form-code-area-bg * 2;
   font-size: 12px;
+  line-height: 1.6;
+  border-radius: 2px;
 }
 
 // color for JSON

@@ -241,7 +241,6 @@ const showFormScratchMe = () => {
         // Get field id or name
         const id = field.id || field.name;
         if (!id) return;
-
         // Check if error message field already exists
         // If not, create one
         let message = field.form.querySelector('.error-message#error-for-' + id);
@@ -249,10 +248,10 @@ const showFormScratchMe = () => {
             message = document.createElement('div');
             message.className = 'error-message';
             message.id = 'error-for-' + id;
-
+            
             // Otherwise, insert it after the field
             let label;
-
+            
             if (!label) {
                 field.parentNode.insertBefore(message, field.nextSibling);
             }
@@ -360,7 +359,6 @@ const showFormScratchMe = () => {
 
     const handleClickTestConnection = (e) => {
         e.preventDefault();
-        console.log(e);
         let messageElem = getMessageElement('test-connection', e.target);
 
 
