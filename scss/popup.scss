@@ -28,6 +28,15 @@
     width: 100%;
 }
 
+#copy-to-clipboard-content {
+  position: absolute;
+    top: -100%;
+    opacity: 0;
+    z-index: -999;
+    overflow: hidden;
+    width: 100%;
+}
+
 pre#code-area-content {outline: 1px solid #ccc; padding: 5px; overflow-x: scroll}
 .string { color: green; }
 .number { color: darkorange; }

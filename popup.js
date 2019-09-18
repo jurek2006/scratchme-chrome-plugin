@@ -7,7 +7,6 @@
 const showFormScratchMe = () => {
     // Form
     const scratchMeForm = document.getElementById('scratch-me-form');
-    // scratchMeForm.setAttribute('novalidate', true);
 
     // Facebook data
     const postAuthorInput = document.getElementById('post-author');
@@ -33,6 +32,11 @@ const showFormScratchMe = () => {
     const copyToClipBtn = document.getElementById('copy-to-clip-btn');
 
 
+    chrome.storage.sync.get(['postData'], (storage) => {
+        setInputsValue(storage.postData);
+    });
+
+
     const copyToClipboard = (e) => {
         e.preventDefault();
 
@@ -47,7 +51,9 @@ const showFormScratchMe = () => {
         setTimeout(() => {
             e.target.textContent = "Copy to clipboard";
         }, 1000);
-    }
+
+    };
+
 
     const setDateTimeValue = (unixTime) => {
         const date = unixTime ? new Date(unixTime * 1000) : new Date(Date.now());
@@ -59,6 +65,8 @@ const showFormScratchMe = () => {
         return `${date.getFullYear()}-${month}-${dayMonth}T${date.getHours()}:${minutes}`
     };
 
+
+
     const setInputsValue = (postData) => {
         const { postId, author, url, content, time, uTime } = postData;
         postAuthorInput.value = author;
@@ -69,9 +77,7 @@ const showFormScratchMe = () => {
         postIdInput.value = postId || "0";
     }
 
-    chrome.storage.sync.get(['postData'], (storage) => {
-        setInputsValue(storage.postData);
-    });
+
 
     const generateCode = (codeName) => {
         const data = {
@@ -83,7 +89,8 @@ const showFormScratchMe = () => {
             postUrl: postUrlInput.value
         };
 
-        const syntaxHighlight = (json) => {
+        // Coloring JSON code
+        const pretyJsonCode = (json) => {
             json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
             return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, (match) => {
                 let cls = 'number';
@@ -108,7 +115,7 @@ const showFormScratchMe = () => {
         switch (codeName) {
             case 'json':
                 const dataJSON = JSON.stringify(data, null, 4);
-                codeAreaContent.innerHTML = syntaxHighlight(dataJSON);
+                codeAreaContent.innerHTML = pretyJsonCode(dataJSON);
                 break;
 
             case 'curl':
@@ -122,33 +129,6 @@ const showFormScratchMe = () => {
                 break;
         }
     }
-
-    selectDataFormat.addEventListener('change', (e) => {
-        const targetValue = e.target.value;
-        const contentOfSelectedOption = document.querySelectorAll('.content-of-selected-option');
-
-        for (const content of contentOfSelectedOption)
-            content.classList.add('disabled');
-
-        const selectedContent = targetValue.slice(0, 4) === 'code' ? document.getElementById('code-area') : document.getElementById(targetValue);
-
-        if (selectedContent)
-            selectedContent.classList.remove('disabled');
-
-        if (targetValue === 'cooper') {
-            sysAccessToken.required = true;
-            sysAppName.required = true;
-            sysUserAppEmail.required = true;
-            sysUserAppEmail.pattern = "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$";
-        } else if (targetValue.slice(0, 4) === 'code') {
-            generateCode(targetValue.slice(5));
-        } else {
-            sysAccessToken.required = false;
-            sysAppName.required = false;
-            sysUserAppEmail.required = false;
-            sysUserAppEmail.removeAttribute('pattern');
-        }
-    });
 
 
 
@@ -195,6 +175,8 @@ const showFormScratchMe = () => {
         return 'The value you entered for this field is invalid.';
     };
 
+
+
     // Show an error message
     const showError = (field, error) => {
         // Add error class to field
@@ -231,6 +213,8 @@ const showFormScratchMe = () => {
         message.style.visibility = 'visible';
     };
 
+
+
     // Remove the error message
     const removeError = (field) => {
         if (sysAccessToken.value && sysAppName.value && sysUserAppEmail.value) {
@@ -258,8 +242,9 @@ const showFormScratchMe = () => {
         message.style.visibility = 'hidden';
     };
 
-    // Listen to all blur events
-    scratchMeForm.addEventListener('blur', (e) => {
+
+    // Listen to all blur event
+    const handleBlurEvent = (e) => {
         // Validate the field
         let error = hasError(e.target);
 
@@ -271,17 +256,105 @@ const showFormScratchMe = () => {
 
         // Otherwise, remove any existing error message
         removeError(e.target);
+    }
 
-    }, true);
 
-    sendFormBtn.addEventListener('click', (e) => {
+    const handleChangeSelectFormat = (e) => {
+
+        const targetValue = e.target.value;
+        const contentOfSelectedOption = document.querySelectorAll('.content-of-selected-option');
+
+        for (const content of contentOfSelectedOption)
+            content.classList.add('disabled');
+
+
+        const selectedContent = document.getElementById(`${targetValue.slice(0, 4) === 'code' ? 'code-area' : targetValue}`);
+        selectedContent.classList.remove('disabled');
+
+
+        if (targetValue === 'cooper') {
+
+            sysAccessToken.required = true;
+            sysAppName.required = true;
+            sysUserAppEmail.required = true;
+            sysUserAppEmail.pattern = "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$";
+
+        } else if (targetValue.slice(0, 4) === 'code') {
+            generateCode(targetValue.slice(5));
+
+        } else {
+
+            sysAccessToken.required = false;
+            sysAppName.required = false;
+            sysUserAppEmail.required = false;
+            sysUserAppEmail.removeAttribute('pattern');
+
+        }
+    }
+
+    const handleClickTestConnection = (e) => {
+        e.preventDefault();
+
+        let message = e.target.form.querySelector('.result-message');
+        if (!message) {
+            message = document.createElement('div');
+            message.className = 'result-message';
+
+            // Otherwise, insert it after the field
+            let label;
+            if (!label) {
+                e.target.parentNode.insertBefore(message, e.target.parrent);
+            }
+        }
+
+
+        const url = 'https://example.com';
+        // const data = { username: 'example' };
+
+        fetch(url, {
+            method: 'GET',
+            // body: JSON.stringify(data),
+            // headers: {
+            //     'Content-Type': 'application/json',
+            //     'X-PW-AccessToken': sysAccessToken.value,
+            //     'X-PW-Application': sysAppName.value,
+            //     'X-PW-UserEmail': sysUserAppEmail
+            // }
+        }).then(res => res.json())
+            .then(response => {
+                console.log('Success:', JSON.stringify(response));
+                message.innerHTML = 'Connection success';
+                message.classList.add('success-message');
+                sysSaveConnectionBtn.disabled = false;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                message.innerHTML = 'Connection failed';
+                message.classList.add('error-message');
+                sysSaveConnectionBtn.disabled = true;
+            });
+
+
+        // Show error message
+        message.style.display = 'block';
+        message.style.visibility = 'visible';
+
+        setTimeout(() => {
+            message.innerHTML = '';
+            message.style.display = 'none';
+            message.style.visibility = 'hidden';
+        }, 5000);
+    }
+
+
+    const handleClickSendForm = (e) => {
         e.preventDefault();
 
         const fields = scratchMeForm.elements;
-
         // Validate each field
         // Store the first field with an error to a variable so we can bring it into focus later
         let error, hasErrors;
+
         for (let i = 0; i < fields.length; i++) {
             error = hasError(fields[i]);
             if (error) {
@@ -297,7 +370,18 @@ const showFormScratchMe = () => {
             event.preventDefault();
             hasErrors.focus();
         }
-    });
+    }
+
+
+    // Listen to all blur events
+    scratchMeForm.addEventListener('blur', handleBlurEvent, true);
+    // Choose a format
+    selectDataFormat.addEventListener('change', handleChangeSelectFormat, false);
+
+    sysTestConnectionBtn.addEventListener('click', handleClickTestConnection, false);
+
+    sendFormBtn.addEventListener('click', handleClickSendForm, false);
+
 }
 
 if (document.readyState === 'loading')
