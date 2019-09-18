@@ -64,6 +64,7 @@ const showFormScratchMe = () => {
                 postUrlInput.value = "";
                 postTitleInput.value = "";
                 codeAreaContent.innerHTML = "";
+                sendFormBtn.disabled = true;
             });
         } catch (error) {
             console.log('Error: ' + error);
@@ -175,13 +176,12 @@ const showFormScratchMe = () => {
                 break;
 
             case 'curl':
-                codeAreaContent.innerHTML = `<pre>
-<span class="s1">curl --location --request GET</span><span class="s2">"https://api.prosperworks.com/developer_api/v1/account"</span><span class="se">\</span>
---header <span class="s2">"X-PW-AccessToken: ${sysAccessToken.value}"</span> <span class="se">\</span>
---header <span class="s2">"X-PW-Application: ${sysAppName.value}"</span> <span class="se">\</span>
---header <span class="s2">"X-PW-UserEmail: ${sysUserAppEmail.value}"</span> <span class="se">\</span>
---header <span class="s2">"Content-Type: application/json"</span>
-</pre>`;
+                codeAreaContent.innerHTML = 
+`<span class="s1">curl --location --request GET</span><span class="s2">"https://api.prosperworks.com/developer_api/v1/account"</span><span class="se"> \\</span>
+    --header <span class="s2">"X-PW-AccessToken: ${sysAccessToken.value}"</span> <span class="se"> \\</span>
+    --header <span class="s2">"X-PW-Application: ${sysAppName.value}"</span> <span class="se"> \\</span>
+    --header <span class="s2">"X-PW-UserEmail: ${sysUserAppEmail.value}"</span> <span class="se"> \\</span>
+    --header <span class="s2">"Content-Type: application/json"</span>`;
                 break;
         }
     }
@@ -275,14 +275,14 @@ const showFormScratchMe = () => {
     const removeError = (field) => {
         if (sysAccessToken.value && sysAppName.value && sysUserAppEmail.value) {
             sysTestConnectionBtn.disabled = false;
-            sendFormBtn.disabled = false;
         }
-
+        
         // Remove error class to field
         field.classList.remove('error');
-
+        
         // Remove ARIA role from the field
         field.removeAttribute('aria-describedby');
+        sendFormBtn.disabled = false;
 
         // Get field id or name
         const id = field.id || field.name;
@@ -360,7 +360,7 @@ const showFormScratchMe = () => {
 
     const handleClickTestConnection = (e) => {
         e.preventDefault();
-
+        console.log(e);
         let messageElem = getMessageElement('test-connection', e.target);
 
 
@@ -408,6 +408,7 @@ const showFormScratchMe = () => {
     const handleClickSendForm = (e) => {
         e.preventDefault();
 
+        let messageElem = getMessageElement('send-form', e.target);
         const fields = scratchMeForm.elements;
         // Validate each field
         // Store the first field with an error to a variable so we can bring it into focus later
@@ -423,16 +424,17 @@ const showFormScratchMe = () => {
             }
         }
 
+
+
         // If there are errrors, don't submit form and focus on first element with error
         if (hasErrors) {
-            event.preventDefault();
             hasErrors.focus();
+            showItemMessage(messageElem, 'Please, complete the form', 'error-message', sysSaveConnectionBtn, true);
+        } else {
+            showItemMessage(messageElem, 'Message was send', 'success-message', sysSaveConnectionBtn, true);
+            clearExtractedData(false);
         }
 
-        let messageElem = getMessageElement('send-form', e.target);
-        showItemMessage(messageElem, 'Message was send', 'success-message', sysSaveConnectionBtn, true);
-
-        clearExtractedData(false);
     }
 
 
