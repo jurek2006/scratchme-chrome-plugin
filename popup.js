@@ -53,7 +53,7 @@ const showFormScratchMe = () => {
 
 
     const clearExtractedData = (e) => {
-        if(e) e.preventDefault();
+        if (e) e.preventDefault();
 
         try {
             chrome.storage.sync.remove(['postData'], (items) => {
@@ -95,6 +95,42 @@ const showFormScratchMe = () => {
         postContentTextarea.value = content;
         postUrlInput.value = url;
         postIdInput.value = postId || "0";
+    }
+
+
+    const getMessageElement = (id, targetElem) => {
+
+        let messageElem = targetElem.form.querySelector('.result-message#message-for-' + id);
+
+        if (!messageElem) {
+            messageElem = document.createElement('div');
+            messageElem.className = 'result-message';
+            messageElem.id = 'message-for-' + id;
+
+            // Otherwise, insert it after the field
+            let label;
+            if (!label) {
+                targetElem.parentNode.insertBefore(messageElem, targetElem.parent);
+            }
+        }
+
+        return messageElem;
+    }
+
+    const showItemMessage = (messageElem, text, itemClassName, disabledElem, isDisable) => {
+        messageElem.classList.add(itemClassName);
+        messageElem.innerHTML = text;
+        disabledElem.disabled = isDisable;
+
+        // Show error message
+        messageElem.style.display = 'block';
+        messageElem.style.visibility = 'visible';
+
+        setTimeout(() => {
+            messageElem.innerHTML = '';
+            messageElem.style.display = 'none';
+            messageElem.style.visibility = 'hidden';
+        }, 5000);
     }
 
 
@@ -325,18 +361,7 @@ const showFormScratchMe = () => {
     const handleClickTestConnection = (e) => {
         e.preventDefault();
 
-        let message = e.target.form.querySelector('.result-message#connection-result');
-        if (!message) {
-            message = document.createElement('div');
-            message.className = 'result-message';
-            message.id = 'connection-result';
-
-            // Otherwise, insert it after the field
-            let label;
-            if (!label) {
-                e.target.parentNode.insertBefore(message, e.target.parrent);
-            }
-        }
+        let messageElem = getMessageElement('test-connection', e.target);
 
 
         const url = 'https://example.com';
@@ -354,27 +379,12 @@ const showFormScratchMe = () => {
         }).then(res => res.json())
             .then(response => {
                 console.log('Success:', JSON.stringify(response));
-                message.innerHTML = 'Connection success';
-                message.classList.add('success-message');
-                sysSaveConnectionBtn.disabled = false;
+                showItemMessage(messageElem, 'Connection success', 'success-message', sysSaveConnectionBtn, false);
             })
             .catch(error => {
                 console.error('Error:', error);
-                message.innerHTML = 'Connection failed';
-                message.classList.add('error-message');
-                sysSaveConnectionBtn.disabled = true;
+                showItemMessage(messageElem, 'Connection failed', 'error-message', sysSaveConnectionBtn, true);
             });
-
-
-        // Show error message
-        message.style.display = 'block';
-        message.style.visibility = 'visible';
-
-        setTimeout(() => {
-            message.innerHTML = '';
-            message.style.display = 'none';
-            message.style.visibility = 'hidden';
-        }, 5000);
     }
 
 
@@ -419,7 +429,9 @@ const showFormScratchMe = () => {
             hasErrors.focus();
         }
 
-        console.log('wysyłanie');
+        let messageElem = getMessageElement('send-form', e.target);
+        showItemMessage(messageElem, 'Message was send', 'success-message', sysSaveConnectionBtn, true);
+
         clearExtractedData(false);
     }
 
