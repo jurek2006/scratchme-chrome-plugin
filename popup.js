@@ -1,9 +1,5 @@
 'use strict';
 
-// chrome.storage.onChanged.addListener((changes, namespace) => {
-//     console.log('Zmiana storage');
-// });
-
 const showFormScratchMe = () => {
     // Form
     const scratchMeForm = document.getElementById('scratch-me-form');
@@ -30,6 +26,7 @@ const showFormScratchMe = () => {
     const sysTestConnectionBtn = document.getElementById('test-connection');
     const sendFormBtn = document.getElementById('send-form');
     const copyToClipBtn = document.getElementById('copy-to-clip-btn');
+    const clearDataBtn = document.getElementById('clear-data-btn');
 
 
     chrome.storage.sync.get(['postData'], (storage) => {
@@ -55,6 +52,26 @@ const showFormScratchMe = () => {
     };
 
 
+    const clearExtractedData = (e) => {
+        if(e) e.preventDefault();
+
+        try {
+            chrome.storage.sync.remove(['postData'], (items) => {
+                postAuthorInput.value = "";
+                postContentTextarea.value = "";
+                postDatetimeInput.value = "";
+                postIdInput.value = "";
+                postUrlInput.value = "";
+                postTitleInput.value = "";
+                codeAreaContent.innerHTML = "";
+            });
+        } catch (error) {
+            console.log('Error: ' + error);
+        }
+
+    }
+
+
     const setDateTimeValue = (unixTime) => {
         const date = unixTime ? new Date(unixTime * 1000) : new Date(Date.now());
 
@@ -68,7 +85,10 @@ const showFormScratchMe = () => {
 
 
     const setInputsValue = (postData) => {
-        const { postId, author, url, content, time, uTime } = postData;
+        if (!postData) return;
+
+        const { postId, author, url, content, uTime } = postData;
+
         postAuthorInput.value = author;
         postDatetimeInput.value = setDateTimeValue(uTime);
         postTitleInput.value = `${postId ? postId + " - " : ""}${content.slice(0, 15)}... - ${author}`;
@@ -269,7 +289,9 @@ const showFormScratchMe = () => {
 
 
         const selectedContent = document.getElementById(`${targetValue.slice(0, 4) === 'code' ? 'code-area' : targetValue}`);
-        selectedContent.classList.remove('disabled');
+
+        if (selectedContent)
+            selectedContent.classList.remove('disabled');
 
 
         if (targetValue === 'cooper') {
@@ -278,6 +300,14 @@ const showFormScratchMe = () => {
             sysAppName.required = true;
             sysUserAppEmail.required = true;
             sysUserAppEmail.pattern = "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$";
+
+
+            const retrievedObject = localStorage.getItem('systemConnectionData');
+            const connectionData = JSON.parse(retrievedObject);
+
+            sysAccessToken.value = connectionData['X-PW-AccessToken'];
+            sysAppName.value = connectionData['X-PW-Application'];
+            sysUserAppEmail.value = connectionData['X-PW-UserEmail'];
 
         } else if (targetValue.slice(0, 4) === 'code') {
             generateCode(targetValue.slice(5));
@@ -295,10 +325,11 @@ const showFormScratchMe = () => {
     const handleClickTestConnection = (e) => {
         e.preventDefault();
 
-        let message = e.target.form.querySelector('.result-message');
+        let message = e.target.form.querySelector('.result-message#connection-result');
         if (!message) {
             message = document.createElement('div');
             message.className = 'result-message';
+            message.id = 'connection-result';
 
             // Otherwise, insert it after the field
             let label;
@@ -318,7 +349,7 @@ const showFormScratchMe = () => {
             //     'Content-Type': 'application/json',
             //     'X-PW-AccessToken': sysAccessToken.value,
             //     'X-PW-Application': sysAppName.value,
-            //     'X-PW-UserEmail': sysUserAppEmail
+            //     'X-PW-UserEmail': sysUserAppEmail.value
             // }
         }).then(res => res.json())
             .then(response => {
@@ -347,6 +378,23 @@ const showFormScratchMe = () => {
     }
 
 
+    const handleClickSaveConnection = (e) => {
+        e.preventDefault();
+
+        const systemConnectionData = {
+            'X-PW-AccessToken': sysAccessToken.value,
+            'X-PW-Application': sysAppName.value,
+            'X-PW-UserEmail': sysUserAppEmail.value
+        };
+
+        try {
+            localStorage.setItem('systemConnectionData', JSON.stringify(systemConnectionData));
+        } catch (error) {
+            console.log('Error: ' + error);
+        }
+    }
+
+
     const handleClickSendForm = (e) => {
         e.preventDefault();
 
@@ -370,6 +418,9 @@ const showFormScratchMe = () => {
             event.preventDefault();
             hasErrors.focus();
         }
+
+        console.log('wysyłanie');
+        clearExtractedData(false);
     }
 
 
@@ -380,7 +431,11 @@ const showFormScratchMe = () => {
 
     sysTestConnectionBtn.addEventListener('click', handleClickTestConnection, false);
 
+    sysSaveConnectionBtn.addEventListener('click', handleClickSaveConnection, false);
+
     sendFormBtn.addEventListener('click', handleClickSendForm, false);
+
+    clearDataBtn.addEventListener('click', clearExtractedData, false);
 
 }
 

@@ -17,6 +17,8 @@
 
         <div class="popup-form">
             <form action="" id="scratch-me-form" class="validate">
+
+
                 <!-- Author input -->
                 <div class="popup-form-item">
                     <label for="post-author">Author: </label>
@@ -56,6 +58,11 @@
                     <input type="text" id="post-id" name="post-id" pattern="[-+]?[0-9]*[.,]?[0-9]+" required>
                 </div>
 
+
+                <div class="popup-form-item">
+                    <button id="clear-data-btn">Clear</button>
+                </div>
+
                 <!-- Choose format input -->
                 <div class="popup-form-item">
                     <label for="data-format">Choose a format:</label>
@@ -87,12 +94,9 @@
                     </div>
 
                     <div class="popup-form-item">
-                        <button id="test-connection">Test connection</button>
+                        <button id="test-connection" disabled>Test connection</button>
                         <button id="save-connection" disabled>Save connection</button>
                         <button type="submit" id="send-form" disabled>Send to Cooper</button>
-                        <!-- <div class="result-info">
-                            Connection success
-                        </div> -->
                     </div>
                 </div>
 
@@ -100,7 +104,8 @@
                 <div id="code-area" class="popup-form-item content-of-selected-option disabled">
                     <button id="copy-to-clip-btn">Copy to clipboard</button>
                     <pre id="code-area-content"></pre>
-                    <textarea name="copy-to-clipboard-content" id="copy-to-clipboard-content" cols="30" rows="10"></textarea>
+                    <textarea name="copy-to-clipboard-content" id="copy-to-clipboard-content" cols="30"
+                        rows="10"></textarea>
                 </div>
             </form>
         </div>
