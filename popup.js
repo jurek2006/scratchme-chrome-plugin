@@ -30,6 +30,24 @@ const showFormScratchMe = () => {
     const sysSaveConnectionBtn = document.getElementById('save-connection');
     const sysTestConnectionBtn = document.getElementById('test-connection');
     const sendFormBtn = document.getElementById('send-form');
+    const copyToClipBtn = document.getElementById('copy-to-clip-btn');
+
+
+    const copyToClipboard = (e) => {
+        e.preventDefault();
+
+        const copyToClipContent = document.getElementById('copy-to-clipboard-content');
+        copyToClipContent.value = codeAreaContent.textContent;
+
+        copyToClipContent.select();
+        document.execCommand("copy");
+        codeAreaContent.blur();
+
+        e.target.textContent = "Copied";
+        setTimeout(() => {
+            e.target.textContent = "Copy to clipboard";
+        }, 1000);
+    }
 
     const setDateTimeValue = (unixTime) => {
         const date = unixTime ? new Date(unixTime * 1000) : new Date(Date.now());
@@ -84,25 +102,8 @@ const showFormScratchMe = () => {
             });
         }
 
-        document.getElementById('copy-to-clip').addEventListener('onMouseOut', () => {
-            const tooltip = document.getElementById("myTooltip");
-            tooltip.innerHTML = "Copy to clipboard";
-        })
-
-        document.getElementById('copy-to-clip').addEventListener('click', (e) => {
-            e.preventDefault();
-            const proba = document.getElementById('copy-to-text');
-            proba.value = codeAreaContent.textContent;
-            proba.select();
-            document.execCommand("copy");
-
-            const tooltip = document.getElementById("myTooltip");
-            tooltip.innerHTML = "Copied";
-
-            setTimeout(() => {
-                tooltip.innerHTML = "Copy to clipboard"
-            }, 1000);
-        }, false);
+        // Copy to clipboard
+        copyToClipBtn.addEventListener('click', copyToClipboard, false);
 
         switch (codeName) {
             case 'json':
