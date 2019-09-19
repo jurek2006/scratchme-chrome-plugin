@@ -12,14 +12,14 @@ const showFormScratchMe = () => {
     const postUrlInput = document.getElementById('post-url');
     const postIdInput = document.getElementById('post-id');
 
-    // Select and display format e.g JSON/Cooper/Curl
+    // Select and display format e.g JSON/Cooper/cURL
     const selectDataFormat = document.getElementById('select-data-format');
     const codeAreaContent = document.getElementById('code-area-content');
 
     // System CRM data
-    const sysAccessToken = document.getElementById('access-token');
-    const sysAppName = document.getElementById('application-name');
-    const sysUserAppEmail = document.getElementById('user-application-email');
+    const sysAccessTokenInput = document.getElementById('access-token');
+    const sysAppNameInput = document.getElementById('application-name');
+    const sysUserAppEmailInput = document.getElementById('user-application-email');
 
     // Buttons
     const sysSaveConnectionBtn = document.getElementById('save-connection');
@@ -30,7 +30,7 @@ const showFormScratchMe = () => {
 
 
     chrome.storage.sync.get(['postData'], (storage) => {
-        setInputsValue(storage.postData);
+        setFieldsValue(storage.postData);
     });
 
 
@@ -38,16 +38,17 @@ const showFormScratchMe = () => {
         e.preventDefault();
 
         const copyToClipContent = document.getElementById('copy-to-clipboard-content');
+        const copyToClipMessage = document.querySelector('span.copy-clip-message');
         copyToClipContent.value = codeAreaContent.textContent;
 
         copyToClipContent.select();
         document.execCommand("copy");
-        codeAreaContent.blur();
+        copyToClipContent.blur();
 
-        e.target.textContent = "Copied";
+        copyToClipMessage.classList.add('active');
         setTimeout(() => {
-            e.target.textContent = "Copy to clipboard";
-        }, 1000);
+            copyToClipMessage.classList.remove('active');
+        }, 4000);
 
     };
 
@@ -64,7 +65,6 @@ const showFormScratchMe = () => {
                 postUrlInput.value = "";
                 postTitleInput.value = "";
                 codeAreaContent.innerHTML = "";
-                sendFormBtn.disabled = true;
             });
         } catch (error) {
             console.log('Error: ' + error);
@@ -85,14 +85,14 @@ const showFormScratchMe = () => {
 
 
 
-    const setInputsValue = (postData) => {
+    const setFieldsValue = (postData) => {
         if (!postData) return;
 
         const { postId, author, url, content, uTime } = postData;
 
         postAuthorInput.value = author;
         postDatetimeInput.value = setDateTimeValue(uTime);
-        postTitleInput.value = `${postId ? postId + " - " : ""}${content.slice(0, 15)}... - ${author}`;
+        postTitleInput.value = `${postId ? postId + " - " : ""}${content.slice(0, 20)}... - ${author}`;
         postContentTextarea.value = content;
         postUrlInput.value = url;
         postIdInput.value = postId || "0";
@@ -146,42 +146,30 @@ const showFormScratchMe = () => {
             postUrl: postUrlInput.value
         };
 
-        // Coloring JSON code
-        const pretyJsonCode = (json) => {
-            json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-            return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, (match) => {
-                let cls = 'number';
-                if (/^"/.test(match)) {
-                    if (/:$/.test(match)) {
-                        cls = 'key';
-                    } else {
-                        cls = 'string';
-                    }
-                } else if (/true|false/.test(match)) {
-                    cls = 'boolean';
-                } else if (/null/.test(match)) {
-                    cls = 'null';
-                }
-                return `<span class="${cls}">${match}</span>`;
-            });
-        }
-
         // Copy to clipboard
         copyToClipBtn.addEventListener('click', copyToClipboard, false);
 
         switch (codeName) {
             case 'json':
-                const dataJSON = JSON.stringify(data, null, 4);
-                codeAreaContent.innerHTML = pretyJsonCode(dataJSON);
+                codeAreaContent.innerHTML = 
+`<code class="json-language"><span class="code-line">{</span>
+<span class="code-line">  <span class="key">"id":</span> <span class="number">${postIdInput.value}</span>,</span>
+<span class="code-line">  <span class="key">"title":</span> <span class="string">"${postTitleInput.value}"</span>,</span>
+<span class="code-line">  <span class="key">"author":</span> <span class="string">"${postAuthorInput.value}"</span>,</span>
+<span class="code-line">  <span class="key">"content":</span> <span class="string">"${postContentTextarea.value}"</span>,</span>
+<span class="code-line">  <span class="key">"date":</span> <span class="string">"${postDatetimeInput.value}"</span>,</span>
+<span class="code-line">  <span class="key">"post_url":</span> <span class="string">"${postUrlInput.value}"</span></span>
+<span class="code-line">}</span></code>`
+                
                 break;
 
             case 'curl':
-                codeAreaContent.innerHTML = 
-`<span class="s1">curl --location --request GET</span><span class="s2">"https://api.prosperworks.com/developer_api/v1/account"</span><span class="se"> \\</span>
-    --header <span class="s2">"X-PW-AccessToken: ${sysAccessToken.value}"</span> <span class="se"> \\</span>
-    --header <span class="s2">"X-PW-Application: ${sysAppName.value}"</span> <span class="se"> \\</span>
-    --header <span class="s2">"X-PW-UserEmail: ${sysUserAppEmail.value}"</span> <span class="se"> \\</span>
-    --header <span class="s2">"Content-Type: application/json"</span>`;
+                codeAreaContent.innerHTML =
+`<code class="curl-language"><span class="code-line">curl --location --request <span class="method">GET</span><span class="value">"https://api.prosperworks.com/developer_api/v1/account"</span><span class="se"> \\</span></span>
+<span class="code-line">--header <span class="value">"X-PW-AccessToken: ${sysAccessTokenInput.value}"</span> <span class="se"> \\</span></span>
+<span class="code-line">--header <span class="value">"X-PW-Application: ${sysAppNameInput.value}"</span> <span class="se"> \\</span></span>
+<span class="code-line">--header <span class="value">"X-PW-UserEmail: ${sysUserAppEmailInput.value}"</span> <span class="se"> \\</span></span>
+<span class="code-line">--header <span class="value">"Content-Type: application/json"</span></span></code>`;
                 break;
         }
     }
@@ -192,12 +180,11 @@ const showFormScratchMe = () => {
         // Don't validate submits, buttons, file and reset inputs, and disabled fields
         if (field.disabled || field.type === 'file' || field.type === 'reset' || field.type === 'submit' || field.type === 'button') return;
 
+        sysTestConnectionBtn.disabled = true;
+        
         const validity = field.validity;
 
         if (validity.valid) return;
-
-        sysTestConnectionBtn.disabled = true;
-        sendFormBtn.disabled = true;
 
         // If field is required and empty
         if (validity.valueMissing) return 'Please fill out this field.';
@@ -248,10 +235,10 @@ const showFormScratchMe = () => {
             message = document.createElement('div');
             message.className = 'error-message';
             message.id = 'error-for-' + id;
-            
+
             // Otherwise, insert it after the field
             let label;
-            
+
             if (!label) {
                 field.parentNode.insertBefore(message, field.nextSibling);
             }
@@ -272,16 +259,15 @@ const showFormScratchMe = () => {
 
     // Remove the error message
     const removeError = (field) => {
-        if (sysAccessToken.value && sysAppName.value && sysUserAppEmail.value) {
+        if (sysAccessTokenInput.value && sysAppNameInput.value && sysUserAppEmailInput.value) {
             sysTestConnectionBtn.disabled = false;
         }
-        
+
         // Remove error class to field
         field.classList.remove('error');
-        
+
         // Remove ARIA role from the field
         field.removeAttribute('aria-describedby');
-        sendFormBtn.disabled = false;
 
         // Get field id or name
         const id = field.id || field.name;
@@ -297,11 +283,35 @@ const showFormScratchMe = () => {
         message.style.visibility = 'hidden';
     };
 
+    
+    // Validates and checks that form fields are correct. Return the first field with an arror.
+    const isTheFormCorrect = () => {
+        // Validate each field
+        // Store the first field with an error to a variable so we can bring it into focus later
+        const fields = scratchMeForm.elements;
+        let error, hasErrors;
+
+        for (let i = 0; i < fields.length; i++) {
+            error = hasError(fields[i]);
+            if (error) {
+                showError(fields[i], error);
+                if (!hasErrors) {
+                    hasErrors = fields[i];
+                }
+            }
+        }
+
+        return hasErrors;
+    }
+
 
     // Listen to all blur event
     const handleBlurEvent = (e) => {
         // Validate the field
         let error = hasError(e.target);
+
+        // Button disabled when the form is incorrect
+        sendFormBtn.disabled = Boolean(isTheFormCorrect());
 
         // If there's an error, show it
         if (error) {
@@ -331,28 +341,28 @@ const showFormScratchMe = () => {
 
         if (targetValue === 'cooper') {
 
-            sysAccessToken.required = true;
-            sysAppName.required = true;
-            sysUserAppEmail.required = true;
-            sysUserAppEmail.pattern = "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$";
+            sysAccessTokenInput.required = true;
+            sysAppNameInput.required = true;
+            sysUserAppEmailInput.required = true;
+            sysUserAppEmailInput.pattern = "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$";
 
 
             const retrievedObject = localStorage.getItem('systemConnectionData');
             const connectionData = JSON.parse(retrievedObject);
 
-            sysAccessToken.value = connectionData['X-PW-AccessToken'];
-            sysAppName.value = connectionData['X-PW-Application'];
-            sysUserAppEmail.value = connectionData['X-PW-UserEmail'];
+            sysAccessTokenInput.value = connectionData['X-PW-AccessToken'];
+            sysAppNameInput.value = connectionData['X-PW-Application'];
+            sysUserAppEmailInput.value = connectionData['X-PW-UserEmail'];
 
         } else if (targetValue.slice(0, 4) === 'code') {
             generateCode(targetValue.slice(5));
 
         } else {
 
-            sysAccessToken.required = false;
-            sysAppName.required = false;
-            sysUserAppEmail.required = false;
-            sysUserAppEmail.removeAttribute('pattern');
+            sysAccessTokenInput.required = false;
+            sysAppNameInput.required = false;
+            sysUserAppEmailInput.required = false;
+            sysUserAppEmailInput.removeAttribute('pattern');
 
         }
     }
@@ -370,9 +380,9 @@ const showFormScratchMe = () => {
             // body: JSON.stringify(data),
             // headers: {
             //     'Content-Type': 'application/json',
-            //     'X-PW-AccessToken': sysAccessToken.value,
-            //     'X-PW-Application': sysAppName.value,
-            //     'X-PW-UserEmail': sysUserAppEmail.value
+            //     'X-PW-AccessToken': sysAccessTokenInput.value,
+            //     'X-PW-Application': sysAppNameInput.value,
+            //     'X-PW-UserEmail': sysUserAppEmailInput.value
             // }
         }).then(res => res.json())
             .then(response => {
@@ -390,9 +400,9 @@ const showFormScratchMe = () => {
         e.preventDefault();
 
         const systemConnectionData = {
-            'X-PW-AccessToken': sysAccessToken.value,
-            'X-PW-Application': sysAppName.value,
-            'X-PW-UserEmail': sysUserAppEmail.value
+            'X-PW-AccessToken': sysAccessTokenInput.value,
+            'X-PW-Application': sysAppNameInput.value,
+            'X-PW-UserEmail': sysUserAppEmailInput.value
         };
 
         try {
@@ -407,22 +417,8 @@ const showFormScratchMe = () => {
         e.preventDefault();
 
         let messageElem = getMessageElement('send-form', e.target);
-        const fields = scratchMeForm.elements;
-        // Validate each field
-        // Store the first field with an error to a variable so we can bring it into focus later
-        let error, hasErrors;
 
-        for (let i = 0; i < fields.length; i++) {
-            error = hasError(fields[i]);
-            if (error) {
-                showError(fields[i], error);
-                if (!hasErrors) {
-                    hasErrors = fields[i];
-                }
-            }
-        }
-
-
+        const hasErrors = isTheFormCorrect(); // function returns first field with an error
 
         // If there are errrors, don't submit form and focus on first element with error
         if (hasErrors) {

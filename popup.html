@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="utf-8">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="/css/popup.min.css">
 </head>
 
@@ -19,6 +20,7 @@
 
         <div class="popup-form">
             <form action="" id="scratch-me-form" class="validate">
+
 
 
                 <!-- Author input -->
@@ -65,7 +67,7 @@
 
 
                 <div class="popup-form-item btn-wrapper">
-                    <button id="clear-data-btn" class="btn btn-1">Clear</button>
+                    <button type="reset" id="clear-data-btn" class="btn btn-1">Clear</button>
                 </div>
 
                 <!-- Choose format input -->
@@ -100,8 +102,8 @@
                     </div>
 
                     <div class="popup-form-item btn-wrapper">
-                        <button id="test-connection" class="btn btn-1" disabled>Test connection</button>
-                        <button id="save-connection" class="btn btn-1" disabled>Save connection</button>
+                        <button type="button" id="test-connection" class="btn btn-1" disabled>Test connection</button>
+                        <button type="button" id="save-connection" class="btn btn-1" disabled>Save connection</button>
                     </div>
 
                     <div class="popup-form-item btn-wrapper">
@@ -111,7 +113,9 @@
 
                 <!-- Code area -->
                 <div id="code-area" class="popup-form-item content-of-selected-option disabled">
-                    <button id="copy-to-clip-btn" class="btn btn-2">Copy to clipboard</button>
+                    <button id="copy-to-clip-btn" title="Copy to clipboard" class="btn btn-copy">
+                        <span class="copy-clip-message">Copied to clipboard</span>
+                    </button>
                     <pre id="code-area-content"></pre>
                     <textarea name="copy-to-clipboard-content" id="copy-to-clipboard-content" cols="30"
                         rows="10"></textarea>
@@ -121,7 +125,6 @@
 
 
         <footer class="popup-footer">
-            <!-- <h3>Scratch Me</h3> -->
             <p>
                 <a class="link" href="https://github.com/bravelab/scratchme-chrome-plugin"
                     title="GitHub - link to repository" target="_blank" rel="noopener noreferrer">ScratchMe</a>

@@ -1,5 +1,12 @@
 @import './colors';
+@import './variables';
 @import './fonts';
+
+@import './form';
+@import './code-area';
+@import './buttons';
+
+
 
 html * {
   box-sizing: border-box;
@@ -22,7 +29,7 @@ html * {
   padding: 8px 0;
   
   a {
-    font-size: 12px;
+    font-size: $md-font-size;
     text-decoration: none;
     color: #333333;
     font-weight: 700;
@@ -42,198 +49,7 @@ html * {
 .popup-footer {
   flex-direction: column;
   align-items: baseline;
-  font-size: 11px;
+  font-size: $md-font-size;
   line-height: 1.6;
   margin-top: 15px;
-}
-
-.popup-form {
-  padding: 15px;
-  background: #fefefe;
-  box-shadow: 0 0 5px $form-shadow;
-  border-radius: 5px;
-  // border: 2px solid rgba(230,230,230,0.4);
-}
-
-.popup-form-item {
-  margin-top: 14px;
-}
-
-.popup-form-item label {
-  display: block;
-  font-family: 'Alegreya Sans', Cantarell, Arial, sans-serif;
-  font-size: 14px;
-  font-weight: 700;
-  margin-bottom: 6px;
-  color: $form-label-color;
-}
-
-.popup-form-item input, .popup-form-item textarea {
-  display: block;
-  width: 100%;
-}
-
-.popup-form-item input, .popup-form-item textarea, .popup-form-item select {
-  padding: 5px 8px;
-  margin-bottom: 5px;
-  background: #ffffff;
-  color: $form-color;
-  font-family: Cantarell, Arial, sans-serif;
-  line-height: 1.5;
-  border: none;
-  outline: none;
-  box-shadow: 0 0 1px $form-shadow-color, 0 0 0 2px $form-border-color;
-  transition: box-shadow .2s ease-in;
-  
-  &:hover {
-    box-shadow: 0 0 4px $form-shadow-hover-color, 0 0 0 2px $form-border-color;
-  }
-  
-  &:focus {
-    box-shadow: 0 0 4px $form-shadow-focus-color, 0 0 0 2px $form-border-color;
-  }
-  
-  &:focus-within {
-    box-shadow: 0 0 8px $form-shadow-focus-color, 0 0 0 2px $form-border-color;
-  }
-  
-  &:active {
-    box-shadow: 0 0 10px $form-shadow-focus-color, 0 0 0 2px $form-border-color;
-  }
-}
-
-.popup-form-item input.error::-webkit-input-placeholder {
-  color: $form-error-color;
-}
-
-.popup-form-item input.error {
-  box-shadow: 0 0 8px $form-error-color, 0 0 0 2px $form-error-color;
-}
-
-.popup-form-item select {
-  margin-bottom: 10px;
-}
-
-.popup-form-item textarea {
-  resize: vertical;
-}
-
-.popup-form-item .error-message, .popup-form-item .success-message {
-  font-size: 12px;
-  font-weight: 700;
-}
-
-.popup-form-item .error-message {
-  color: $form-error-color;
-}
-
-.popup-form-item .success-message {
-  color: $form-success-color;
-}
-
-.btn-wrapper {
-  text-align: right;
-}
-
-.btn {
-  position: relative;
-  border: none;
-  outline: none;
-  margin: 10px 0;
-  font-size: 13px;
-  font-weight: 700;
-  cursor: pointer;
-  z-index: 0;
-}
-
-.btn::before {
-  content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: $form-shadow-hover-color;
-    box-shadow: 0 0 3px 0 $btn-shadow-hover, 0 0 0 1px $btn-bg-hover; 
-    opacity: 0;
-    z-index: -1;
-    transition: opacity .3s ease-in;
-}
-
-.btn:hover:not(:disabled)::before {
-  opacity: 1;
-}
-
-.btn:focus:not(:disabled)::before {
-  opacity: 1;
-}
-
-.btn-1:first-child {
-  margin-right: 5px;
-}
-
-.btn-1 {
-  display: inline-block;
-  background: $form-btn-1-bg;
-  padding: 5px 12px;
-  color: $form-btn-1-color;
-}
-
-.btn-1:disabled {
-  color: $form-btn-disabled-color;
-}
-
-.btn-2 {
-  display: block;
-  margin-left: auto;
-  background: $form-btn-2-bg;
-  color: #ffffff;
-  padding: 10px 15px;
-}
-
-.btn-2:disabled {
-  background-color: $form-btn-disabled-color;
-}
-
-.content-of-selected-option.disabled {
-    display: none;
-}
-
-#copy-to-clipboard-content {
-  position: absolute;
-    top: -100%;
-    left: -100%;
-    opacity: 0;
-    z-index: -999;
-    overflow: hidden;
-    width: 100%;
-}
-
-pre#code-area-content {
-  outline: none;
-  border: none; 
-  padding: 15px; 
-  overflow-x: scroll;
-  background: $form-code-area-bg;
-  color: #ffffff;
-  box-shadow: 0 0 10px $form-code-area-bg * 2;
-  font-size: 12px;
-  line-height: 1.6;
-  border-radius: 2px;
-}
-
-// color for JSON
-#code-area-content {
-  .string { color: #9FE5FC; }
-  .number { color: #5EBCDB; }
-  .boolean { color: #FFBB94; }
-  .null { color: #3E9DBD; }
-  .key { color: #FA6B8F; }
-}
-
-// color for cURL
-#code-area-content {
-  .s1 { color: #5EBCDB; }
-  .s2 { color: #FFBB94; }
-  .se { color: #FA6B8F; }
 }
