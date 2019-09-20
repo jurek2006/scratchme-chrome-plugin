@@ -1,5 +1,39 @@
+// ScratchMe button
+
 $btn-bg: rgba(58,146,175, 1);
 $btn-color: #ffffff;
 $btn-shadow: #eeeeee;
 $btn-bg-hover: rgba(58,146,175, 0.8);
 $btn-shadow-hover: #ffffff;
+
+
+// ScratchMe form
+$form-bg: rgba(230,230,230,0.1);
+$form-color: #363A4A;
+$form-shadow: #17506346;
+$form-error-color: rgb(243, 36, 92);
+$form-success-color: rgb(26, 170, 74);
+$form-label-color: #363A4A;
+$form-border-color: #eee;
+$form-shadow-color: #3A92B0;
+$form-shadow-focus-color: #29687D;
+$form-shadow-hover-color: #77ACBD;
+$form-btn-disabled-color: #aaaaaa;
+$form-btn-1-bg: #eeeeee;
+$form-btn-1-color: #363A4A;
+$form-btn-2-bg: rgb(58,146,175);
+
+$clipboard-msg-bg: rgba(47, 49, 55, 0.8); 
+
+// Code area
+$code-area-bg: #2F3137;
+$code-area-color: #A7ABB9;
+$code-line-color: #4D4F60;
+$code-color-1: #C49866;
+$code-color-2: #93CC7C;
+$code-color-3: #DD6175;
+
+
+// Scrollbar colors:
+$scrollbar-thumb-color: #4D4F60;
+$scrollbar-interactive-color: #4D4F60;

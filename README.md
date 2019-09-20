@@ -1,10 +1,12 @@
 # scratchme-chrome-plugin
-Save any Facebook Post to simple JSON form
+Save any Facebook Post to simple JSON form.
 
 ## Description
-This is a Chrome extension that adds a button “ScratchMe” while scrolling to each Facebook post.
+Version 2.0 - form demo added
 
-After click on button, data is extracted from the post and displayed as JSON. Using this plugin you will forget about copying post data and increase your productivity.
+This is a Chrome extension that adds a button “ScratchMe” while scrolling to each Facebook post. 
+
+After clicking the button, the data is taken from the post and displayed in the form. It is possible to display data in JSON and cURL formats.
 
 ## Installation
 

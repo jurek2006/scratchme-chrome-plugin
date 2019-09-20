@@ -3,10 +3,12 @@
     "name": "Scratch Me",
     "short_name": "Scratch Me",
     "description": "Save any Facebook Post to simple JSON form",
-    "version": "1.0",
+    "version": "2.0",
     "homepage_url": "https://github.com/bravelab/scratchme-chrome-plugin",
     "permissions": [
-        "activeTab"
+        "tabs",
+        "activeTab",
+        "storage"
     ],
     "browser_action": {
         "default_popup": "popup.html",
@@ -16,6 +18,12 @@
         "16": "img/icon16.png",
         "48": "img/icon48.png",
         "128": "img/icon128.png"
+    },
+    "background": {
+        "scripts": [
+            "background.js"
+        ],
+        "persistent": false
     },
     "content_scripts": [
         {
