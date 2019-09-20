@@ -6,6 +6,7 @@
     "version": "1.0",
     "homepage_url": "https://github.com/bravelab/scratchme-chrome-plugin",
     "permissions": [
+        "tabs",
         "activeTab",
         "storage"
     ],
@@ -17,6 +18,12 @@
         "16": "img/icon16.png",
         "48": "img/icon48.png",
         "128": "img/icon128.png"
+    },
+    "background": {
+        "scripts": [
+            "background.js"
+        ],
+        "persistent": false
     },
     "content_scripts": [
         {

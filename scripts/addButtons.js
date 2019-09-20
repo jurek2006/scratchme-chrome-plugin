@@ -24,9 +24,9 @@ const showMessage = (element) => {
     const author = element.querySelector('span.fcg a').textContent || '';
 
     const stripTags = (str) => {
-        if (!str)
+        if (!str) {
             return "";
-        else {
+        } else {
             const reg = /<([^>]+>)/ig;
             return str.replace(reg, '');
         }
@@ -35,14 +35,8 @@ const showMessage = (element) => {
     let content = element.querySelector('.userContent') || '';
     content = stripTags(content.innerHTML);
 
-    // Save data to chrome.storage.sync. The data are read in popup.js
-    chrome.storage.sync.set({
-        postData: {
-            postId, author, url, content, time, uTime
-        }
-    }, () => {
-        console.log('Data was saved to local.sync');
-    });
+    // Save data to background.js. The data are save in background and read in popup.js
+    chrome.runtime.sendMessage({ isClickedButton: true, postId, author, url, content, time, uTime });
 }
 
 const addButtons = () => {
@@ -77,16 +71,16 @@ const scrollWindow = () => {
     let timer;
 
     window.addEventListener('scroll', () => {
-        if (timer) {
+        if (timer)
             window.clearTimeout(timer);
-        }
 
         timer = window.setTimeout(addButtons, 100);
     });
 }
 
 
-if (document.readyState === 'loading')
+if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', scrollWindow);
-else
+} else {
     scrollWindow();
+}

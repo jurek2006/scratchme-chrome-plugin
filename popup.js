@@ -75,7 +75,7 @@ const showFormScratchMe = () => {
 
     const setDateTimeValue = (unixTime) => {
         const date = unixTime ? new Date(unixTime * 1000) : new Date(Date.now());
-        
+
         const month = ("0" + (date.getMonth() + 1)).slice(-2);
         const dayMonth = ("0" + date.getDate()).slice(-2);
         const hours = (date.getHours() < 10 ? '0' : '') + date.getHours();
@@ -90,7 +90,7 @@ const showFormScratchMe = () => {
         if (!postData) return;
 
         const { postId, author, url, content, uTime } = postData;
-        
+
         postAuthorInput.value = author;
         postDatetimeInput.value = setDateTimeValue(uTime);
         postTitleInput.value = `${postId ? postId + " - " : ""}${content.slice(0, 20)}... - ${author}`;
@@ -152,8 +152,8 @@ const showFormScratchMe = () => {
 
         switch (codeName) {
             case 'json':
-                codeAreaContent.innerHTML = 
-`<code class="json-language"><span class="code-line">{</span>
+                codeAreaContent.innerHTML =
+                    `<code class="json-language"><span class="code-line">{</span>
 <span class="code-line">  <span class="key">"id":</span> <span class="number">${postIdInput.value}</span>,</span>
 <span class="code-line">  <span class="key">"title":</span> <span class="string">"${postTitleInput.value}"</span>,</span>
 <span class="code-line">  <span class="key">"author":</span> <span class="string">"${postAuthorInput.value}"</span>,</span>
@@ -161,12 +161,12 @@ const showFormScratchMe = () => {
 <span class="code-line">  <span class="key">"date":</span> <span class="string">"${postDatetimeInput.value}"</span>,</span>
 <span class="code-line">  <span class="key">"post_url":</span> <span class="string">"${postUrlInput.value}"</span></span>
 <span class="code-line">}</span></code>`
-                
+
                 break;
 
             case 'curl':
                 codeAreaContent.innerHTML =
-`<code class="curl-language"><span class="code-line">curl --location --request <span class="method">GET</span><span class="value">"https://api.prosperworks.com/developer_api/v1/account"</span><span class="se"> \\</span></span>
+                    `<code class="curl-language"><span class="code-line">curl --location --request <span class="method">GET</span><span class="value">"https://api.prosperworks.com/developer_api/v1/account"</span><span class="se"> \\</span></span>
 <span class="code-line">--header <span class="value">"X-PW-AccessToken: ${sysAccessTokenInput.value}"</span> <span class="se"> \\</span></span>
 <span class="code-line">--header <span class="value">"X-PW-Application: ${sysAppNameInput.value}"</span> <span class="se"> \\</span></span>
 <span class="code-line">--header <span class="value">"X-PW-UserEmail: ${sysUserAppEmailInput.value}"</span> <span class="se"> \\</span></span>
@@ -182,7 +182,7 @@ const showFormScratchMe = () => {
         if (field.disabled || field.type === 'file' || field.type === 'reset' || field.type === 'submit' || field.type === 'button') return;
 
         sysTestConnectionBtn.disabled = true;
-        
+
         const validity = field.validity;
 
         if (validity.valid) return;
@@ -284,7 +284,7 @@ const showFormScratchMe = () => {
         message.style.visibility = 'hidden';
     };
 
-    
+
     // Validates and checks that form fields are correct. Return the first field with an arror.
     const isTheFormCorrect = () => {
         // Validate each field
@@ -448,7 +448,8 @@ const showFormScratchMe = () => {
 
 }
 
-if (document.readyState === 'loading')
+if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', showFormScratchMe);
-else
+} else {
     showFormScratchMe();
+}
