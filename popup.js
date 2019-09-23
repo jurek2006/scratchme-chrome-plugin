@@ -1,6 +1,8 @@
 'use strict';
 
 const showFormScratchMe = () => {
+    const popup = document.querySelector('.popup');
+
     // Form
     const scratchMeForm = document.getElementById('scratch-me-form');
 
@@ -351,14 +353,11 @@ const showFormScratchMe = () => {
             const retrievedObject = localStorage.getItem('systemConnectionData');
             const connectionData = JSON.parse(retrievedObject);
 
-            sysAccessTokenInput.value = connectionData['X-PW-AccessToken'];
-            sysAppNameInput.value = connectionData['X-PW-Application'];
-            sysUserAppEmailInput.value = connectionData['X-PW-UserEmail'];
-
-            
-            const isCorrect = Boolean(isTheFormCorrect());
-            sendFormBtn.disabled = isCorrect;
-            sysTestConnectionBtn.disabled = isCorrect;
+            if(connectionData) {
+                sysAccessTokenInput.value = connectionData['X-PW-AccessToken'];
+                sysAppNameInput.value = connectionData['X-PW-Application'];
+                sysUserAppEmailInput.value = connectionData['X-PW-UserEmail'];
+            }
 
         } else if (targetValue.slice(0, 4) === 'code') {
             generateCode(targetValue.slice(5));
@@ -429,11 +428,16 @@ const showFormScratchMe = () => {
 
         // If there are errrors, don't submit form and focus on first element with error
         if (hasErrors) {
+            
             hasErrors.focus();
             showItemMessage(messageElem, 'Please, complete the form', 'error-message', sysSaveConnectionBtn, true);
+        
         } else {
-            showItemMessage(messageElem, 'Message was send', 'success-message', sysSaveConnectionBtn, true);
+
+            popup.classList.add('success');
             clearExtractedData(false);
+            chrome.windows.getCurrent((win) => setTimeout(() => chrome.windows.remove(win.id), 4000));
+        
         }
 
     }
