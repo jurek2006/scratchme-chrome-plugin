@@ -14,7 +14,6 @@ html * {
   padding: 0;
   font-family: Cantarell, Arial, sans-serif;
   color: $form-color;
-  background: #fafafa;
 }
 
 .popup-info {
@@ -22,10 +21,11 @@ html * {
   padding: 20px;
   font-family: Cantarell, Arial, sans-serif;
   color: $form-color;
-  background: #fafafa;
+  background: $popup-bg;
 }
 
 .popup {
+  background: $popup-bg;
   position: relative;
   width: 100%;
   overflow-x: hidden;
@@ -87,7 +87,7 @@ html * {
   a {
     font-size: $md-font-size;
     text-decoration: none;
-    color: #333333;
+    color: $popup-link-color;
     font-weight: 700;
     opacity: 1;
     transition: opacity .3s ease-in;
