@@ -306,8 +306,8 @@ const showFormScratchMe = () => {
     }
 
 
-    // Listen to all blur event
-    const handleBlurEvent = (e) => {
+    // Listen to all input event
+    const handleInputEvent = (e) => {
         // Validate the field
         let error = hasError(e.target);
 
@@ -355,6 +355,11 @@ const showFormScratchMe = () => {
             sysAppNameInput.value = connectionData['X-PW-Application'];
             sysUserAppEmailInput.value = connectionData['X-PW-UserEmail'];
 
+            
+            const isCorrect = Boolean(isTheFormCorrect());
+            sendFormBtn.disabled = isCorrect;
+            sysTestConnectionBtn.disabled = isCorrect;
+
         } else if (targetValue.slice(0, 4) === 'code') {
             generateCode(targetValue.slice(5));
 
@@ -392,6 +397,7 @@ const showFormScratchMe = () => {
             })
             .catch(error => {
                 console.error('Error:', error);
+                sendFormBtn.disabled = false;
                 showItemMessage(messageElem, 'Connection failed', 'error-message', sysSaveConnectionBtn, true);
             });
     }
@@ -433,8 +439,8 @@ const showFormScratchMe = () => {
     }
 
 
-    // Listen to all blur events
-    scratchMeForm.addEventListener('blur', handleBlurEvent, true);
+    // Listen to all input events
+    scratchMeForm.addEventListener('input', handleInputEvent, true);
     // Choose a format
     selectDataFormat.addEventListener('change', handleChangeSelectFormat, false);
 
