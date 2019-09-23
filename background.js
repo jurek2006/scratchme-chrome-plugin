@@ -5,7 +5,7 @@ chrome.runtime.onMessage.addListener((req, sender) => {
 
 
         chrome.windows.create({
-            url: chrome.extension.getURL("popup_form.html"),
+            url: chrome.extension.getURL("popup-form.html"),
             type: "popup",
             top: 10,
             left: 10,
