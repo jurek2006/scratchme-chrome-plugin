@@ -14,6 +14,17 @@ html * {
   padding: 0;
   font-family: Cantarell, Arial, sans-serif;
   color: $form-color;
+
+  a {
+    text-decoration: none;
+
+    opacity: 1;
+    transition: opacity .3s ease-in;
+    
+    &:hover {
+      opacity: .8;
+    }
+  }
 }
 
 .popup-info {
@@ -86,15 +97,8 @@ html * {
   
   a {
     font-size: $md-font-size;
-    text-decoration: none;
     color: $popup-link-color;
     font-weight: 700;
-    opacity: 1;
-    transition: opacity .3s ease-in;
-    
-    &:hover {
-      opacity: .8;
-    }
   }
 }
 
