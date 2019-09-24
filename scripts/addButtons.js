@@ -40,6 +40,13 @@ const showMessage = (element) => {
 }
 
 const addButtons = () => {
+    
+    // Does not add a button when pathname does not contain "groups"
+    const reg = /groups/;
+    if(!reg.test(window.location.pathname)) return;
+
+    
+    
     const posts = document.querySelectorAll('._1dwg._1w_m._q7o');
 
     [].forEach.call(posts, (post) => {

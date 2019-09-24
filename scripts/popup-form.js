@@ -1,6 +1,8 @@
 'use strict';
 
 const showFormScratchMe = () => {
+    const popup = document.querySelector('.popup');
+
     // Form
     const scratchMeForm = document.getElementById('scratch-me-form');
 
@@ -306,8 +308,8 @@ const showFormScratchMe = () => {
     }
 
 
-    // Listen to all blur event
-    const handleBlurEvent = (e) => {
+    // Listen to all input event
+    const handleInputEvent = (e) => {
         // Validate the field
         let error = hasError(e.target);
 
@@ -351,9 +353,11 @@ const showFormScratchMe = () => {
             const retrievedObject = localStorage.getItem('systemConnectionData');
             const connectionData = JSON.parse(retrievedObject);
 
-            sysAccessTokenInput.value = connectionData['X-PW-AccessToken'];
-            sysAppNameInput.value = connectionData['X-PW-Application'];
-            sysUserAppEmailInput.value = connectionData['X-PW-UserEmail'];
+            if(connectionData) {
+                sysAccessTokenInput.value = connectionData['X-PW-AccessToken'];
+                sysAppNameInput.value = connectionData['X-PW-Application'];
+                sysUserAppEmailInput.value = connectionData['X-PW-UserEmail'];
+            }
 
         } else if (targetValue.slice(0, 4) === 'code') {
             generateCode(targetValue.slice(5));
@@ -392,6 +396,7 @@ const showFormScratchMe = () => {
             })
             .catch(error => {
                 console.error('Error:', error);
+                sendFormBtn.disabled = false;
                 showItemMessage(messageElem, 'Connection failed', 'error-message', sysSaveConnectionBtn, true);
             });
     }
@@ -423,18 +428,23 @@ const showFormScratchMe = () => {
 
         // If there are errrors, don't submit form and focus on first element with error
         if (hasErrors) {
+            
             hasErrors.focus();
             showItemMessage(messageElem, 'Please, complete the form', 'error-message', sysSaveConnectionBtn, true);
+        
         } else {
-            showItemMessage(messageElem, 'Message was send', 'success-message', sysSaveConnectionBtn, true);
+
+            popup.classList.add('success');
             clearExtractedData(false);
+            chrome.windows.getCurrent((win) => setTimeout(() => chrome.windows.remove(win.id), 4000));
+        
         }
 
     }
 
 
-    // Listen to all blur events
-    scratchMeForm.addEventListener('blur', handleBlurEvent, true);
+    // Listen to all input events
+    scratchMeForm.addEventListener('input', handleInputEvent, true);
     // Choose a format
     selectDataFormat.addEventListener('change', handleChangeSelectFormat, false);
 

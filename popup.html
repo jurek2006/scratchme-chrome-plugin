@@ -10,118 +10,13 @@
 <body>
     <style>
     </style>
-    <div class="popup">
+    <div class="popup-info">
 
         <header class="popup-header">
             <h1><a href="#" title="ScratchMe"><img src="img/icon48.png" alt="scratch-me-logo" /></a></h1>
             <a class="link" href="https://github.com/bravelab/scratchme-chrome-plugin"
                 title="Github - link to repositorium" target="_blank" rel="noopener noreferrer">GitHub</a>
         </header>
-
-        <div class="popup-form">
-            <form action="" id="scratch-me-form" class="validate">
-
-
-
-                <!-- Author input -->
-                <div class="popup-form-item">
-                    <label for="post-author">Author: </label>
-                    <input type="text" id="post-author" placeholder="Enter the author of the post" name="post-author"
-                        minlength="3" maxlength="40" pattern="[^()/><\][\\\x22,;|]+" required>
-                </div>
-
-                <!-- Date input -->
-                <div class="popup-form-item">
-                    <label for="post-datetime">Date: </label>
-                    <input type="datetime-local" id="post-datetime" name="post-datetime" required>
-                </div>
-
-                <!-- Title input -->
-                <div class="popup-form-item">
-                    <label for="post-title">Title: </label>
-                    <input type="text" id="post-title" placeholder="Enter the post title" name="post-title"
-                        minlength="3" maxlength="40" required>
-                </div>
-
-                <!-- Content textarea -->
-                <div class="popup-form-item">
-                    <label for="post-content">Content:</label>
-                    <textarea id="post-content" name="post-content" rows="10" cols="35" minlength="3"
-                        placeholder="Enter the content of the post"></textarea>
-                </div>
-
-                <!-- Url input -->
-                <div class="popup-form-item">
-                    <label for="post-url">Post URL:</label>
-                    <input type="url" id="post-url" name="post-url" placeholder="Enter the post URL" minlength="2"
-                        pattern="^(?:(?:https?|HTTPS?|ftp|FTP):\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-zA-Z\u00a1-\uffff0-9]-*)*[a-zA-Z\u00a1-\uffff0-9]+)(?:\.(?:[a-zA-Z\u00a1-\uffff0-9]-*)*[a-zA-Z\u00a1-\uffff0-9]+)*)(?::\d{2,})?(?:[\/?#]\S*)?$"
-                        size="30">
-                </div>
-
-                <!-- PostID input -->
-                <div class="popup-form-item">
-                    <label for="post-id">Post ID: </label>
-                    <input type="text" id="post-id" name="post-id" pattern="[-+]?[0-9]*[.,]?[0-9]+"
-                        placeholder="Enter the post id" required>
-                </div>
-
-
-                <div class="popup-form-item btn-wrapper">
-                    <button type="reset" id="clear-data-btn" class="btn btn-1">Clear</button>
-                </div>
-
-                <!-- Choose format input -->
-                <div class="popup-form-item">
-                    <label for="data-format">Choose a format:</label>
-                    <select id="select-data-format">
-                        <option value="">-- Please choose a format --</option>
-                        <option value="cooper">Cooper CRM</option>
-                        <option value="code-json">JSON</option>
-                        <option value="code-curl">cURL</option>
-                    </select>
-                </div>
-
-                <div id="cooper" class="content-of-selected-option disabled">
-                    <!-- Access Token input -->
-                    <div class="popup-form-item">
-                        <label for="access-token">X-PW-AccessToken:</label>
-                        <input type="text" id="access-token" placeholder="YOUR_TOKEN_HERE" name="access-token">
-                    </div>
-
-                    <!-- Application name input -->
-                    <div class="popup-form-item">
-                        <label for="application-name">X-PW-Application:</label>
-                        <input type="text" id="application-name" placeholder="developer_api" name="application-name">
-                    </div>
-
-                    <!-- User application email input -->
-                    <div class="popup-form-item">
-                        <label for="user-application-email">X-PW-UserEmail:</label>
-                        <input type="text" id="user-application-email" placeholder="YOUR_EMAIL_HERE"
-                            name="user-application-email">
-                    </div>
-
-                    <div class="popup-form-item btn-wrapper">
-                        <button type="button" id="test-connection" class="btn btn-1" disabled>Test connection</button>
-                        <button type="button" id="save-connection" class="btn btn-1" disabled>Save connection</button>
-                    </div>
-
-                    <div class="popup-form-item btn-wrapper">
-                        <button type="submit" class="btn btn-2" id="send-form" disabled>Send to Cooper</button>
-                    </div>
-                </div>
-
-                <!-- Code area -->
-                <div id="code-area" class="popup-form-item content-of-selected-option disabled">
-                    <button id="copy-to-clip-btn" title="Copy to clipboard" class="btn btn-copy">
-                        <span class="copy-clip-message">Copied to clipboard</span>
-                    </button>
-                    <pre id="code-area-content"></pre>
-                    <textarea name="copy-to-clipboard-content" id="copy-to-clipboard-content" cols="30"
-                        rows="10"></textarea>
-                </div>
-            </form>
-        </div>
 
 
         <footer class="popup-footer">
@@ -134,8 +29,6 @@
         </footer>
     </div>
 
-
-    <script src="/popup.js" type="text/javascript"></script>
 </body>
 
 </html>

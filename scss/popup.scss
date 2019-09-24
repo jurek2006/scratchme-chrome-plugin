@@ -12,14 +12,70 @@ html * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  font-family: Cantarell, Arial, sans-serif;
+  color: $form-color;
 }
 
-.popup {
-  width: 420px;
+.popup-info {
+  width: 380px;
   padding: 20px;
   font-family: Cantarell, Arial, sans-serif;
   color: $form-color;
-  background: #fafafa;
+  background: $popup-bg;
+}
+
+.popup {
+  background: $popup-bg;
+  position: relative;
+  width: 100%;
+  overflow-x: hidden;
+  height: 100vh;
+}
+
+.popup-content, .confirmation-sent {
+  position: absolute;
+  top: 0;
+  left: 50%;    
+  width: 100%;
+  padding: 20px;
+  transition: opacity .7s ease, transform 1s ease;
+}
+
+.popup-content {
+  transform: translate(-50%,0);
+}
+
+
+.confirmation-sent {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-size: $lg-font-size;
+  opacity: 1;
+  z-index: 9;
+  transform: translate(100%,0);
+  
+  .success-icon {
+    .material-icons {
+        font-size: 100px;
+        font-weight: 700;
+        color: $form-success-color;
+    }
+  }
+}
+
+.popup.success {
+  .confirmation-sent {
+      opacity: 1;
+      transform: translate(-50%,0);
+  }
+
+  .popup-content {
+      opacity: 0;
+      transform: translate(-200%, 0);
+  }
 }
 
 .popup-header, .popup-footer {
@@ -31,7 +87,7 @@ html * {
   a {
     font-size: $md-font-size;
     text-decoration: none;
-    color: #333333;
+    color: $popup-link-color;
     font-weight: 700;
     opacity: 1;
     transition: opacity .3s ease-in;

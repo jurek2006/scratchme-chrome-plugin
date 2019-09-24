@@ -1,17 +1,20 @@
-chrome.runtime.onStartup.addListener(() => {
-    chrome.browserAction.setPopup({ popup: 'popup_without_form.html' }, (details) => {
-        console.log(details);
-    });
-});
-
 chrome.runtime.onMessage.addListener((req, sender) => {
 
     if (req.isClickedButton) {
-        chrome.browserAction.setPopup({ popup: 'popup.html' });
-        chrome.browserAction.setBadgeText({text: 'New'});
+        chrome.browserAction.setBadgeText({ text: 'New' });
+
+
+        chrome.windows.create({
+            url: chrome.extension.getURL("popup-form.html"),
+            type: "popup",
+            top: 10,
+            left: 10,
+            width: 435,
+            height: 700
+        });
 
         setTimeout(() => {
-            chrome.browserAction.setBadgeText({text: ''});
+            chrome.browserAction.setBadgeText({ text: '' });
         }, 5000);
 
         const { postId, author, url, content, time, uTime } = req;
