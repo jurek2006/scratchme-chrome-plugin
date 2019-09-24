@@ -19,6 +19,7 @@ const showFormScratchMe = () => {
     const codeAreaContent = document.getElementById('code-area-content');
 
     // System CRM data
+    const popupFormSlide = document.querySelector('.popup-form-slide');
     const sysAccessTokenInput = document.getElementById('access-token');
     const sysAppNameInput = document.getElementById('application-name');
     const sysUserAppEmailInput = document.getElementById('user-application-email');
@@ -26,6 +27,7 @@ const showFormScratchMe = () => {
     // Buttons
     const sysSaveConnectionBtn = document.getElementById('save-connection');
     const sysTestConnectionBtn = document.getElementById('test-connection');
+    const sysEditConnectionBtn = document.getElementById('edit-connection');
     const sendFormBtn = document.getElementById('send-form');
     const copyToClipBtn = document.getElementById('copy-to-clip-btn');
     const clearDataBtn = document.getElementById('clear-data-btn');
@@ -353,10 +355,14 @@ const showFormScratchMe = () => {
             const retrievedObject = localStorage.getItem('systemConnectionData');
             const connectionData = JSON.parse(retrievedObject);
 
-            if(connectionData) {
+            if (connectionData) {
+                sysTestConnectionBtn.disabled = false;
+                popupFormSlide.classList.add('active');
                 sysAccessTokenInput.value = connectionData['X-PW-AccessToken'];
                 sysAppNameInput.value = connectionData['X-PW-Application'];
                 sysUserAppEmailInput.value = connectionData['X-PW-UserEmail'];
+            } else {
+                popupFormSlide.classList.remove('active');
             }
 
         } else if (targetValue.slice(0, 4) === 'code') {
@@ -428,16 +434,16 @@ const showFormScratchMe = () => {
 
         // If there are errrors, don't submit form and focus on first element with error
         if (hasErrors) {
-            
+
             hasErrors.focus();
             showItemMessage(messageElem, 'Please, complete the form', 'error-message', sysSaveConnectionBtn, true);
-        
+
         } else {
 
             popup.classList.add('success');
             clearExtractedData(false);
             chrome.windows.getCurrent((win) => setTimeout(() => chrome.windows.remove(win.id), 4000));
-        
+
         }
 
     }
@@ -451,6 +457,8 @@ const showFormScratchMe = () => {
     sysTestConnectionBtn.addEventListener('click', handleClickTestConnection, false);
 
     sysSaveConnectionBtn.addEventListener('click', handleClickSaveConnection, false);
+
+    sysEditConnectionBtn.addEventListener('click', () => popupFormSlide.classList.toggle('active'), false);
 
     sendFormBtn.addEventListener('click', handleClickSendForm, false);
 
