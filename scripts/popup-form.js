@@ -53,7 +53,6 @@ const showFormScratchMe = () => {
         setTimeout(() => {
             copyToClipMessage.classList.remove('active');
         }, 4000);
-
     };
 
 
@@ -71,9 +70,8 @@ const showFormScratchMe = () => {
                 codeAreaContent.innerHTML = "";
             });
         } catch (error) {
-            console.log('Error: ' + error);
+            console.error('Error: ' + error);
         }
-
     }
 
 
@@ -87,7 +85,6 @@ const showFormScratchMe = () => {
 
         return `${date.getFullYear()}-${month}-${dayMonth}T${hours}:${minutes}`
     };
-
 
 
     const setFieldsValue = (postData) => {
@@ -138,7 +135,6 @@ const showFormScratchMe = () => {
             messageElem.style.visibility = 'hidden';
         }, 5000);
     }
-
 
 
     const generateCode = (codeName) => {
@@ -264,9 +260,8 @@ const showFormScratchMe = () => {
 
     // Remove the error message
     const removeError = (field) => {
-        if (sysAccessTokenInput.value && sysAppNameInput.value && sysUserAppEmailInput.value) {
+        if (sysAccessTokenInput.value && sysAppNameInput.value && sysUserAppEmailInput.value)
             sysTestConnectionBtn.disabled = false;
-        }
 
         // Remove error class to field
         field.classList.remove('error');
@@ -337,20 +332,16 @@ const showFormScratchMe = () => {
         for (const content of contentOfSelectedOption)
             content.classList.add('disabled');
 
-
         const selectedContent = document.getElementById(`${targetValue.slice(0, 4) === 'code' ? 'code-area' : targetValue}`);
 
         if (selectedContent)
             selectedContent.classList.remove('disabled');
 
-
         if (targetValue === 'cooper') {
-
             sysAccessTokenInput.required = true;
             sysAppNameInput.required = true;
             sysUserAppEmailInput.required = true;
             sysUserAppEmailInput.pattern = "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$";
-
 
             const retrievedObject = localStorage.getItem('systemConnectionData');
             const connectionData = JSON.parse(retrievedObject);
@@ -369,42 +360,37 @@ const showFormScratchMe = () => {
             generateCode(targetValue.slice(5));
 
         } else {
-
             sysAccessTokenInput.required = false;
             sysAppNameInput.required = false;
             sysUserAppEmailInput.required = false;
             sysUserAppEmailInput.removeAttribute('pattern');
-
         }
     }
 
     const handleClickTestConnection = (e) => {
         e.preventDefault();
-        let messageElem = getMessageElement('test-connection', e.target);
+        const messageElem = getMessageElement('test-connection', e.target);
 
-
-        const url = 'https://example.com';
-        // const data = { username: 'example' };
+        const url = 'https://api.prosperworks.com/developer_api/v1/account';
 
         fetch(url, {
             method: 'GET',
-            // body: JSON.stringify(data),
-            // headers: {
-            //     'Content-Type': 'application/json',
-            //     'X-PW-AccessToken': sysAccessTokenInput.value,
-            //     'X-PW-Application': sysAppNameInput.value,
-            //     'X-PW-UserEmail': sysUserAppEmailInput.value
-            // }
-        }).then(res => res.json())
-            .then(response => {
-                console.log('Success:', JSON.stringify(response));
+            headers: {
+                'X-PW-AccessToken': sysAccessTokenInput.value,
+                'X-PW-Application': sysAppNameInput.value,
+                'X-PW-UserEmail': sysUserAppEmailInput.value,
+                'Content-Type': 'application/json',
+                "Cache-Control": 'no-cache',
+            }
+        }).then(resp => {
+            if (resp.ok)
                 showItemMessage(messageElem, 'Connection success', 'success-message', sysSaveConnectionBtn, false);
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                sendFormBtn.disabled = false;
-                showItemMessage(messageElem, 'Connection failed', 'error-message', sysSaveConnectionBtn, true);
-            });
+
+        }).catch(error => {
+            console.error('Error:', error);
+            sendFormBtn.disabled = false;
+            showItemMessage(messageElem, 'Connection failed', 'error-message', sysSaveConnectionBtn, true);
+        });
     }
 
 
@@ -434,18 +420,14 @@ const showFormScratchMe = () => {
 
         // If there are errrors, don't submit form and focus on first element with error
         if (hasErrors) {
-
             hasErrors.focus();
             showItemMessage(messageElem, 'Please, complete the form', 'error-message', sysSaveConnectionBtn, true);
-
         } else {
-
+            // const url = '';
             popup.classList.add('success');
             clearExtractedData(false);
             chrome.windows.getCurrent((win) => setTimeout(() => chrome.windows.remove(win.id), 4000));
-
         }
-
     }
 
 
@@ -463,7 +445,6 @@ const showFormScratchMe = () => {
     sendFormBtn.addEventListener('click', handleClickSendForm, false);
 
     clearDataBtn.addEventListener('click', clearExtractedData, false);
-
 }
 
 if (document.readyState === 'loading') {
