@@ -325,7 +325,6 @@ const showFormScratchMe = () => {
 
 
     const handleChangeSelectFormat = (e) => {
-
         const targetValue = e.target.value;
         const contentOfSelectedOption = document.querySelectorAll('.content-of-selected-option');
 
