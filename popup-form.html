@@ -90,42 +90,45 @@
                     </div>
 
                     <div id="cooper" class="content-of-selected-option disabled">
-                        <div class="popup-form-slide">
-                            <!-- Access Token input -->
-                            <div class="popup-form-item">
-                                <label for="access-token">X-PW-AccessToken:</label>
-                                <input type="text" id="access-token" placeholder="YOUR_TOKEN_HERE" name="access-token">
-                            </div>
+                        <!-- Access Token input -->
+                        <div class="popup-form-item">
+                            <label for="access-token">X-PW-AccessToken:</label>
+                            <input type="text" id="access-token" placeholder="YOUR_TOKEN_HERE" name="access-token">
+                        </div>
 
-                            <!-- Application name input -->
-                            <div class="popup-form-item">
-                                <label for="application-name">X-PW-Application:</label>
-                                <input type="text" id="application-name" placeholder="developer_api"
-                                    name="application-name">
-                            </div>
+                        <!-- Application name input -->
+                        <div class="popup-form-item">
+                            <label for="application-name">X-PW-Application:</label>
+                            <input type="text" id="application-name" placeholder="developer_api"
+                                name="application-name">
+                        </div>
 
-                            <!-- User application email input -->
-                            <div class="popup-form-item">
-                                <label for="user-application-email">X-PW-UserEmail:</label>
-                                <input type="text" id="user-application-email" placeholder="YOUR_EMAIL_HERE"
-                                    name="user-application-email">
-                            </div>
+                        <!-- User application email input -->
+                        <div class="popup-form-item">
+                            <label for="user-application-email">X-PW-UserEmail:</label>
+                            <input type="text" id="user-application-email" placeholder="YOUR_EMAIL_HERE"
+                                name="user-application-email">
                         </div>
 
                         <div class="popup-form-item btn-wrapper">
-                            <button type="button" id="edit-connection" class="btn btn-1">Edit connection</button>
                             <button type="button" id="test-connection" class="btn btn-1" disabled>Test
                                 connection</button>
                             <button type="button" id="save-connection" class="btn btn-1" disabled>Save
                                 connection</button>
                         </div>
 
+                        <div id="copper-data-wrapper">
+                            <div class="popup-form-item">
+                                <label for="select-pipeline">Choose a pipeline:</label>
+                                <select id="select-pipeline">
+                                    <option value="">-- Please choose a pipeline --</option>
+                                </select>
+                            </div>
+                        </div>
+
+
                         <div class="popup-form-item btn-wrapper">
                             <button type="submit" class="btn btn-2" id="send-form" disabled>Send to Cooper</button>
-                        </div>
-                        
-                        <div class="popup-form-item documentation-info">
-                            <a href="https://developer.copper.com/introduction/authentication.html" target="_blank" title="Copper Docs">Copper Developer API</a>
                         </div>
                     </div>
 
