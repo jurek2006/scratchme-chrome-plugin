@@ -1,10 +1,3 @@
-.popup-form {
-  padding: 15px;
-  background: #fefefe;
-  box-shadow: 0 0 5px $form-shadow;
-  border-radius: $border-radius-val;
-}
-
 .popup-form-slide {
   overflow: hidden;
   transition: max-height 0.8s ease, opacity .8s ease;
@@ -42,6 +35,12 @@
 .popup-form-item input, .popup-form-item textarea {
   display: block;
   width: 100%;
+
+  &:disabled {
+    &:hover {
+      box-shadow: 0 0 1px $form-shadow-color, 0 0 0 2px $form-border-color;
+    }
+  }
 }
 
 .popup-form-item input, .popup-form-item textarea, .popup-form-item select {
@@ -85,6 +84,10 @@
   margin-bottom: 10px;
 }
 
+select.error {
+  box-shadow: 0 0 1px $form-error-color, 0 0 0 2px $form-error-color;
+}
+
 .popup-form-item textarea {
   resize: vertical;
 }
@@ -118,4 +121,53 @@
 .copper-connection-wrapper.disabled {
   max-height: 0;
   overflow: hidden;
+}
+
+.contact-application-name-list {
+  box-shadow: 0 0 5px $form-shadow;
+}
+
+.contact-application-name-list-item {
+  background-color: $list-item-bg-1;
+  padding: $space-5 $space-15;
+  opacity: 1;
+  transition: all .3s ease-in;
+  cursor: pointer;
+  
+  &:nth-child(odd) {
+    background-color: $list-item-bg-2;
+  }
+  
+  &:hover {
+    background-color: $list-item-bg-hover;
+    opacity: .8;
+  }
+
+  .company-name {
+    display: block;
+  }
+}
+
+.contact-application-name-list-item.choosen {
+  display: flex;
+  justify-content: space-between;
+  .contact-application-name-list {
+    box-shadow: none;
+  }
+
+  &:hover {
+    background: transparent;
+    opacity: 1;
+  }
+}
+
+.status-text {
+  padding: $space-5 0;
+}
+
+.delete {
+  color: $form-error-color;
+  font-weight: 700;
+  cursor: pointer;
+
 }

@@ -23,8 +23,11 @@ const showFormScratchMe = () => {
     const sysAppNameInput = document.getElementById('application-name');
     const sysUserAppEmailInput = document.getElementById('user-application-email');
     const selectPipeline = document.getElementById('select-pipeline');
+    const contactAppNameInput = document.getElementById('contact-application-name');
     const copperDataWrapper = document.getElementById('copper-data-wrapper');
     const copperConectionWrapper = document.getElementById('copper-connection-wrapper');
+    const contactAppNameList = document.getElementById('contact-application-name-list');
+    const statusText = document.getElementById('status-text');
 
     // Buttons
     const sysSaveConnectionBtn = document.getElementById('save-connection');
@@ -34,8 +37,8 @@ const showFormScratchMe = () => {
     const clearDataBtn = document.getElementById('clear-data-btn');
     const editConnectionBtn = document.getElementById('edit-connection');
 
-    // ArrayData
-    let primaryContactID = [];
+    // primary_contact_id global variable
+    let primaryContactID = null;
 
 
     chrome.storage.sync.get(['postData'], (storage) => {
@@ -113,7 +116,7 @@ const showFormScratchMe = () => {
 
         postAuthorInput.value = author;
         postDatetimeInput.value = setDateTimeValue(uTime);
-        postTitleInput.value = `${content.slice(0, 20)}... - ${author}`;
+        postTitleInput.value = `${content.slice(0, 200)}...`;
         postContentTextarea.value = `${url} - ${content}`;
         postUrlInput.value = url;
         postIdInput.value = postId || "0";
@@ -466,7 +469,7 @@ const showFormScratchMe = () => {
     const handleEditConnection = (e) => {
         e.preventDefault();
 
-        if(copperConectionWrapper.classList.contains('disabled')) {
+        if (copperConectionWrapper.classList.contains('disabled')) {
             copperConectionWrapper.classList.remove('disabled');
             editConnectionBtn.classList.add('disabled');
         }
@@ -557,10 +560,71 @@ const showFormScratchMe = () => {
             sendFormBtn.disabled = false;
             console.error('Error:', error);
         });
-    }
+    };
+
+    const handleKeyUpContactAppName = async (e) => {
+        const companiesUrl = 'https://api.prosperworks.com/developer_api/v1/people/search';
+        const headers = getHeaders();
+
+        if (e.target.value.length > 5) {
+            statusText.textContent = "Loading...";
+
+            await fetch(companiesUrl, {
+                method: 'POST',
+                headers: headers,
+                body: JSON.stringify({
+                    "page_size": 200,
+                    "name": e.target.value
+                })
+            }).then(resp => {
+                if (resp.ok) {
+                    return resp.json();
+                } else {
+                    return Promise.reject(resp);
+                }
+            }).then(data => {
+                console.log(data);
+                if (data.length === 0) {
+                    statusText.textContent = "Not found";
+                    contactAppNameList.innerHTML = "";
+                    return;
+                };
+
+                statusText.textContent = `Found ${data.length} items`;
+
+                let liElements = "";
+                data.forEach(item => {
+                    liElements += `<li class="contact-application-name-list-item" data-id=${item.id} data-name="${item.name}" data-company="${item.company_name}">${item.name} ${item.emails.length ? `${item.emails[0].email}` : ""} <span class="company-name">${item.company_name}</span></li>`;
+                });
+                contactAppNameList.innerHTML = liElements;
+
+                const contactAppNameListItems = contactAppNameList.querySelectorAll('li');
+                contactAppNameListItems.forEach(item => {
+                    item.addEventListener('click', (e) => {
+                        primaryContactID = e.currentTarget.dataset.id;
+                        sendFormBtn.disabled = false;
+                        contactAppNameInput.disabled = true;
+                        statusText.textContent = "Choosen";
+                        contactAppNameList.innerHTML = `<li class="contact-application-name-list-item choosen">${e.currentTarget.dataset.id} - ${e.currentTarget.dataset.name} (${e.currentTarget.dataset.company}) <span id="delete-contact" class="delete">Delete</span></li>`;
+
+                        document.getElementById('delete-contact').addEventListener('click', (e) => {
+                            contactAppNameInput.disabled = false;
+                            statusText.textContent = "Search contact again";
+                            primaryContactID = null;
+                            contactAppNameList.innerHTML = "";
+                        }, false);
+                    }, false);
+                });
+            }).catch(error => {
+                sendFormBtn.disabled = false;
+                console.error('Error:', error);
+            });
+        }
+    };
 
     const handleClickSendForm = (e) => {
         e.preventDefault();
+        console.log(primaryContactID);
 
         let messageElem = getMessageElement('send-form', e.target);
 
@@ -570,6 +634,9 @@ const showFormScratchMe = () => {
             hasErrors.focus();
             showItemMessage(messageElem, 'Please, complete the form', 'error-message', sendFormBtn, true);
         } else if (selectPipeline.value === '') {
+            selectPipeline.classList.add('error');
+            showItemMessage(messageElem, 'Please, complete the form', 'error-message', sendFormBtn, true);
+        } else if (!Boolean(primaryContactID)) {
             showItemMessage(messageElem, 'Please, complete the form', 'error-message', sendFormBtn, true);
         } else {
             showItemMessage(messageElem, '', 'success-message', sendFormBtn, true);
@@ -580,7 +647,7 @@ const showFormScratchMe = () => {
 
             const data = {
                 name: postTitleInput.value,
-                primary_contact_id: 38536682,
+                primary_contact_id: primaryContactID,
                 company_id: acountDetailData['company_id'],
                 pipeline_id: Number(selectPipeline.value),
                 details: postContentTextarea.value,
@@ -642,8 +709,10 @@ const showFormScratchMe = () => {
     sendFormBtn.addEventListener('click', handleClickSendForm, false);
 
     clearDataBtn.addEventListener('click', clearExtractedData, false);
-    
+
     editConnectionBtn.addEventListener('click', handleEditConnection, false);
+
+    contactAppNameInput.addEventListener('keyup', handleKeyUpContactAppName, false);
 }
 
 if (document.readyState === 'loading') {

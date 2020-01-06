@@ -23,13 +23,6 @@
 
 
         <div class="popup-content">
-            <header class="popup-header">
-                <h1><a href="#" title="ScratchMe"><img src="img/icon48.png" alt="scratch-me-logo" /></a></h1>
-                <a class="link" href="https://github.com/bravelab/scratchme-chrome-plugin"
-                    title="Github - link to repositorium" target="_blank" rel="noopener noreferrer">GitHub</a>
-            </header>
-
-
             <div class="popup-form">
                 <form action="" id="scratch-me-form" class="validate">
 
@@ -94,7 +87,7 @@
 
                     <div id="copper" class="content-of-selected-option disabled">
                         <div class="popup-form-item btn-wrapper-left">
-                            <button type="button" id="edit-connection" class="btn btn-3 edit-connection-btn">Edit
+                            <button type="button" id="edit-connection" class="btn btn-1 edit-connection-btn">Edit
                                 connection</button>
                         </div>
                         <div id="copper-connection-wrapper" class="copper-connection-wrapper disabled">
@@ -134,13 +127,18 @@
                             </div>
 
                             <div class="popup-form-item">
-                                <ul id="list"></ul>
+                                <label for="contact-application-name">Contact:</label>
+                                <input type="text" id="contact-application-name" placeholder="Name contact"
+                                    name="contact-application-name">
+                                <div id="status-text" class="status-text"></div>
+                                <ul id="contact-application-name-list" class="contact-application-name-list"></ul>
                             </div>
                         </div>
 
 
                         <div class="popup-form-item btn-wrapper">
-                            <button type="submit" class="btn btn-2 mb-5" id="send-form" disabled>Send to Copper</button>
+                            <button type="submit" class="btn btn-2 mt-10 mb-5" id="send-form" disabled>Send to
+                                Copper</button>
                         </div>
                     </div>
 
@@ -161,9 +159,10 @@
                 <p>
                     <a class="link" href="https://github.com/bravelab/scratchme-chrome-plugin"
                         title="GitHub - link to repository" target="_blank" rel="noopener noreferrer">ScratchMe</a>
-                    save any Facebook Post to simple JSON form.
+                    save any Facebook Post to CRM.
                 </p>
-                <p>&copy; <a href="https://bravelab.io" title="Bravelab website">Bravelab</a> 2019: Wszystkie prawa zastrzeżone.</p>
+                <p>&copy; <a href="https://bravelab.io" title="Bravelab website">Bravelab</a> 2019: Wszystkie prawa
+                    zastrzeżone.</p>
             </footer>
         </div>
     </div>

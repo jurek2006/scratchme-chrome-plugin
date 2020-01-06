@@ -1,5 +1,5 @@
 # scratchme-chrome-plugin
-Save any Facebook Post to simple JSON form.
+Save any Facebook Post to CRM.
 
 ## Description
 Version 2.0 - form demo added

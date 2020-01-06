@@ -54,7 +54,7 @@ html * {
   top: 0;
   left: 50%;    
   width: 100%;
-  padding: 20px;
+  padding: $space-15;
   transition: opacity .7s ease, transform 1s ease;
 }
 
