@@ -1,6 +1,7 @@
 @import './colors';
 @import './variables';
 @import './fonts';
+@import './spaces';
 
 @import './form';
 @import './code-area';
@@ -25,6 +26,11 @@ html * {
       opacity: .8;
     }
   }
+}
+
+.disabled {
+  display: none;
+  visibility: hidden;
 }
 
 .popup-info {

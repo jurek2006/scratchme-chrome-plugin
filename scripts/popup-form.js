@@ -14,7 +14,7 @@ const showFormScratchMe = () => {
     const postUrlInput = document.getElementById('post-url');
     const postIdInput = document.getElementById('post-id');
 
-    // Select and display format e.g JSON/Cooper/cURL
+    // Select and display format e.g JSON/copper/cURL
     const selectDataFormat = document.getElementById('select-data-format');
     const codeAreaContent = document.getElementById('code-area-content');
 
@@ -24,6 +24,7 @@ const showFormScratchMe = () => {
     const sysUserAppEmailInput = document.getElementById('user-application-email');
     const selectPipeline = document.getElementById('select-pipeline');
     const copperDataWrapper = document.getElementById('copper-data-wrapper');
+    const copperConectionWrapper = document.getElementById('copper-connection-wrapper');
 
     // Buttons
     const sysSaveConnectionBtn = document.getElementById('save-connection');
@@ -31,13 +32,17 @@ const showFormScratchMe = () => {
     const sendFormBtn = document.getElementById('send-form');
     const copyToClipBtn = document.getElementById('copy-to-clip-btn');
     const clearDataBtn = document.getElementById('clear-data-btn');
+    const editConnectionBtn = document.getElementById('edit-connection');
+
+    // ArrayData
+    let primaryContactID = [];
 
 
     chrome.storage.sync.get(['postData'], (storage) => {
         setFieldsValue(storage.postData);
     });
 
-    // Get headers for request to Cooper
+    // Get headers for request to copper
     const getHeaders = () => {
         const headers = {
             'X-PW-AccessToken': sysAccessTokenInput.value,
@@ -108,8 +113,8 @@ const showFormScratchMe = () => {
 
         postAuthorInput.value = author;
         postDatetimeInput.value = setDateTimeValue(uTime);
-        postTitleInput.value = `${postId ? postId + " - " : ""}${content.slice(0, 20)}... - ${author}`;
-        postContentTextarea.value = content;
+        postTitleInput.value = `${content.slice(0, 20)}... - ${author}`;
+        postContentTextarea.value = `${url} - ${content}`;
         postUrlInput.value = url;
         postIdInput.value = postId || "0";
     }
@@ -354,8 +359,7 @@ const showFormScratchMe = () => {
         if (selectedContent)
             selectedContent.classList.remove('disabled');
 
-
-        if (targetValue === 'cooper') {
+        if (targetValue === 'copper') {
 
             sysAccessTokenInput.required = true;
             sysAppNameInput.required = true;
@@ -371,9 +375,11 @@ const showFormScratchMe = () => {
                 sysUserAppEmailInput.value = connectionData['X-PW-UserEmail'];
                 sysTestConnectionBtn.disabled = false;
 
+                fetchCompanyID();
                 fetchPipelines();
             } else {
                 copperDataWrapper.style.display = 'none';
+                copperConectionWrapper.classList.remove('disabled');
             }
 
         } else if (targetValue.slice(0, 4) === 'code') {
@@ -451,6 +457,18 @@ const showFormScratchMe = () => {
             localStorage.setItem('systemConnectionData', JSON.stringify(systemConnectionData));
         } catch (error) {
             console.log('Error: ' + error);
+        } finally {
+            copperConectionWrapper.classList.add('disabled');
+            editConnectionBtn.classList.remove('disabled');
+        }
+    }
+
+    const handleEditConnection = (e) => {
+        e.preventDefault();
+
+        if(copperConectionWrapper.classList.contains('disabled')) {
+            copperConectionWrapper.classList.remove('disabled');
+            editConnectionBtn.classList.add('disabled');
         }
     }
 
@@ -480,6 +498,66 @@ const showFormScratchMe = () => {
         });
     }
 
+    const fetchCompanyID = () => {
+        const companiesUrl = 'https://api.prosperworks.com/developer_api/v1/companies/search';
+        const retrievedAcountDataObject = localStorage.getItem('acoundDetailData');
+        const acountDetailData = JSON.parse(retrievedAcountDataObject);
+
+        const headers = getHeaders();
+
+        fetch(companiesUrl, {
+            method: 'POST',
+            headers: headers,
+            body: JSON.stringify({
+                "name": acountDetailData['company_name']
+            })
+        }).then(resp => {
+            if (resp.ok) {
+                return resp.json();
+            } else {
+                return Promise.reject(resp);
+            }
+        }).then(data => {
+            fetchPrimaryContactID(data[0].id);
+        }).catch(error => {
+            sendFormBtn.disabled = false;
+            console.error('Error:', error);
+        });
+    }
+
+    const fetchPrimaryContactID = (companyID) => {
+        const companiesUrl = 'https://api.prosperworks.com/developer_api/v1/people/search';
+
+        const headers = getHeaders();
+
+        fetch(companiesUrl, {
+            method: 'POST',
+            headers: headers,
+            body: JSON.stringify({
+                "company_ids": [companyID],
+                "page_size": 200,
+                "sort_direction": "asc"
+            })
+        }).then(resp => {
+            if (resp.ok) {
+                return resp.json();
+            } else {
+                return Promise.reject(resp);
+            }
+        }).then(data => {
+            primaryContactID = data.map(item => {
+                const newItem = {
+                    id: item.id,
+                    name: item.name,
+                    email: item.emails.length ? item.emails[0].email : ""
+                }
+                return newItem;
+            });
+        }).catch(error => {
+            sendFormBtn.disabled = false;
+            console.error('Error:', error);
+        });
+    }
 
     const handleClickSendForm = (e) => {
         e.preventDefault();
@@ -490,10 +568,13 @@ const showFormScratchMe = () => {
         // If there are errrors, don't submit form and focus on first element with error
         if (hasErrors) {
             hasErrors.focus();
-            showItemMessage(messageElem, 'Please, complete the form', 'error-message', sysSaveConnectionBtn, true);
+            showItemMessage(messageElem, 'Please, complete the form', 'error-message', sendFormBtn, true);
         } else if (selectPipeline.value === '') {
-            showItemMessage(messageElem, 'Please, complete the form', 'error-message', sysSaveConnectionBtn, true);
+            showItemMessage(messageElem, 'Please, complete the form', 'error-message', sendFormBtn, true);
         } else {
+            showItemMessage(messageElem, '', 'success-message', sendFormBtn, true);
+            sendFormBtn.textContent = "Sending...";
+
             const retrievedAcountDataObject = localStorage.getItem('acoundDetailData');
             const acountDetailData = JSON.parse(retrievedAcountDataObject);
 
@@ -516,17 +597,38 @@ const showFormScratchMe = () => {
                 if (resp.ok) {
                     popup.classList.add('success');
                     clearExtractedData(false);
-                    chrome.windows.getCurrent((win) => setTimeout(() => chrome.windows.remove(win.id), 4000));
+
+                    chrome.windows.getCurrent((win) => {
+                        const closeWindowBtn = document.getElementById('close-window');
+                        const countdownWrapper = document.getElementById('count-down');
+                        let countdownInSeconds = 5;
+
+                        const closeWindow = () => {
+                            clearInterval(intervalId);
+                            chrome.windows.remove(win.id);
+                        }
+
+                        const intervalId = setInterval(() => {
+                            countdownWrapper.textContent = String(--countdownInSeconds);
+                            if (countdownInSeconds === 0) {
+                                closeWindow();
+                            }
+                        }, 1000);
+
+                        closeWindowBtn.addEventListener('click', () => {
+                            closeWindow();
+                        });
+                    });
                 } else {
                     return Promise.reject(resp);
                 };
             }).catch(error => {
-                showItemMessage(messageElem, 'Error', 'error-message', sysSaveConnectionBtn, false);
+                sendFormBtn.textContent = "Send to Copper"
+                showItemMessage(messageElem, 'Error sending to system. Try sending the data again later.', 'error-message', sendFormBtn, false);
                 console.error('Error:', error);
             });
         };
     };
-
 
     // Listen to all input events
     scratchMeForm.addEventListener('input', handleInputEvent, true);
@@ -540,7 +642,8 @@ const showFormScratchMe = () => {
     sendFormBtn.addEventListener('click', handleClickSendForm, false);
 
     clearDataBtn.addEventListener('click', clearExtractedData, false);
-
+    
+    editConnectionBtn.addEventListener('click', handleEditConnection, false);
 }
 
 if (document.readyState === 'loading') {

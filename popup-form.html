@@ -10,12 +10,15 @@
 <body>
 
     <div class="popup">
-
+        <!-- style="transform: translate(-50%, 0); background: white" -->
         <div id="confirmation-sent" class="confirmation-sent">
             <div class="success-icon">
                 <i class="material-icons">done</i>
             </div>
-            The form has been sent successfully
+            <p>The form has been sent successfully.</p>
+            <p class="mt-10 light-text">The window will close automatically in <span id="count-down"
+                    class="light-text">5</span> seconds</p>
+            <button type="button" id="close-window" class="btn btn-2 mt-20">Close</button>
         </div>
 
 
@@ -83,38 +86,43 @@
                         <label for="data-format">Choose a format:</label>
                         <select id="select-data-format">
                             <option value="">-- Please choose a format --</option>
-                            <option value="cooper">Cooper CRM</option>
+                            <option value="copper">Copper CRM</option>
                             <option value="code-json">JSON</option>
                             <option value="code-curl">cURL</option>
                         </select>
                     </div>
 
-                    <div id="cooper" class="content-of-selected-option disabled">
-                        <!-- Access Token input -->
-                        <div class="popup-form-item">
-                            <label for="access-token">X-PW-AccessToken:</label>
-                            <input type="text" id="access-token" placeholder="YOUR_TOKEN_HERE" name="access-token">
-                        </div>
-
-                        <!-- Application name input -->
-                        <div class="popup-form-item">
-                            <label for="application-name">X-PW-Application:</label>
-                            <input type="text" id="application-name" placeholder="developer_api"
-                                name="application-name">
-                        </div>
-
-                        <!-- User application email input -->
-                        <div class="popup-form-item">
-                            <label for="user-application-email">X-PW-UserEmail:</label>
-                            <input type="text" id="user-application-email" placeholder="YOUR_EMAIL_HERE"
-                                name="user-application-email">
-                        </div>
-
-                        <div class="popup-form-item btn-wrapper">
-                            <button type="button" id="test-connection" class="btn btn-1" disabled>Test
+                    <div id="copper" class="content-of-selected-option disabled">
+                        <div class="popup-form-item btn-wrapper-left">
+                            <button type="button" id="edit-connection" class="btn btn-3 edit-connection-btn">Edit
                                 connection</button>
-                            <button type="button" id="save-connection" class="btn btn-1" disabled>Save
-                                connection</button>
+                        </div>
+                        <div id="copper-connection-wrapper" class="copper-connection-wrapper disabled">
+                            <!-- Access Token input -->
+                            <div class="popup-form-item">
+                                <label for="access-token">X-PW-AccessToken:</label>
+                                <input type="text" id="access-token" placeholder="YOUR_TOKEN_HERE" name="access-token">
+                            </div>
+
+                            <!-- Application name input -->
+                            <div class="popup-form-item">
+                                <label for="application-name">X-PW-Application:</label>
+                                <input type="text" id="application-name" placeholder="developer_api"
+                                    name="application-name">
+                            </div>
+
+                            <!-- User application email input -->
+                            <div class="popup-form-item">
+                                <label for="user-application-email">X-PW-UserEmail:</label>
+                                <input type="text" id="user-application-email" placeholder="YOUR_EMAIL_HERE"
+                                    name="user-application-email">
+                            </div>
+                            <div class="popup-form-item btn-wrapper">
+                                <button type="button" id="test-connection" class="btn btn-1" disabled>Test
+                                    connection</button>
+                                <button type="button" id="save-connection" class="btn btn-1" disabled>Save
+                                    connection</button>
+                            </div>
                         </div>
 
                         <div id="copper-data-wrapper">
@@ -124,11 +132,15 @@
                                     <option value="">-- Please choose a pipeline --</option>
                                 </select>
                             </div>
+
+                            <div class="popup-form-item">
+                                <ul id="list"></ul>
+                            </div>
                         </div>
 
 
                         <div class="popup-form-item btn-wrapper">
-                            <button type="submit" class="btn btn-2" id="send-form" disabled>Send to Cooper</button>
+                            <button type="submit" class="btn btn-2 mb-5" id="send-form" disabled>Send to Copper</button>
                         </div>
                     </div>
 
@@ -151,7 +163,7 @@
                         title="GitHub - link to repository" target="_blank" rel="noopener noreferrer">ScratchMe</a>
                     save any Facebook Post to simple JSON form.
                 </p>
-                <p>&copy; <a href="#" title="Bravelab website">Bravelab</a> 2019: Wszystkie prawa zastrzeżone.</p>
+                <p>&copy; <a href="https://bravelab.io" title="Bravelab website">Bravelab</a> 2019: Wszystkie prawa zastrzeżone.</p>
             </footer>
         </div>
     </div>

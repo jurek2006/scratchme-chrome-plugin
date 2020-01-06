@@ -1,0 +1,48 @@
+$space-5: 5px;
+$space-10: 10px;
+$space-15: 15px;
+$space-20: 20px;
+
+$spaces: 0, 5, 10, 15, 20;
+
+@each $space in $spaces {
+  .p-#{$space} {
+    padding: #{$space}px;
+  }
+
+  .pt-#{$space} {
+    padding-top: #{$space}px;
+  }
+
+  .pb-#{$space} {
+    padding-bottom: #{$space}px;
+  }
+
+  .pr-#{$space} {
+    padding-right: #{$space}px;
+  }
+
+  .pl-#{$space} {
+    padding-left: #{$space}px;
+  }
+
+  .m-#{$space} {
+    margin: #{$space}px;
+  }
+
+  .mt-#{$space} {
+    margin-top: #{$space}px;
+  }
+
+  .mb-#{$space} {
+    margin-bottom: #{$space}px!important;
+  }
+
+  .mr-#{$space} {
+    margin-right: #{$space}px;
+  }
+
+  .ml-#{$space} {
+    margin-left: #{$space}px;
+  }
+}

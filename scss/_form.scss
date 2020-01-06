@@ -110,3 +110,12 @@
 .content-of-selected-option.disabled {
   display: none;
 }
+
+.copper-connection-wrapper {
+  max-height: auto;
+}
+
+.copper-connection-wrapper.disabled {
+  max-height: 0;
+  overflow: hidden;
+}

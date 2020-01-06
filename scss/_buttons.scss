@@ -2,6 +2,10 @@
     text-align: right;
   }
   
+  .btn-wrapper-left {
+    text-align: left;
+}
+  
   .btn {
     outline: none;
     border: none;
@@ -9,11 +13,11 @@
     font-size: $md-font-size;
     cursor: pointer;
     opacity: 1;
-    transition: opacity .3s ease-in;
+    transition: opacity .3s ease-in, background-color .3s ease-in;
   
   
     &:disabled { 
-      color: $form-btn-disabled-color; 
+      color: $form-btn-disabled-color;
       &:focus { opacity: 1 }
       &:hover { opacity: 1 }
     }
@@ -33,6 +37,20 @@
       background: $form-btn-2-bg;
       color: #ffffff;
       padding: 10px 15px;
+
+      &:disabled {
+        background: $form-btn-1-bg;
+      }
+  }
+
+  .btn-3 {
+      background: $form-btn-1-bg;
+      color: $form-btn-1-color;
+      padding: 10px 15px;
+
+      &:disabled {
+        background: $form-btn-1-bg;
+      }
   }
   
   .btn-copy {
