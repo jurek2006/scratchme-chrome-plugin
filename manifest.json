@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
-    "name": "Scratch Me",
-    "short_name": "Scratch Me",
+    "name": "JS Scratch Me",
+    "short_name": "JS Scratch Me",
     "description": "Save any Facebook Post to simple JSON form",
     "version": "2.0",
     "homepage_url": "https://github.com/bravelab/scratchme-chrome-plugin",
