@@ -1,3 +1,13 @@
+.extracted-data-wrapper {
+  overflow: hidden;
+  opacity: 1;
+  transition: all .3s ease-in;
+}
+
+.extracted-data-wrapper.hidden {
+  opacity: 0;
+}
+
 .popup-form-slide {
   overflow: hidden;
   transition: max-height 0.8s ease, opacity .8s ease;
@@ -85,7 +95,7 @@
 }
 
 select.error {
-  box-shadow: 0 0 1px $form-error-color, 0 0 0 2px $form-error-color;
+  box-shadow: 0 0 8px $form-error-color, 0 0 0 2px $form-error-color;
 }
 
 .popup-form-item textarea {
@@ -127,9 +137,18 @@ select.error {
   box-shadow: 0 0 5px $form-shadow;
 }
 
+.contact-application-name-list.choosen {
+  box-shadow: 0 0 0 $form-shadow;
+}
+
+.contact-application-name-list.error {
+  box-shadow: 0 0 8px $form-error-color, 0 0 0 2px $form-error-color;
+}
+
 .contact-application-name-list-item {
+  font-size: $md-font-size;
   background-color: $list-item-bg-1;
-  padding: $space-5 $space-15;
+  padding: $space-10 $space-15;
   opacity: 1;
   transition: all .3s ease-in;
   cursor: pointer;
@@ -145,6 +164,7 @@ select.error {
 
   .company-name {
     display: block;
+    font-size: $sm-font-size;
     color: $light-color;
   }
 }
@@ -152,9 +172,9 @@ select.error {
 .contact-application-name-list-item.choosen {
   display: flex;
   justify-content: space-between;
-  .contact-application-name-list {
-    box-shadow: none;
-  }
+  background: transparent;
+  padding: 0;
+  font-weight: 700;
 
   &:hover {
     background: transparent;
@@ -163,7 +183,9 @@ select.error {
 }
 
 .status-text {
-  padding: $space-5 0;
+  padding-bottom: $space-10;
+  color: $light-color;
+  font-size: $sm-font-size;
 }
 
 .delete {

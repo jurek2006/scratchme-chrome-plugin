@@ -21,11 +21,19 @@
             <button type="button" id="close-window" class="btn btn-2 mt-20">Close</button>
         </div>
 
-
         <div class="popup-content">
             <div class="popup-form">
                 <form action="" id="scratch-me-form" class="validate">
+                    <div class="popup-form-item">
+                        <h2>Extracted data from Facebook</h2>
+                    </div>
 
+                    <!-- PostID input -->
+                    <div class="popup-form-item">
+                        <label for="post-id">Post ID: </label>
+                        <input type="text" id="post-id" name="post-id" pattern="[-+]?[0-9]*[.,]?[0-9]+"
+                            placeholder="Enter the post id" required>
+                    </div>
 
                     <!-- Author input -->
                     <div class="popup-form-item">
@@ -46,31 +54,25 @@
                         <input type="text" id="post-title" placeholder="Enter the post title" name="post-title"
                             minlength="3" maxlength="40" required>
                     </div>
+                    <div id="extracted-data" class="extracted-data-wrapper">
+                        <!-- Url input -->
+                        <div class="popup-form-item">
+                            <label for="post-url">Post URL:</label>
+                            <input type="url" id="post-url" name="post-url" placeholder="Enter the post URL"
+                                minlength="2"
+                                pattern="^(?:(?:https?|HTTPS?|ftp|FTP):\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-zA-Z\u00a1-\uffff0-9]-*)*[a-zA-Z\u00a1-\uffff0-9]+)(?:\.(?:[a-zA-Z\u00a1-\uffff0-9]-*)*[a-zA-Z\u00a1-\uffff0-9]+)*)(?::\d{2,})?(?:[\/?#]\S*)?$"
+                                size="30">
+                        </div>
 
-                    <!-- Content textarea -->
-                    <div class="popup-form-item">
-                        <label for="post-content">Content:</label>
-                        <textarea id="post-content" name="post-content" rows="10" cols="35" minlength="3"
-                            placeholder="Enter the content of the post"></textarea>
+                        <!-- Content textarea -->
+                        <div class="popup-form-item">
+                            <label for="post-content">Content:</label>
+                            <textarea id="post-content" name="post-content" rows="10" cols="35" minlength="3"
+                                placeholder="Enter the content of the post"></textarea>
+                        </div>
                     </div>
-
-                    <!-- Url input -->
-                    <div class="popup-form-item">
-                        <label for="post-url">Post URL:</label>
-                        <input type="url" id="post-url" name="post-url" placeholder="Enter the post URL" minlength="2"
-                            pattern="^(?:(?:https?|HTTPS?|ftp|FTP):\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-zA-Z\u00a1-\uffff0-9]-*)*[a-zA-Z\u00a1-\uffff0-9]+)(?:\.(?:[a-zA-Z\u00a1-\uffff0-9]-*)*[a-zA-Z\u00a1-\uffff0-9]+)*)(?::\d{2,})?(?:[\/?#]\S*)?$"
-                            size="30">
-                    </div>
-
-                    <!-- PostID input -->
-                    <div class="popup-form-item">
-                        <label for="post-id">Post ID: </label>
-                        <input type="text" id="post-id" name="post-id" pattern="[-+]?[0-9]*[.,]?[0-9]+"
-                            placeholder="Enter the post id" required>
-                    </div>
-
-
                     <div class="popup-form-item btn-wrapper">
+                        <button id="show-extracted-data" class="btn btn-1">Hide extracted data</button>
                         <button type="reset" id="clear-data-btn" class="btn btn-1">Clear</button>
                     </div>
 
@@ -87,7 +89,7 @@
 
                     <div id="copper" class="content-of-selected-option disabled">
                         <div class="popup-form-item btn-wrapper-left">
-                            <button type="button" id="edit-connection" class="btn btn-1 edit-connection-btn">Edit
+                            <button type="button" id="edit-connection" class="btn btn-1">Edit
                                 connection</button>
                         </div>
                         <div id="copper-connection-wrapper" class="copper-connection-wrapper disabled">
@@ -127,9 +129,7 @@
                             </div>
 
                             <div class="popup-form-item">
-                                <label for="contact-application-name">Contact:</label>
-                                <input type="text" id="contact-application-name" placeholder="Name contact"
-                                    name="contact-application-name">
+                                <label for="contact-application-name">Contact name:</label>
                                 <div id="status-text" class="status-text"></div>
                                 <ul id="contact-application-name-list" class="contact-application-name-list"></ul>
                             </div>

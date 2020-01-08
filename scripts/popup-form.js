@@ -2,6 +2,8 @@
 
 const showFormScratchMe = () => {
     const popup = document.querySelector('.popup');
+    const extractedDataWrapper = document.getElementById('extracted-data');
+    const showExtractedData = document.getElementById('show-extracted-data');
 
     // Form
     const scratchMeForm = document.getElementById('scratch-me-form');
@@ -23,7 +25,6 @@ const showFormScratchMe = () => {
     const sysAppNameInput = document.getElementById('application-name');
     const sysUserAppEmailInput = document.getElementById('user-application-email');
     const selectPipeline = document.getElementById('select-pipeline');
-    const contactAppNameInput = document.getElementById('contact-application-name');
     const copperDataWrapper = document.getElementById('copper-data-wrapper');
     const copperConectionWrapper = document.getElementById('copper-connection-wrapper');
     const contactAppNameList = document.getElementById('contact-application-name-list');
@@ -116,7 +117,7 @@ const showFormScratchMe = () => {
 
         postAuthorInput.value = author;
         postDatetimeInput.value = setDateTimeValue(uTime);
-        postTitleInput.value = `${content.slice(0, 200)}...`;
+        postTitleInput.value = `${content.slice(0, 180)}...`;
         postContentTextarea.value = `${url} - ${content}`;
         postUrlInput.value = url;
         postIdInput.value = postId || "0";
@@ -143,7 +144,7 @@ const showFormScratchMe = () => {
     }
 
     const showItemMessage = (messageElem, text, itemClassName, disabledElem, isDisable) => {
-        messageElem.classList.add(itemClassName);
+        messageElem.className = `result-message result-message ${itemClassName}`;
         messageElem.innerHTML = text;
         disabledElem.disabled = isDisable;
 
@@ -353,6 +354,8 @@ const showFormScratchMe = () => {
         const targetValue = e.target.value;
         const contentOfSelectedOption = document.querySelectorAll('.content-of-selected-option');
 
+        hideExtractedData();
+
         for (const content of contentOfSelectedOption)
             content.classList.add('disabled');
 
@@ -380,49 +383,46 @@ const showFormScratchMe = () => {
 
                 fetchCompanyID();
                 fetchPipelines();
+                searchPrimaryContact(postAuthorInput.value);
             } else {
                 copperDataWrapper.style.display = 'none';
                 copperConectionWrapper.classList.remove('disabled');
+                editConnectionBtn.classList.add('disabled');
             }
 
         } else if (targetValue.slice(0, 4) === 'code') {
             generateCode(targetValue.slice(5));
 
         } else {
-
             sysAccessTokenInput.required = false;
             sysAppNameInput.required = false;
             sysUserAppEmailInput.required = false;
             sysUserAppEmailInput.removeAttribute('pattern');
-
         }
     }
 
-    const handleClickTestConnection = (e) => {
-        e.preventDefault();
-        let messageElem = getMessageElement('test-connection', e.target);
-
+    const fetchAccount = async (messageElem) => {
         const url = 'https://api.prosperworks.com/developer_api/v1/account';
         const headers = getHeaders();
 
-        fetch(url, {
+        await fetch(url, {
             method: 'GET',
             headers: headers
         }).then(resp => {
             if (resp.ok) {
-                showItemMessage(messageElem, 'Connection success', 'success-message', sysSaveConnectionBtn, false);
+                if (messageElem) showItemMessage(messageElem, 'Connection success', 'success-message', sysSaveConnectionBtn, false);
                 return resp.json();
             } else {
                 return Promise.reject(resp);
             }
-        }).then(data => {
+        }).then(async data => {
             const acoundDetailData = {
                 'company_id': data.id,
                 'company_name': data.name
             };
 
             try {
-                localStorage.setItem('acoundDetailData', JSON.stringify(acoundDetailData));
+                await localStorage.setItem('acoundDetailData', JSON.stringify(acoundDetailData));
             } catch (error) {
                 console.log('Error: ' + error);
             } finally {
@@ -430,6 +430,7 @@ const showFormScratchMe = () => {
             };
 
             fetchPipelines();
+            searchPrimaryContact(postAuthorInput.value);
         }).catch(error => {
             sendFormBtn.disabled = false;
             if (error.status === 429) {
@@ -444,7 +445,14 @@ const showFormScratchMe = () => {
             copperDataWrapper.style.display = "none";
             console.error('Error:', error);
         });
-    }
+    };
+
+    const handleClickTestConnection = (e) => {
+        e.preventDefault();
+        let messageElem = getMessageElement('test-connection', e.target);
+
+        fetchAccount(messageElem);
+    };
 
 
     const handleClickSaveConnection = (e) => {
@@ -475,11 +483,11 @@ const showFormScratchMe = () => {
         }
     }
 
-    const fetchPipelines = () => {
+    const fetchPipelines = async () => {
         const url = 'https://api.prosperworks.com/developer_api/v1/pipelines';
         const headers = getHeaders();
 
-        fetch(url, {
+        await fetch(url, {
             method: 'GET',
             headers: headers
         }).then(resp => {
@@ -501,14 +509,18 @@ const showFormScratchMe = () => {
         });
     }
 
-    const fetchCompanyID = () => {
+    const fetchCompanyID = async () => {
+        if (!localStorage.getItem('acoundDetailData')) {
+            fetchAccount();
+        }
+
         const companiesUrl = 'https://api.prosperworks.com/developer_api/v1/companies/search';
+        const headers = getHeaders();
+
         const retrievedAcountDataObject = localStorage.getItem('acoundDetailData');
         const acountDetailData = JSON.parse(retrievedAcountDataObject);
 
-        const headers = getHeaders();
-
-        fetch(companiesUrl, {
+        await fetch(companiesUrl, {
             method: 'POST',
             headers: headers,
             body: JSON.stringify({
@@ -520,26 +532,23 @@ const showFormScratchMe = () => {
             } else {
                 return Promise.reject(resp);
             }
-        }).then(data => {
-            fetchPrimaryContactID(data[0].id);
         }).catch(error => {
             sendFormBtn.disabled = false;
             console.error('Error:', error);
         });
     }
 
-    const fetchPrimaryContactID = (companyID) => {
-        const companiesUrl = 'https://api.prosperworks.com/developer_api/v1/people/search';
-
+    const createNewPerson = async (name) => {
+        const url = 'https://api.prosperworks.com/developer_api/v1/people';
         const headers = getHeaders();
 
-        fetch(companiesUrl, {
+        statusText.textContent = "A new person is created...";
+
+        await fetch(url, {
             method: 'POST',
             headers: headers,
             body: JSON.stringify({
-                "company_ids": [companyID],
-                "page_size": 200,
-                "sort_direction": "asc"
+                "name": name
             })
         }).then(resp => {
             if (resp.ok) {
@@ -548,83 +557,86 @@ const showFormScratchMe = () => {
                 return Promise.reject(resp);
             }
         }).then(data => {
-            primaryContactID = data.map(item => {
-                const newItem = {
-                    id: item.id,
-                    name: item.name,
-                    email: item.emails.length ? item.emails[0].email : ""
-                }
-                return newItem;
+            statusText.textContent = `Create a new person ${data.name} (${data.id})`;
+            primaryContactID = data.id;
+        }).catch(error => {
+            statusText.textContent = `Creating new person failed`;
+            sendFormBtn.disabled = false;
+            console.error('Error:', error);
+        });
+    };
+
+    const searchPrimaryContact = async (name) => {
+        if (postAuthorInput === '') return;
+
+        const url = 'https://api.prosperworks.com/developer_api/v1/people/search';
+        const headers = getHeaders();
+
+        statusText.textContent = "Loading...";
+
+        await fetch(url, {
+            method: 'POST',
+            headers: headers,
+            body: JSON.stringify({
+                "page_size": 200,
+                "name": name
+            })
+        }).then(resp => {
+            if (resp.ok) {
+                return resp.json();
+            } else {
+                return Promise.reject(resp);
+            }
+        }).then(data => {
+            if (data.length === 0) {
+                statusText.textContent = "Not found. Contact will be created during saving.";
+                contactAppNameList.innerHTML = "";
+
+                createNewPerson(name);
+                return;
+            };
+
+            let liElements = "";
+            data.forEach((item, index) => {
+                liElements += `<li class="contact-application-name-list-item" data-id=${item.id} data-name="${item.name}" data-company="${item.company_name}">${index + 1}. ${item.name} ${item.emails.length ? `${item.emails[0].email}` : ""} ${item.company_name ? "(" + item.company_name + ")" : ""}</li>`;
             });
+
+            const addItemsToList = () => {
+                statusText.textContent = `Found ${data.length} items. Choose a contact`;
+                primaryContactID = null;
+                contactAppNameList.innerHTML = liElements;
+
+                const contactAppNameListItems = contactAppNameList.querySelectorAll('li');
+
+                contactAppNameListItems.forEach(item => {
+                    item.addEventListener('click', (e) => {
+                        const { dataset } = e.currentTarget;
+
+                        primaryContactID = dataset.id;
+                        sendFormBtn.disabled = false;
+                        statusText.textContent = "Choosen";
+                        contactAppNameList.innerHTML = `<li class="contact-application-name-list-item choosen">${dataset.id} - ${dataset.name} ${item.company_name ? "(" + item.company_name + ")" : ""} <span id="delete-contact" class="delete">Undo</span></li>`;
+
+                        contactAppNameList.classList.remove('error');
+                        contactAppNameList.classList.add('choosen');
+
+                        document.getElementById('delete-contact').addEventListener('click', (e) => {
+                            addItemsToList();
+                            contactAppNameList.classList.remove('choosen');
+                        }, false);
+                    }, false);
+                });
+            };
+
+            addItemsToList();
         }).catch(error => {
             sendFormBtn.disabled = false;
             console.error('Error:', error);
         });
     };
 
-    const handleKeyUpContactAppName = async (e) => {
-        const companiesUrl = 'https://api.prosperworks.com/developer_api/v1/people/search';
-        const headers = getHeaders();
-
-        if (e.target.value.length > 5) {
-            statusText.textContent = "Loading...";
-
-            await fetch(companiesUrl, {
-                method: 'POST',
-                headers: headers,
-                body: JSON.stringify({
-                    "page_size": 200,
-                    "name": e.target.value
-                })
-            }).then(resp => {
-                if (resp.ok) {
-                    return resp.json();
-                } else {
-                    return Promise.reject(resp);
-                }
-            }).then(data => {
-                console.log(data);
-                if (data.length === 0) {
-                    statusText.textContent = "Not found";
-                    contactAppNameList.innerHTML = "";
-                    return;
-                };
-
-                statusText.textContent = `Found ${data.length} items`;
-
-                let liElements = "";
-                data.forEach(item => {
-                    liElements += `<li class="contact-application-name-list-item" data-id=${item.id} data-name="${item.name}" data-company="${item.company_name}">${item.name} ${item.emails.length ? `${item.emails[0].email}` : ""} <span class="company-name">${item.company_name}</span></li>`;
-                });
-                contactAppNameList.innerHTML = liElements;
-
-                const contactAppNameListItems = contactAppNameList.querySelectorAll('li');
-                contactAppNameListItems.forEach(item => {
-                    item.addEventListener('click', (e) => {
-                        primaryContactID = e.currentTarget.dataset.id;
-                        sendFormBtn.disabled = false;
-                        contactAppNameInput.disabled = true;
-                        statusText.textContent = "Choosen";
-                        contactAppNameList.innerHTML = `<li class="contact-application-name-list-item choosen">${e.currentTarget.dataset.id} - ${e.currentTarget.dataset.name} (${e.currentTarget.dataset.company}) <span id="delete-contact" class="delete">Delete</span></li>`;
-
-                        document.getElementById('delete-contact').addEventListener('click', (e) => {
-                            contactAppNameInput.disabled = false;
-                            statusText.textContent = "Search contact again";
-                            primaryContactID = null;
-                            contactAppNameList.innerHTML = "";
-                        }, false);
-                    }, false);
-                });
-            }).catch(error => {
-                sendFormBtn.disabled = false;
-                console.error('Error:', error);
-            });
-        }
-    };
-
     const handleClickSendForm = (e) => {
         e.preventDefault();
-        console.log(primaryContactID);
 
         let messageElem = getMessageElement('send-form', e.target);
 
@@ -637,6 +649,7 @@ const showFormScratchMe = () => {
             selectPipeline.classList.add('error');
             showItemMessage(messageElem, 'Please, complete the form', 'error-message', sendFormBtn, true);
         } else if (!Boolean(primaryContactID)) {
+            contactAppNameList.classList.add('error');
             showItemMessage(messageElem, 'Please, complete the form', 'error-message', sendFormBtn, true);
         } else {
             showItemMessage(messageElem, '', 'success-message', sendFormBtn, true);
@@ -646,11 +659,11 @@ const showFormScratchMe = () => {
             const acountDetailData = JSON.parse(retrievedAcountDataObject);
 
             const data = {
-                name: postTitleInput.value,
-                primary_contact_id: primaryContactID,
-                company_id: acountDetailData['company_id'],
+                name: String(postTitleInput.value),
+                primary_contact_id: Number(primaryContactID),
+                company_id: Number(acountDetailData['company_id']),
                 pipeline_id: Number(selectPipeline.value),
-                details: postContentTextarea.value,
+                details: String(postContentTextarea.value),
             };
 
             const url = 'https://api.prosperworks.com/developer_api/v1/opportunities';
@@ -697,10 +710,35 @@ const showFormScratchMe = () => {
         };
     };
 
-    // Listen to all input events
-    scratchMeForm.addEventListener('input', handleInputEvent, true);
+    const extractedDataWrapperHeight = extractedDataWrapper.clientHeight;
+    extractedDataWrapper.style.maxHeight = `${extractedDataWrapperHeight}px`;
+
+    const hideExtractedData = () => {
+        if (!extractedDataWrapper.classList.contains('hidden')) {
+            extractedDataWrapper.style.maxHeight = 0;
+            showExtractedData.textContent = "Show all extracted data";
+            extractedDataWrapper.classList.add('hidden');
+            return true;
+        } return false;
+    }
+
+    const showHideExtractedData = (e) => {
+        e.preventDefault();
+
+        if (!hideExtractedData()) {
+            extractedDataWrapper.style.maxHeight = `${extractedDataWrapperHeight}px`;
+            showExtractedData.textContent = "Hide all extracted data";
+            extractedDataWrapper.classList.remove('hidden');
+        };
+    };
+
     // Choose a format
     selectDataFormat.addEventListener('change', handleChangeSelectFormat, false);
+
+    // Listen to all input events
+    showExtractedData.addEventListener('click', showHideExtractedData, false);
+
+    scratchMeForm.addEventListener('input', handleInputEvent, true);
 
     sysTestConnectionBtn.addEventListener('click', handleClickTestConnection, false);
 
@@ -711,8 +749,6 @@ const showFormScratchMe = () => {
     clearDataBtn.addEventListener('click', clearExtractedData, false);
 
     editConnectionBtn.addEventListener('click', handleEditConnection, false);
-
-    contactAppNameInput.addEventListener('keyup', handleKeyUpContactAppName, false);
 }
 
 if (document.readyState === 'loading') {
