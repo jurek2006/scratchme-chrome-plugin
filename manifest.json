@@ -1,6 +1,7 @@
 {
     "manifest_version": 2,
     "name": "JS Scratch Me",
+    "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAumPaxyGXXeBM8LJX3UkrCbatfr9oIrtWpOw2w++ZjDmzNLpVlWpPlzeUnvDeMcS8DspnkuR2wCtiUGYxtid0xpwgxOwl2CFzaP4djBwdvteFFrF9bOfRaHa2nBTyP3R9o1KmsymOnqv+WUNR4FjX53/mcJH9iVZijt5KRxNk8ADmVpD4u6Jj30kwAa13lITW6BrxIb/arg0vQjEQ0X3snzE278eoUkqE1gXCasFdg8/Hyog8CJGX+U6y+MBioVfgpcyjRwP3NDQXbBamLU5zrS8NVlGaAU4sKxVYEl7YqptDth65cNt6zBM1KCvSAz3LhYdAUOHA9IT6Ks303r5qKQIDAQAB",
     "short_name": "JS Scratch Me",
     "description": "Save any Facebook Post to simple JSON form",
     "version": "2.0",
@@ -8,7 +9,8 @@
     "permissions": [
         "tabs",
         "activeTab",
-        "storage"
+        "storage",
+        "identity"
     ],
     "browser_action": {
         "default_popup": "popup.html",
@@ -39,5 +41,12 @@
                 "css/main.min.css"
             ]
         }
-    ]
+    ],
+    "content_security_policy": "script-src 'self' https://apis.google.com/; object-src 'self'",
+    "oauth2": {
+        "client_id": "1011074552537-8s87oshrnidd6ca7j7lq45uokl8rod92.apps.googleusercontent.com",
+        "scopes": [
+            "https://www.googleapis.com/auth/spreadsheets"
+        ]
+    }
 }
