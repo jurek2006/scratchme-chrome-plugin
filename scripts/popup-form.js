@@ -2,6 +2,8 @@
 
 const showFormScratchMe = () => {
     const popup = document.querySelector('.popup');
+    const extractedDataWrapper = document.getElementById('extracted-data');
+    const showExtractedData = document.getElementById('show-extracted-data');
 
     // Form
     const scratchMeForm = document.getElementById('scratch-me-form');
@@ -14,7 +16,7 @@ const showFormScratchMe = () => {
     const postUrlInput = document.getElementById('post-url');
     const postIdInput = document.getElementById('post-id');
 
-    // Select and display format e.g JSON/Cooper/cURL
+    // Select and display format e.g JSON/copper/cURL
     const selectDataFormat = document.getElementById('select-data-format');
     const codeAreaContent = document.getElementById('code-area-content');
 
@@ -22,6 +24,11 @@ const showFormScratchMe = () => {
     const sysAccessTokenInput = document.getElementById('access-token');
     const sysAppNameInput = document.getElementById('application-name');
     const sysUserAppEmailInput = document.getElementById('user-application-email');
+    const selectPipeline = document.getElementById('select-pipeline');
+    const copperDataWrapper = document.getElementById('copper-data-wrapper');
+    const copperConectionWrapper = document.getElementById('copper-connection-wrapper');
+    const contactAppNameList = document.getElementById('contact-application-name-list');
+    const statusText = document.getElementById('status-text');
 
     // Buttons
     const sysSaveConnectionBtn = document.getElementById('save-connection');
@@ -29,11 +36,44 @@ const showFormScratchMe = () => {
     const sendFormBtn = document.getElementById('send-form');
     const copyToClipBtn = document.getElementById('copy-to-clip-btn');
     const clearDataBtn = document.getElementById('clear-data-btn');
+    const editConnectionBtn = document.getElementById('edit-connection');
+
+    // primary_contact_id global variable
+    let primaryContactID = null;
 
 
     chrome.storage.sync.get(['postData'], (storage) => {
         setFieldsValue(storage.postData);
     });
+
+    // Get headers for request to copper
+    const getHeaders = () => {
+        return {
+            'X-PW-AccessToken': sysAccessTokenInput.value,
+            'X-PW-Application': sysAppNameInput.value,
+            'X-PW-UserEmail': sysUserAppEmailInput.value,
+            'Content-Type': 'application/json',
+        }
+    }
+
+    const getDataFromCopper = async (url) => {
+        const headers = getHeaders();
+
+        return await fetch(url, {
+            method: 'GET',
+            headers: headers
+        });
+    }
+
+    const postDataFromCopper = async (url, data) => {
+        const headers = getHeaders();
+
+        return await fetch(url, {
+            method: 'POST',
+            headers: headers,
+            body: JSON.stringify(data)
+        });
+    }
 
 
     const copyToClipboard = (e) => {
@@ -52,7 +92,7 @@ const showFormScratchMe = () => {
             copyToClipMessage.classList.remove('active');
         }, 4000);
 
-    };
+    }
 
 
     const clearExtractedData = (e) => {
@@ -71,7 +111,6 @@ const showFormScratchMe = () => {
         } catch (error) {
             console.log('Error: ' + error);
         }
-
     }
 
 
@@ -84,7 +123,7 @@ const showFormScratchMe = () => {
         const minutes = (date.getMinutes() < 10 ? '0' : '') + date.getMinutes();
 
         return `${date.getFullYear()}-${month}-${dayMonth}T${hours}:${minutes}`
-    };
+    }
 
 
 
@@ -95,8 +134,8 @@ const showFormScratchMe = () => {
 
         postAuthorInput.value = author;
         postDatetimeInput.value = setDateTimeValue(uTime);
-        postTitleInput.value = `${postId ? postId + " - " : ""}${content.slice(0, 20)}... - ${author}`;
-        postContentTextarea.value = content;
+        postTitleInput.value = `${content.slice(0, 180)}...`;
+        postContentTextarea.value = `${url} - ${content}`;
         postUrlInput.value = url;
         postIdInput.value = postId || "0";
     }
@@ -122,7 +161,7 @@ const showFormScratchMe = () => {
     }
 
     const showItemMessage = (messageElem, text, itemClassName, disabledElem, isDisable) => {
-        messageElem.classList.add(itemClassName);
+        messageElem.className = `result-message result-message ${itemClassName}`;
         messageElem.innerHTML = text;
         disabledElem.disabled = isDisable;
 
@@ -147,7 +186,7 @@ const showFormScratchMe = () => {
             content: postContentTextarea.value,
             datetime: postDatetimeInput.value,
             postUrl: postUrlInput.value
-        };
+        }
 
         // Copy to clipboard
         copyToClipBtn.addEventListener('click', copyToClipboard, false);
@@ -219,7 +258,7 @@ const showFormScratchMe = () => {
 
         // If all else fails, return a generic catchall error
         return 'The value you entered for this field is invalid.';
-    };
+    }
 
 
 
@@ -256,7 +295,7 @@ const showFormScratchMe = () => {
         // Show error message
         message.style.display = 'block';
         message.style.visibility = 'visible';
-    };
+    }
 
 
 
@@ -284,7 +323,7 @@ const showFormScratchMe = () => {
         message.innerHTML = '';
         message.style.display = 'none';
         message.style.visibility = 'hidden';
-    };
+    }
 
 
     // Validates and checks that form fields are correct. Return the first field with an arror.
@@ -332,6 +371,8 @@ const showFormScratchMe = () => {
         const targetValue = e.target.value;
         const contentOfSelectedOption = document.querySelectorAll('.content-of-selected-option');
 
+        hideExtractedData();
+
         for (const content of contentOfSelectedOption)
             content.classList.add('disabled');
 
@@ -341,66 +382,92 @@ const showFormScratchMe = () => {
         if (selectedContent)
             selectedContent.classList.remove('disabled');
 
-
-        if (targetValue === 'cooper') {
+        if (targetValue === 'copper') {
 
             sysAccessTokenInput.required = true;
             sysAppNameInput.required = true;
             sysUserAppEmailInput.required = true;
             sysUserAppEmailInput.pattern = "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$";
 
-
             const retrievedObject = localStorage.getItem('systemConnectionData');
             const connectionData = JSON.parse(retrievedObject);
 
-            if(connectionData) {
+            if (connectionData) {
                 sysAccessTokenInput.value = connectionData['X-PW-AccessToken'];
                 sysAppNameInput.value = connectionData['X-PW-Application'];
                 sysUserAppEmailInput.value = connectionData['X-PW-UserEmail'];
+                sysTestConnectionBtn.disabled = false;
+
+                fetchCompanyID();
+                fetchPipelines();
+                searchPrimaryContact(postAuthorInput.value);
+            } else {
+                copperDataWrapper.style.display = 'none';
+                copperConectionWrapper.classList.remove('disabled');
+                editConnectionBtn.classList.add('disabled');
             }
 
         } else if (targetValue.slice(0, 4) === 'code') {
             generateCode(targetValue.slice(5));
 
         } else {
-
             sysAccessTokenInput.required = false;
             sysAppNameInput.required = false;
             sysUserAppEmailInput.required = false;
             sysUserAppEmailInput.removeAttribute('pattern');
-
         }
+    }
+
+    const fetchAccount = async (messageElem) => {
+        await getDataFromCopper('https://api.prosperworks.com/developer_api/v1/account')
+            .then(resp => {
+                if (resp.ok) {
+                    if (messageElem) {
+                        showItemMessage(messageElem, 'Connection success', 'success-message', sysSaveConnectionBtn, false);
+                    }
+
+                    return resp.json();
+                } else {
+                    return Promise.reject(resp);
+                }
+            }).then(data => {
+                const acoundDetailData = {
+                    'company_id': data.id,
+                    'company_name': data.name
+                }
+
+                try {
+                    localStorage.setItem('acoundDetailData', JSON.stringify(acoundDetailData));
+                } catch (error) {
+                    console.log('Error: ' + error);
+                } finally {
+                    copperDataWrapper.style.display = "block";
+                }
+
+                fetchPipelines();
+                searchPrimaryContact(postAuthorInput.value);
+            }).catch(error => {
+                sendFormBtn.disabled = false;
+                if (error.status === 429) {
+                    showItemMessage(messageElem, '429 - Too Many Requests', 'error-message', sysSaveConnectionBtn, true);
+                } else if (error.status === 401) {
+                    showItemMessage(messageElem, '401 - Unauthorized', 'error-message', sysSaveConnectionBtn, true);
+                } else if (error.status === 500) {
+                    showItemMessage(messageElem, '500 - Internal Server Error', 'error-message', sysSaveConnectionBtn, true);
+                } else {
+                    showItemMessage(messageElem, 'Connection failed', 'error-message', sysSaveConnectionBtn, true);
+                }
+                copperDataWrapper.style.display = "none";
+                console.error('Error:', error);
+            });
     }
 
     const handleClickTestConnection = (e) => {
         e.preventDefault();
         let messageElem = getMessageElement('test-connection', e.target);
 
-
-        const url = 'https://example.com';
-        // const data = { username: 'example' };
-
-        fetch(url, {
-            method: 'GET',
-            // body: JSON.stringify(data),
-            // headers: {
-            //     'Content-Type': 'application/json',
-            //     'X-PW-AccessToken': sysAccessTokenInput.value,
-            //     'X-PW-Application': sysAppNameInput.value,
-            //     'X-PW-UserEmail': sysUserAppEmailInput.value
-            // }
-        }).then(res => res.json())
-            .then(response => {
-                console.log('Success:', JSON.stringify(response));
-                showItemMessage(messageElem, 'Connection success', 'success-message', sysSaveConnectionBtn, false);
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                sendFormBtn.disabled = false;
-                showItemMessage(messageElem, 'Connection failed', 'error-message', sysSaveConnectionBtn, true);
-            });
+        fetchAccount(messageElem);
     }
-
 
     const handleClickSaveConnection = (e) => {
         e.preventDefault();
@@ -409,15 +476,161 @@ const showFormScratchMe = () => {
             'X-PW-AccessToken': sysAccessTokenInput.value,
             'X-PW-Application': sysAppNameInput.value,
             'X-PW-UserEmail': sysUserAppEmailInput.value
-        };
+        }
 
         try {
             localStorage.setItem('systemConnectionData', JSON.stringify(systemConnectionData));
         } catch (error) {
             console.log('Error: ' + error);
+        } finally {
+            copperConectionWrapper.classList.add('disabled');
+            editConnectionBtn.classList.remove('disabled');
         }
     }
 
+    const handleEditConnection = (e) => {
+        e.preventDefault();
+
+        if (copperConectionWrapper.classList.contains('disabled')) {
+            copperConectionWrapper.classList.remove('disabled');
+            editConnectionBtn.classList.add('disabled');
+        }
+    }
+
+    const fetchPipelines = async () => {
+        await getDataFromCopper('https://api.prosperworks.com/developer_api/v1/pipelines')
+            .then(resp => {
+                if (resp.ok) {
+                    return resp.json();
+                } else {
+                    return Promise.reject(resp);
+                }
+            }).then(data => {
+                while (selectPipeline.options.length) selectPipeline.remove(0);
+                selectPipeline.add(new Option('-- Please choose a pipeline --', ''));
+
+                for (let i in data) {
+                    selectPipeline.add(new Option(data[i].name, data[i].id));
+                }
+            }).catch(error => {
+                sendFormBtn.disabled = false;
+                console.error('Error:', error);
+            });
+    }
+
+    const fetchCompanyID = async () => {
+        if (!localStorage.getItem('acoundDetailData')) {
+            await fetchAccount();
+        }
+
+        const retrievedAcountDataObject = localStorage.getItem('acoundDetailData');
+        const acountDetailData = JSON.parse(retrievedAcountDataObject);
+
+        const data = {
+            "name": acountDetailData['company_name']
+        }
+
+        await postDataFromCopper('https://api.prosperworks.com/developer_api/v1/companies/search', data)
+            .then(resp => {
+                if (resp.ok) {
+                    return resp.json();
+                } else {
+                    return Promise.reject(resp);
+                }
+            }).catch(error => {
+                sendFormBtn.disabled = false;
+                console.error('Error:', error);
+            });
+    }
+
+    const createNewPerson = async (name) => {
+        const data = {
+            "name": name
+        }
+
+        statusText.textContent = "A new person is created...";
+
+        await postDataFromCopper('https://api.prosperworks.com/developer_api/v1/people', data)
+            .then(resp => {
+                if (resp.ok) {
+                    return resp.json();
+                } else {
+                    return Promise.reject(resp);
+                }
+            }).then(data => {
+                statusText.textContent = `Create a new person ${data.name} (${data.id})`;
+                primaryContactID = data.id;
+            }).catch(error => {
+                statusText.textContent = `Creating new person failed`;
+                sendFormBtn.disabled = false;
+                console.error('Error:', error);
+            });
+    }
+
+    const addItemsToList = (liElements, countElements) => {
+        statusText.textContent = `Found ${countElements} items. Choose a contact`;
+        primaryContactID = null;
+        contactAppNameList.innerHTML = liElements;
+
+        const contactAppNameListItems = contactAppNameList.querySelectorAll('li');
+
+        contactAppNameListItems.forEach(item => {
+            item.addEventListener('click', (e) => {
+                const { dataset } = e.currentTarget;
+
+                primaryContactID = dataset.id;
+                sendFormBtn.disabled = false;
+                statusText.textContent = "Choosen";
+                contactAppNameList.innerHTML = `<li class="contact-application-name-list-item choosen">${dataset.id} - ${dataset.name} ${item.company_name ? "(" + item.company_name + ")" : ""} <span id="delete-contact" class="delete">Undo</span></li>`;
+
+                contactAppNameList.classList.remove('error');
+                contactAppNameList.classList.add('choosen');
+
+                document.getElementById('delete-contact').addEventListener('click', (e) => {
+                    addItemsToList(liElements, countElements);
+                    contactAppNameList.classList.remove('choosen');
+                }, false);
+            }, false);
+        });
+    }
+
+    const searchPrimaryContact = async (name) => {
+        if (postAuthorInput === '') return;
+
+        const data = {
+            "page_size": 200,
+            "name": name
+        }
+
+        statusText.textContent = "Loading...";
+
+        await postDataFromCopper('https://api.prosperworks.com/developer_api/v1/people/search', data)
+            .then(resp => {
+                if (resp.ok) {
+                    return resp.json();
+                } else {
+                    return Promise.reject(resp);
+                }
+            }).then(data => {
+                if (data.length === 0) {
+                    statusText.textContent = "Not found. Contact will be created during saving.";
+                    contactAppNameList.innerHTML = "";
+
+                    createNewPerson(name);
+                    return;
+                }
+
+                let liElements = "";
+                data.forEach((item, index) => {
+                    liElements += `<li class="contact-application-name-list-item" data-id=${item.id} data-name="${item.name}" data-company="${item.company_name}">${index + 1}. ${item.name} ${item.emails.length ? `${item.emails[0].email}` : ""} ${item.company_name ? "(" + item.company_name + ")" : ""}</li>`;
+                });
+
+                addItemsToList(liElements, data.length);
+            }).catch(error => {
+                sendFormBtn.disabled = false;
+                console.error('Error:', error);
+            });
+    }
 
     const handleClickSendForm = (e) => {
         e.preventDefault();
@@ -425,28 +638,100 @@ const showFormScratchMe = () => {
         let messageElem = getMessageElement('send-form', e.target);
 
         const hasErrors = isTheFormCorrect(); // function returns first field with an error
-
         // If there are errrors, don't submit form and focus on first element with error
         if (hasErrors) {
-            
             hasErrors.focus();
-            showItemMessage(messageElem, 'Please, complete the form', 'error-message', sysSaveConnectionBtn, true);
-        
+            showItemMessage(messageElem, 'Please, complete the form', 'error-message', sendFormBtn, true);
+        } else if (selectPipeline.value === '') {
+            selectPipeline.classList.add('error');
+            showItemMessage(messageElem, 'Please, complete the form', 'error-message', sendFormBtn, true);
+        } else if (!Boolean(primaryContactID)) {
+            contactAppNameList.classList.add('error');
+            showItemMessage(messageElem, 'Please, complete the form', 'error-message', sendFormBtn, true);
         } else {
+            showItemMessage(messageElem, '', 'success-message', sendFormBtn, true);
+            sendFormBtn.textContent = "Sending...";
 
-            popup.classList.add('success');
-            clearExtractedData(false);
-            chrome.windows.getCurrent((win) => setTimeout(() => chrome.windows.remove(win.id), 4000));
-        
+            const retrievedAcountDataObject = localStorage.getItem('acoundDetailData');
+            const acountDetailData = JSON.parse(retrievedAcountDataObject);
+
+            const data = {
+                name: String(postTitleInput.value),
+                primary_contact_id: Number(primaryContactID),
+                company_id: Number(acountDetailData['company_id']),
+                pipeline_id: Number(selectPipeline.value),
+                details: String(postContentTextarea.value),
+            }
+
+            postDataFromCopper('https://api.prosperworks.com/developer_api/v1/opportunities', data)
+                .then(resp => {
+                    if (resp.ok) {
+                        popup.classList.add('success');
+                        clearExtractedData(false);
+
+                        chrome.windows.getCurrent((win) => {
+                            const closeWindowBtn = document.getElementById('close-window');
+                            const countdownWrapper = document.getElementById('count-down');
+                            let countdownInSeconds = 5;
+
+                            const closeWindow = () => {
+                                clearInterval(intervalId);
+                                chrome.windows.remove(win.id);
+                            }
+
+                            const intervalId = setInterval(() => {
+                                countdownWrapper.textContent = String(--countdownInSeconds);
+                                if (countdownInSeconds === 0) {
+                                    closeWindow();
+                                }
+                            }, 1000);
+
+                            closeWindowBtn.addEventListener('click', () => {
+                                closeWindow();
+                            });
+                        });
+                    } else {
+                        return Promise.reject(resp);
+                    }
+                }).catch(error => {
+                    sendFormBtn.textContent = "Send to Copper"
+                    showItemMessage(messageElem, 'Error sending to system. Try sending the data again later.', 'error-message', sendFormBtn, false);
+                    console.error('Error:', error);
+                });
         }
-
     }
 
+    const extractedDataWrapperHeight = extractedDataWrapper.clientHeight;
+    extractedDataWrapper.style.maxHeight = `${extractedDataWrapperHeight}px`;
 
-    // Listen to all input events
-    scratchMeForm.addEventListener('input', handleInputEvent, true);
+    const hideExtractedData = () => {
+        if (!extractedDataWrapper.classList.contains('hidden')) {
+            extractedDataWrapper.style.maxHeight = 0;
+            showExtractedData.textContent = "Show all extracted data";
+            extractedDataWrapper.classList.add('hidden');
+            return true;
+        }
+
+        return false;
+    }
+
+    const showHideExtractedData = (e) => {
+        e.preventDefault();
+
+        if (!hideExtractedData()) {
+            extractedDataWrapper.style.maxHeight = `${extractedDataWrapperHeight}px`;
+            showExtractedData.textContent = "Hide all extracted data";
+            extractedDataWrapper.classList.remove('hidden');
+        }
+    }
+
     // Choose a format
     selectDataFormat.addEventListener('change', handleChangeSelectFormat, false);
+
+    // Listen to all input events
+    showExtractedData.addEventListener('click', showHideExtractedData, false);
+
+    scratchMeForm.addEventListener('input', handleInputEvent, true);
 
     sysTestConnectionBtn.addEventListener('click', handleClickTestConnection, false);
 
@@ -456,6 +741,7 @@ const showFormScratchMe = () => {
 
     clearDataBtn.addEventListener('click', clearExtractedData, false);
 
+    editConnectionBtn.addEventListener('click', handleEditConnection, false);
 }
 
 if (document.readyState === 'loading') {

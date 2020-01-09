@@ -1,8 +1,6 @@
 chrome.runtime.onMessage.addListener((req, sender) => {
-
     if (req.isClickedButton) {
         chrome.browserAction.setBadgeText({ text: 'New' });
-
 
         chrome.windows.create({
             url: chrome.extension.getURL("popup-form.html"),

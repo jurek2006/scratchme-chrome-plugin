@@ -2,13 +2,14 @@
     "manifest_version": 2,
     "name": "Scratch Me",
     "short_name": "Scratch Me",
-    "description": "Save any Facebook Post to simple JSON form",
+    "description": "Save any Facebook Post to CRM.",
     "version": "2.0",
     "homepage_url": "https://github.com/bravelab/scratchme-chrome-plugin",
     "permissions": [
         "tabs",
         "activeTab",
-        "storage"
+        "storage",
+        "https://api.prosperworks.com/developer_api/v1/*"
     ],
     "browser_action": {
         "default_popup": "popup.html",
