@@ -36,86 +36,88 @@
         </header>
 
         <div class="popup-form">
-          <form action="" id="scratch-me-form" class="validate">
-            <!-- Author input -->
-            <div class="popup-form-item">
-              <label for="post-author">Author: </label>
-              <input
-                type="text"
-                id="post-author"
-                placeholder="Enter the author of the post"
-                name="post-author"
-                minlength="3"
-                maxlength="40"
-                pattern="[^()/><\][\\\x22,;|]+"
-                required
-              />
-            </div>
+          <form action="" id="scratch-me-form">
+            <fieldset id="from-facebook" class="validate">
+              <!-- Author input -->
+              <div class="popup-form-item">
+                <label for="post-author">Author: </label>
+                <input
+                  type="text"
+                  id="post-author"
+                  placeholder="Enter the author of the post"
+                  name="post-author"
+                  minlength="3"
+                  maxlength="40"
+                  pattern="[^()/><\][\\\x22,;|]+"
+                  required
+                />
+              </div>
 
-            <!-- Date input -->
-            <div class="popup-form-item">
-              <label for="post-datetime">Date: </label>
-              <input
-                type="datetime-local"
-                id="post-datetime"
-                name="post-datetime"
-                required
-              />
-            </div>
+              <!-- Date input -->
+              <div class="popup-form-item">
+                <label for="post-datetime">Date: </label>
+                <input
+                  type="datetime-local"
+                  id="post-datetime"
+                  name="post-datetime"
+                  required
+                />
+              </div>
 
-            <!-- Title input -->
-            <div class="popup-form-item">
-              <label for="post-title">Title: </label>
-              <input
-                type="text"
-                id="post-title"
-                placeholder="Enter the post title"
-                name="post-title"
-                minlength="3"
-                maxlength="40"
-                required
-              />
-            </div>
+              <!-- Title input -->
+              <div class="popup-form-item">
+                <label for="post-title">Title: </label>
+                <input
+                  type="text"
+                  id="post-title"
+                  placeholder="Enter the post title"
+                  name="post-title"
+                  minlength="3"
+                  maxlength="40"
+                  required
+                />
+              </div>
 
-            <!-- Content textarea -->
-            <div class="popup-form-item">
-              <label for="post-content">Content:</label>
-              <textarea
-                id="post-content"
-                name="post-content"
-                rows="10"
-                cols="35"
-                minlength="3"
-                placeholder="Enter the content of the post"
-              ></textarea>
-            </div>
+              <!-- Content textarea -->
+              <div class="popup-form-item">
+                <label for="post-content">Content:</label>
+                <textarea
+                  id="post-content"
+                  name="post-content"
+                  rows="10"
+                  cols="35"
+                  minlength="3"
+                  placeholder="Enter the content of the post"
+                ></textarea>
+              </div>
 
-            <!-- Url input -->
-            <div class="popup-form-item">
-              <label for="post-url">Post URL:</label>
-              <input
-                type="url"
-                id="post-url"
-                name="post-url"
-                placeholder="Enter the post URL"
-                minlength="2"
-                pattern="^(?:(?:https?|HTTPS?|ftp|FTP):\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-zA-Z\u00a1-\uffff0-9]-*)*[a-zA-Z\u00a1-\uffff0-9]+)(?:\.(?:[a-zA-Z\u00a1-\uffff0-9]-*)*[a-zA-Z\u00a1-\uffff0-9]+)*)(?::\d{2,})?(?:[\/?#]\S*)?$"
-                size="30"
-              />
-            </div>
+              <!-- Url input -->
+              <div class="popup-form-item">
+                <label for="post-url">Post URL:</label>
+                <input
+                  type="url"
+                  id="post-url"
+                  name="post-url"
+                  placeholder="Enter the post URL"
+                  minlength="2"
+                  pattern="^(?:(?:https?|HTTPS?|ftp|FTP):\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-zA-Z\u00a1-\uffff0-9]-*)*[a-zA-Z\u00a1-\uffff0-9]+)(?:\.(?:[a-zA-Z\u00a1-\uffff0-9]-*)*[a-zA-Z\u00a1-\uffff0-9]+)*)(?::\d{2,})?(?:[\/?#]\S*)?$"
+                  size="30"
+                />
+              </div>
 
-            <!-- PostID input -->
-            <div class="popup-form-item">
-              <label for="post-id">Post ID: </label>
-              <input
-                type="text"
-                id="post-id"
-                name="post-id"
-                pattern="[-+]?[0-9]*[.,]?[0-9]+"
-                placeholder="Enter the post id"
-                required
-              />
-            </div>
+              <!-- PostID input -->
+              <div class="popup-form-item">
+                <label for="post-id">Post ID: </label>
+                <input
+                  type="text"
+                  id="post-id"
+                  name="post-id"
+                  pattern="[-+]?[0-9]*[.,]?[0-9]+"
+                  placeholder="Enter the post id"
+                  required
+                />
+              </div>
+            </fieldset>
 
             <div class="popup-form-item btn-wrapper">
               <button type="reset" id="clear-data-btn" class="btn btn-1">
@@ -135,7 +137,10 @@
               </select>
             </div>
 
-            <div id="google-sheets" class="content-of-selected-option disabled">
+            <fieldset
+              id="google-sheets"
+              class="content-of-selected-option disabled"
+            >
               <!-- Google SpreadSheet ID -->
               <div class="popup-form-item">
                 <label for="google-spreadsheet-id"
@@ -174,9 +179,9 @@
                   Send to Google Sheets
                 </button>
               </div>
-            </div>
+            </fieldset>
 
-            <div id="cooper" class="content-of-selected-option disabled">
+            <fieldset id="cooper" class="content-of-selected-option disabled">
               <!-- Access Token input -->
               <div class="popup-form-item">
                 <label for="access-token">X-PW-AccessToken:</label>
@@ -239,10 +244,10 @@
                   Send to Cooper
                 </button>
               </div>
-            </div>
+            </fieldset>
 
             <!-- Code area -->
-            <div
+            <fieldset
               id="code-area"
               class="popup-form-item content-of-selected-option disabled"
             >
@@ -260,7 +265,7 @@
                 cols="30"
                 rows="10"
               ></textarea>
-            </div>
+            </fieldset>
           </form>
         </div>
 

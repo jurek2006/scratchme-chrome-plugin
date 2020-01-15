@@ -76,6 +76,9 @@ const showFormScratchMe = () => {
   // Form
   const scratchMeForm = document.getElementById('scratch-me-form');
 
+  // Form fieldset with fields to be filled from facebook
+  const fieldsetFromFacebook = document.getElementById('from-facebook');
+
   // Facebook data
   const postAuthorInput = document.getElementById('post-author');
   const postDatetimeInput = document.getElementById('post-datetime');
@@ -89,12 +92,14 @@ const showFormScratchMe = () => {
   const codeAreaContent = document.getElementById('code-area-content');
 
   // Google Sheets data
+  const googleSpreadSheetFieldset = document.getElementById('google-sheets');
   const googleSpreadSheetId = document.getElementById('google-spreadsheet-id');
   const googleSpreadSheetTabName = document.getElementById(
     'google-spreadsheet-tab-name'
   );
 
   // System CRM data
+  const cooperFieldset = document.getElementById('cooper');
   const sysAccessTokenInput = document.getElementById('access-token');
   const sysAppNameInput = document.getElementById('application-name');
   const sysUserAppEmailInput = document.getElementById(
@@ -103,6 +108,7 @@ const showFormScratchMe = () => {
 
   // Buttons
   let sendFormBtn; // flexible button for sending form - is changed according to selected storing option
+  let sendingOptionsFieldset; // flexible container - changed when selected sending(storing) option (for validating fields only for chosen option)
 
   const sysSaveConnectionBtn = document.getElementById('save-connection');
   const sysTestConnectionBtn = document.getElementById('test-connection');
@@ -386,11 +392,14 @@ const showFormScratchMe = () => {
     message.style.visibility = 'hidden';
   };
 
-  // Validates and checks that form fields are correct. Return the first field with an arror.
-  const isTheFormCorrect = () => {
+  // Validates and checks that form fields in formItem are correct. Return the first field with an arror.
+  const isTheFormIncorrect = formItem => {
+    // formItem can be form or fieldset element
+
     // Validate each field
     // Store the first field with an error to a variable so we can bring it into focus later
-    const fields = scratchMeForm.elements;
+
+    const fields = formItem.elements;
     let error, hasErrors;
 
     for (let i = 0; i < fields.length; i++) {
@@ -435,8 +444,11 @@ const showFormScratchMe = () => {
     let error = hasError(e.target);
 
     // Button disabled when the form is incorrect
+    // Checking fieldset with fields from facebook and fieldset for chosen sending option (e.g. GoogleSheets or Cooper)
     if (sendFormBtn) {
-      sendFormBtn.disabled = Boolean(isTheFormCorrect());
+      sendFormBtn.disabled =
+        Boolean(isTheFormIncorrect(fieldsetFromFacebook)) ||
+        Boolean(isTheFormIncorrect(sendingOptionsFieldset));
     }
 
     // If there's an error, show it
@@ -465,9 +477,13 @@ const showFormScratchMe = () => {
     if (selectedContent) selectedContent.classList.remove('disabled');
 
     if (targetValue === 'google-sheets') {
+      // set active button for sending and fieldset for validating option configuration fields
       sendFormBtn = sendGoogleSheetsBtn;
+      sendingOptionsFieldset = googleSpreadSheetFieldset;
     } else if (targetValue === 'cooper') {
+      // set active button for sending and fieldset for validating option configuration fields
       sendFormBtn = sendCooperBtn;
+      sendingOptionsFieldset = cooperFieldset;
 
       sysAccessTokenInput.required = true;
       sysAppNameInput.required = true;
@@ -559,7 +575,10 @@ const showFormScratchMe = () => {
 
     let messageElem = getMessageElement('send-form', e.target);
 
-    const hasErrors = isTheFormCorrect(); // function returns first field with an error
+    // additional form checking - if form is invalid sending button should be anyway disabled and shouldn't get here
+    const hasErrors =
+      isTheFormIncorrect(fieldsetFromFacebook) ||
+      isTheFormIncorrect(sendingOptionsFieldset); //checking fields scratched from fb and fields from selected sending option (function returns first field with an error from both)
 
     // If there are errors, don't submit form and focus on first element with error
     if (hasErrors) {
