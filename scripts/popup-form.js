@@ -32,6 +32,20 @@ function saveToGoogleSheets(rowToSave, spreadsheetConfig) {
       sheetTabName
     }
   */
+  const isGoogleConfigPassed =
+    spreadsheetConfig &&
+    spreadsheetConfig.sheetId &&
+    spreadsheetConfig.sheetId.length > 0 &&
+    spreadsheetConfig.sheetTabName &&
+    spreadsheetConfig.sheetTabName.length > 0;
+
+  if (!isGoogleConfigPassed) {
+    return Promise.reject('Spreadsheet ID and/or Tab not defined');
+  }
+
+  if (!rowToSave || !Array.isArray(rowToSave) || rowToSave.length === 0) {
+    return Promise.reject('Not passed data to store in Google Sheets');
+  }
 
   return new Promise((resolve, reject) => {
     // get the token
