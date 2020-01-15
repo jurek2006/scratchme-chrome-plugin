@@ -573,7 +573,8 @@ const showFormScratchMe = () => {
   const handleClickSendForm = (sendFunction, e) => {
     e.preventDefault();
 
-    let messageElem = getMessageElement('send-form', e.target);
+    // send id of clicked button to get or created message element in current option
+    let messageElem = getMessageElement(e.target.id, e.target);
 
     // additional form checking - if form is invalid sending button should be anyway disabled and shouldn't get here
     const hasErrors =
