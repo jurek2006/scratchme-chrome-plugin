@@ -5,7 +5,8 @@ import {
   showItemMessage,
   isTheFormIncorrect,
   hasError,
-  showError
+  showError,
+  getMessageElement
 } from './modules/helpers.js';
 
 const showFormScratchMe = () => {
@@ -136,26 +137,6 @@ const showFormScratchMe = () => {
     postContentTextarea.value = content;
     postUrlInput.value = url;
     postIdInput.value = postId || '0';
-  };
-
-  const getMessageElement = (id, targetElem) => {
-    let messageElem = targetElem.form.querySelector(
-      '.result-message#message-for-' + id
-    );
-
-    if (!messageElem) {
-      messageElem = document.createElement('div');
-      messageElem.className = 'result-message';
-      messageElem.id = 'message-for-' + id;
-
-      // Otherwise, insert it after the field
-      let label;
-      if (!label) {
-        targetElem.parentNode.insertBefore(messageElem, targetElem.parent);
-      }
-    }
-
-    return messageElem;
   };
 
   const generateCode = codeName => {

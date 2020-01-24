@@ -122,6 +122,24 @@ export const isTheFormIncorrect = formItem => {
   return hasErrors;
 };
 
+export const getMessageElement = (id, targetElem, isErrorMessage = false) => {
+  let messageElem = targetElem.form.querySelector(
+    (isErrorMessage
+      ? '.error-message#error-for-'
+      : '.result-message#message-for-') + id
+  );
+
+  if (!messageElem) {
+    messageElem = document.createElement('div');
+    messageElem.className = isErrorMessage ? 'error-message' : 'result-message';
+    messageElem.id = (isErrorMessage ? 'error-for-' : 'message-for-') + id;
+
+    targetElem.parentNode.insertBefore(messageElem, targetElem.parent);
+  }
+
+  return messageElem;
+};
+
 // Show an error message
 export const showError = (field, error) => {
   // Add error class to field
@@ -130,24 +148,19 @@ export const showError = (field, error) => {
   // Get field id or name
   const id = field.id || field.name;
   if (!id) return;
+
   // Check if error message field already exists
   // If not, create one
-  let message = field.form.querySelector('.error-message#error-for-' + id);
-  if (!message) {
-    message = document.createElement('div');
-    message.className = 'error-message';
-    message.id = 'error-for-' + id;
-
-    field.parentNode.insertBefore(message, field.nextSibling);
-  }
+  // 3. parameter true means it is error message instead of regular result message
+  const messageElem = getMessageElement(id, field, true);
 
   // Add ARIA role to the field
   field.setAttribute('aria-describedby', 'error-for-' + id);
 
   // Update error message
-  message.innerHTML = error;
+  messageElem.innerHTML = error;
 
   // Show error message
-  message.style.display = 'block';
-  message.style.visibility = 'visible';
+  messageElem.style.display = 'block';
+  messageElem.style.visibility = 'visible';
 };
