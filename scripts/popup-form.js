@@ -24,28 +24,43 @@ const showFormScratchMe = () => {
   const codeAreaContent = document.getElementById('code-area-content');
 
   // Google Sheets data
-  const googleSpreadSheetFieldset = document.getElementById('google-sheets');
   const googleSpreadSheetId = document.getElementById('google-spreadsheet-id');
   const googleSpreadSheetTabName = document.getElementById(
     'google-spreadsheet-tab-name'
   );
 
   // System CRM data
-  const cooperFieldset = document.getElementById('cooper');
   const sysAccessTokenInput = document.getElementById('access-token');
   const sysAppNameInput = document.getElementById('application-name');
   const sysUserAppEmailInput = document.getElementById(
     'user-application-email'
   );
 
-  // Buttons
-  let sendFormBtn; // flexible button for sending form - is changed according to selected storing option
-  let sendingOptionsFieldset; // flexible container - changed when selected sending(storing) option (for validating fields only for chosen option)
+  let connectionOptionsFieldset; // flexible container - assigned when selected sending(storing) option (for validating fields only for chosen option)
 
-  const sysSaveConnectionBtn = document.getElementById('save-connection');
-  const sysTestConnectionBtn = document.getElementById('test-connection');
+  // Buttons
+  let sendFormBtn; // flexible button for sending form - is assigned according to selected storing option
+  let testConnectionBtn; // flexible button for testing selected connection - assigned when option selected
+  let saveConnectionBtn; // flexible button for saving selected connection - assigned when option selected
+
+  // get all saveConnetion buttons (all do the same)
+  const saveConnectionButtonsArray = document.querySelectorAll(
+    'button.js-save-connection-btn'
+  );
+
+  // Google Sheets buttons
   const sendGoogleSheetsBtn = document.getElementById('send-to-google-sheets');
+  const testConnectionGoogleSheetsBtn = document.getElementById(
+    'test-connection-google-sheets'
+  );
+
+  // Cooper buttons
   const sendCooperBtn = document.getElementById('send-to-cooper');
+  const testConnectionCooperBtn = document.getElementById(
+    'test-connection-cooper'
+  );
+
+  // Other buttons
   const copyToClipBtn = document.getElementById('copy-to-clip-btn');
   const clearDataBtn = document.getElementById('clear-data-btn');
 
@@ -184,8 +199,6 @@ const showFormScratchMe = () => {
     )
       return;
 
-    sysTestConnectionBtn.disabled = true;
-
     const validity = field.validity;
 
     if (validity.valid) return;
@@ -272,14 +285,6 @@ const showFormScratchMe = () => {
 
   // Remove the error message
   const removeError = field => {
-    if (
-      sysAccessTokenInput.value &&
-      sysAppNameInput.value &&
-      sysUserAppEmailInput.value
-    ) {
-      sysTestConnectionBtn.disabled = false;
-    }
-
     // Remove error class to field
     field.classList.remove('error');
 
@@ -302,7 +307,7 @@ const showFormScratchMe = () => {
     message.style.visibility = 'hidden';
   };
 
-  // Validates and checks that form fields in formItem are correct. Return the first field with an arror.
+  // Validates and checks that form fields in formItem are correct. Return the first field with an error.
   const isTheFormIncorrect = formItem => {
     // formItem can be form or fieldset element
 
@@ -335,7 +340,13 @@ const showFormScratchMe = () => {
     if (sendFormBtn) {
       sendFormBtn.disabled =
         Boolean(isTheFormIncorrect(fieldsetFromFacebook)) ||
-        Boolean(isTheFormIncorrect(sendingOptionsFieldset));
+        Boolean(isTheFormIncorrect(connectionOptionsFieldset));
+    }
+
+    if (testConnectionBtn) {
+      testConnectionBtn.disabled = Boolean(
+        isTheFormIncorrect(connectionOptionsFieldset)
+      );
     }
 
     // If there's an error, show it
@@ -361,70 +372,59 @@ const showFormScratchMe = () => {
       `${targetValue.slice(0, 4) === 'code' ? 'code-area' : targetValue}`
     );
 
-    if (selectedContent) selectedContent.classList.remove('disabled');
+    if (selectedContent) {
+      // enable fieldset for selected option
+      selectedContent.classList.remove('disabled');
 
-    if (targetValue === 'google-sheets') {
-      // set active button for sending and fieldset for validating option configuration fields
-      sendFormBtn = sendGoogleSheetsBtn;
-      sendingOptionsFieldset = googleSpreadSheetFieldset;
-    } else if (targetValue === 'cooper') {
-      // set active button for sending and fieldset for validating option configuration fields
-      sendFormBtn = sendCooperBtn;
-      sendingOptionsFieldset = cooperFieldset;
+      // set current fieldset (for selected 'connection' option)
+      connectionOptionsFieldset = selectedContent;
 
-      sysAccessTokenInput.required = true;
-      sysAppNameInput.required = true;
-      sysUserAppEmailInput.required = true;
-      sysUserAppEmailInput.pattern = '^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$';
+      // set current buttons from selected option
+      testConnectionBtn = connectionOptionsFieldset.querySelector(
+        'button.js-test-connection-btn'
+      );
+      saveConnectionBtn = connectionOptionsFieldset.querySelector(
+        'button.js-save-connection-btn'
+      );
+      sendFormBtn = connectionOptionsFieldset.querySelector(
+        'button.js-send-data-btn'
+      );
 
-      const retrievedObject = localStorage.getItem('systemConnectionData');
-      const connectionData = JSON.parse(retrievedObject);
-
-      if (connectionData) {
-        sysAccessTokenInput.value = connectionData['X-PW-AccessToken'];
-        sysAppNameInput.value = connectionData['X-PW-Application'];
-        sysUserAppEmailInput.value = connectionData['X-PW-UserEmail'];
+      // if there's a test-connection button in selected option
+      // check if option's fieldset is valid and enable the button if so
+      if (testConnectionBtn) {
+        testConnectionBtn.disabled = Boolean(
+          isTheFormIncorrect(connectionOptionsFieldset)
+        );
       }
-    } else if (targetValue.slice(0, 4) === 'code') {
+    }
+
+    // if selected option with code - generate code
+    if (targetValue.slice(0, 4) === 'code') {
       generateCode(targetValue.slice(5));
-    } else {
-      sysAccessTokenInput.required = false;
-      sysAppNameInput.required = false;
-      sysUserAppEmailInput.required = false;
-      sysUserAppEmailInput.removeAttribute('pattern');
     }
   };
 
-  const handleClickTestConnection = e => {
+  // invokes passed function for testing connection
+  // shows relevant message about success or error returned from the function
+  // enables saveConnectionButton if connection succeeded (disabled when failed)
+  const handleClickTestConnection = (testConnectionFunction, e) => {
     e.preventDefault();
-    let messageElem = getMessageElement('test-connection', e.target);
+    // get(create if doesn't exist) element with id basen on id of clicked button
+    let messageElem = getMessageElement(e.target.id, e.target);
 
-    const url = 'https://example.com';
-    // const data = { username: 'example' };
-
-    fetch(url, {
-      method: 'GET'
-      // body: JSON.stringify(data),
-      // headers: {
-      //     'Content-Type': 'application/json',
-      //     'X-PW-AccessToken': sysAccessTokenInput.value,
-      //     'X-PW-Application': sysAppNameInput.value,
-      //     'X-PW-UserEmail': sysUserAppEmailInput.value
-      // }
-    })
-      .then(res => res.json())
+    testConnectionFunction()
       .then(response => {
-        console.log('Success:', JSON.stringify(response));
-        showItemMessage(messageElem, 'Connection success', 'success');
-        disableInput(sysSaveConnectionBtn, false);
+        // connected successfully
+        showItemMessage(messageElem, response, 'success');
+        disableInput(saveConnectionBtn, false);
       })
       .catch(error => {
-        console.error('Error:', error);
-        if (sendFormBtn) {
-          sendFormBtn.disabled = false;
-        }
-        showItemMessage(messageElem, 'Connection failed', 'error');
-        disableInput(sysSaveConnectionBtn, true);
+        // connection error occured
+        console.log('Error in testing connection', error);
+
+        showItemMessage(messageElem, `Connection failed: ${error}`, 'error');
+        disableInput(saveConnectionBtn, true);
       });
   };
 
@@ -456,13 +456,13 @@ const showFormScratchMe = () => {
     // additional form checking - if form is invalid sending button should be anyway disabled and shouldn't get here
     const hasErrors =
       isTheFormIncorrect(fieldsetFromFacebook) ||
-      isTheFormIncorrect(sendingOptionsFieldset); //checking fields scratched from fb and fields from selected sending option (function returns first field with an error from both)
+      isTheFormIncorrect(connectionOptionsFieldset); //checking fields scratched from fb and fields from selected sending option (function returns first field with an error from both)
 
     // If there are errors, don't submit form and focus on first element with error
     if (hasErrors) {
       hasErrors.focus();
       showItemMessage(messageElem, 'Please, complete the form', 'error');
-      disableInput(sysSaveConnectionBtn, true);
+      disableInput(sendFormBtn, true);
     } else {
       // if there's no error call given sendFunction (must return promise)
       sendFunction()
@@ -476,7 +476,7 @@ const showFormScratchMe = () => {
         })
         .catch(error => {
           showItemMessage(messageElem, error, 'error');
-          disableInput(sysSaveConnectionBtn, true);
+          disableInput(sendFormBtn, true);
         });
     }
   };
@@ -486,17 +486,15 @@ const showFormScratchMe = () => {
   // Choose a format
   selectDataFormat.addEventListener('change', handleChangeSelectFormat, false);
 
-  sysTestConnectionBtn.addEventListener(
-    'click',
-    handleClickTestConnection,
-    false
-  );
+  // set handler for ALL SAVE CONNECTION BUTTONS
+  // for each connection option (they share the same handler)
+  saveConnectionButtonsArray.forEach(saveBtn => {
+    saveBtn.addEventListener('click', () => {
+      console.log('saving not defined yet');
+    });
+  });
 
-  sysSaveConnectionBtn.addEventListener(
-    'click',
-    handleClickSaveConnection,
-    false
-  );
+  // set handlers for GOOGLE SHEETS BUTTONS
 
   sendGoogleSheetsBtn.addEventListener(
     'click',
@@ -519,9 +517,29 @@ const showFormScratchMe = () => {
     false
   );
 
+  // TEMP - pass real function for testing connection
+  // for now always succeed
+  testConnectionGoogleSheetsBtn.addEventListener(
+    'click',
+    handleClickTestConnection.bind(null, () =>
+      Promise.resolve('Connected to fake GSheets')
+    ),
+    false
+  );
+
+  // set handlers for COOPER BUTTONS
+
   sendCooperBtn.addEventListener(
     'click',
     handleClickSendForm.bind(null, cooperModule.sendDataToSave),
+    false
+  );
+
+  testConnectionCooperBtn.addEventListener(
+    'click',
+    handleClickTestConnection.bind(null, () =>
+      Promise.reject('Testing Cooper Connection not implemented')
+    ),
     false
   );
 

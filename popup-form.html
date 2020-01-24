@@ -195,7 +195,7 @@
               <div class="popup-form-item btn-wrapper">
                 <button
                   type="submit"
-                  class="btn btn-2 js-send-form"
+                  class="btn btn-2 js-send-data-btn"
                   id="send-to-google-sheets"
                   disabled
                 >
@@ -213,6 +213,7 @@
                   id="access-token"
                   placeholder="YOUR_TOKEN_HERE"
                   name="access-token"
+                  required="true"
                 />
               </div>
 
@@ -224,6 +225,7 @@
                   id="application-name"
                   placeholder="developer_api"
                   name="application-name"
+                  required="true"
                 />
               </div>
 
@@ -231,10 +233,11 @@
               <div class="popup-form-item">
                 <label for="user-application-email">X-PW-UserEmail:</label>
                 <input
-                  type="text"
+                  type="email"
                   id="user-application-email"
                   placeholder="YOUR_EMAIL_HERE"
                   name="user-application-email"
+                  required="true"
                 />
               </div>
 
@@ -263,7 +266,7 @@
                 <!-- button send to Cooper -->
                 <button
                   type="submit"
-                  class="btn btn-2 js-send-form"
+                  class="btn btn-2 js-send-data-btn"
                   id="send-to-cooper"
                   disabled
                 >
