@@ -1,5 +1,6 @@
 import googleSheetsModule from './modules/googleSheetsModule.js';
 import cooperModule from './modules/cooperModule.js';
+import { disableInput, showItemMessage } from './modules/helpers.js';
 
 const showFormScratchMe = () => {
   const popup = document.querySelector('.popup');
@@ -134,28 +135,6 @@ const showFormScratchMe = () => {
     }
 
     return messageElem;
-  };
-
-  const showItemMessage = (
-    messageElem,
-    text,
-    itemClassName,
-    disabledElem,
-    isDisable
-  ) => {
-    messageElem.classList.add(itemClassName);
-    messageElem.innerHTML = text;
-    disabledElem.disabled = isDisable;
-
-    // Show error message
-    messageElem.style.display = 'block';
-    messageElem.style.visibility = 'visible';
-
-    setTimeout(() => {
-      messageElem.innerHTML = '';
-      messageElem.style.display = 'none';
-      messageElem.style.visibility = 'hidden';
-    }, 5000);
   };
 
   const generateCode = codeName => {
@@ -436,26 +415,16 @@ const showFormScratchMe = () => {
       .then(res => res.json())
       .then(response => {
         console.log('Success:', JSON.stringify(response));
-        showItemMessage(
-          messageElem,
-          'Connection success',
-          'success-message',
-          sysSaveConnectionBtn,
-          false
-        );
+        showItemMessage(messageElem, 'Connection success', 'success');
+        disableInput(sysSaveConnectionBtn, false);
       })
       .catch(error => {
         console.error('Error:', error);
         if (sendFormBtn) {
           sendFormBtn.disabled = false;
         }
-        showItemMessage(
-          messageElem,
-          'Connection failed',
-          'error-message',
-          sysSaveConnectionBtn,
-          true
-        );
+        showItemMessage(messageElem, 'Connection failed', 'error');
+        disableInput(sysSaveConnectionBtn, true);
       });
   };
 
@@ -492,13 +461,8 @@ const showFormScratchMe = () => {
     // If there are errors, don't submit form and focus on first element with error
     if (hasErrors) {
       hasErrors.focus();
-      showItemMessage(
-        messageElem,
-        'Please, complete the form',
-        'error-message',
-        sysSaveConnectionBtn,
-        true
-      );
+      showItemMessage(messageElem, 'Please, complete the form', 'error');
+      disableInput(sysSaveConnectionBtn, true);
     } else {
       // if there's no error call given sendFunction (must return promise)
       sendFunction()
@@ -511,13 +475,8 @@ const showFormScratchMe = () => {
           );
         })
         .catch(error => {
-          showItemMessage(
-            messageElem,
-            error,
-            'error-message',
-            sysSaveConnectionBtn,
-            true
-          );
+          showItemMessage(messageElem, error, 'error');
+          disableInput(sysSaveConnectionBtn, true);
         });
     }
   };
