@@ -164,3 +164,15 @@ export const showError = (field, error) => {
   messageElem.style.display = 'block';
   messageElem.style.visibility = 'visible';
 };
+
+// from all inputs in form grap input's name and value and put it in associative array
+export const getInputs = form => {
+  const inputsArray = form.querySelectorAll('input');
+
+  const inputsObj = {};
+  inputsArray.forEach(input => {
+    Object.assign(inputsObj, { [input.name]: input.value });
+  });
+
+  return inputsObj;
+};

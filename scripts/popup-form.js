@@ -6,7 +6,8 @@ import {
   isTheFormIncorrect,
   hasError,
   showError,
-  getMessageElement
+  getMessageElement,
+  getInputs
 } from './modules/helpers.js';
 
 const showFormScratchMe = () => {
@@ -300,19 +301,27 @@ const showFormScratchMe = () => {
   const handleClickSaveConnection = e => {
     e.preventDefault();
 
-    const systemConnectionData = {
-      'X-PW-AccessToken': sysAccessTokenInput.value,
-      'X-PW-Application': sysAppNameInput.value,
-      'X-PW-UserEmail': sysUserAppEmailInput.value
-    };
+    const messageElem = getMessageElement(e.target.id, e.target);
 
+    // get activeFieldset of options (based on which button was clicked - get button's ancestor)
+    const activeFieldset = e.target.closest(
+      'fieldset.content-of-selected-option'
+    );
+
+    // get fieldset inputs names & values
+    const connectionOptions = getInputs(activeFieldset);
+
+    // store options
     try {
       localStorage.setItem(
-        'systemConnectionData',
-        JSON.stringify(systemConnectionData)
+        activeFieldset.id,
+        JSON.stringify(connectionOptions)
       );
+      showItemMessage(messageElem, 'Connection options saved', 'success');
+      disableInput(testConnectionBtn, true);
     } catch (error) {
-      console.log('Error: ' + error);
+      showItemMessage(messageElem, 'Failed saving connection options', 'error');
+      disableInput(testConnectionBtn, false);
     }
   };
 
@@ -358,9 +367,7 @@ const showFormScratchMe = () => {
   // set handler for ALL SAVE CONNECTION BUTTONS
   // for each connection option (they share the same handler)
   saveConnectionButtonsArray.forEach(saveBtn => {
-    saveBtn.addEventListener('click', () => {
-      console.log('saving not defined yet');
-    });
+    saveBtn.addEventListener('click', handleClickSaveConnection);
   });
 
   // set handlers for GOOGLE SHEETS BUTTONS
@@ -387,7 +394,6 @@ const showFormScratchMe = () => {
   );
 
   // TEMP - pass real function for testing connection
-  // for now always succeed
   testConnectionGoogleSheetsBtn.addEventListener(
     'click',
     handleClickTestConnection.bind(null, () =>
@@ -407,7 +413,7 @@ const showFormScratchMe = () => {
   testConnectionCooperBtn.addEventListener(
     'click',
     handleClickTestConnection.bind(null, () =>
-      Promise.reject('Testing Cooper Connection not implemented')
+      Promise.resolve('Connected successfully')
     ),
     false
   );
