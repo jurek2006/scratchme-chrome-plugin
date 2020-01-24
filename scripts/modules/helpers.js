@@ -38,3 +38,116 @@ export const showItemMessage = (
     messageElem.style.visibility = 'hidden';
   }, 5000);
 };
+
+export const hasError = field => {
+  // Don't validate submits, buttons, file and reset inputs, and disabled fields
+  if (
+    field.disabled ||
+    field.type === 'file' ||
+    field.type === 'reset' ||
+    field.type === 'submit' ||
+    field.type === 'button'
+  )
+    return;
+
+  const validity = field.validity;
+
+  if (validity.valid) return;
+
+  // If field is required and empty
+  if (validity.valueMissing) return 'Please fill out this field.';
+
+  // If not the right type
+  if (validity.typeMismatch) {
+    if (field.type === 'email') return 'Please enter an email address.';
+    if (field.type === 'url') return 'Please enter a URL.';
+  }
+
+  // If too short
+  if (validity.tooShort)
+    return (
+      'Please lengthen this text to ' +
+      field.getAttribute('minLength') +
+      ' characters or more. You are currently using ' +
+      field.value.length +
+      ' characters.'
+    );
+
+  // If too long
+  if (validity.tooLong)
+    return (
+      'Please shorten this text to no more than ' +
+      field.getAttribute('maxLength') +
+      ' characters. You are currently using ' +
+      field.value.length +
+      ' characters.'
+    );
+
+  // If number input isn't a number
+  if (validity.badInput) return 'Please enter a number.';
+
+  // If pattern doesn't match
+  if (validity.patternMismatch) {
+    // If pattern info is included, return custom error
+    if (field.hasAttribute('title')) return field.getAttribute('title');
+
+    // Otherwise, generic error
+    return 'Please match the requested format.';
+  }
+
+  // If all else fails, return a generic catchall error
+  return 'The value you entered for this field is invalid.';
+};
+
+// Validates and checks that form fields in formItem are correct. Return the first field with an error.
+export const isTheFormIncorrect = formItem => {
+  // formItem can be form or fieldset element
+
+  // Validate each field
+  // Store the first field with an error to a variable so we can bring it into focus later
+
+  const fields = formItem.elements;
+  let error, hasErrors;
+
+  for (let i = 0; i < fields.length; i++) {
+    error = hasError(fields[i]);
+    if (error) {
+      showError(fields[i], error);
+      if (!hasErrors) {
+        hasErrors = fields[i];
+      }
+    }
+  }
+
+  return hasErrors;
+};
+
+// Show an error message
+export const showError = (field, error) => {
+  // Add error class to field
+  field.classList.add('error');
+
+  // Get field id or name
+  const id = field.id || field.name;
+  if (!id) return;
+  // Check if error message field already exists
+  // If not, create one
+  let message = field.form.querySelector('.error-message#error-for-' + id);
+  if (!message) {
+    message = document.createElement('div');
+    message.className = 'error-message';
+    message.id = 'error-for-' + id;
+
+    field.parentNode.insertBefore(message, field.nextSibling);
+  }
+
+  // Add ARIA role to the field
+  field.setAttribute('aria-describedby', 'error-for-' + id);
+
+  // Update error message
+  message.innerHTML = error;
+
+  // Show error message
+  message.style.display = 'block';
+  message.style.visibility = 'visible';
+};
