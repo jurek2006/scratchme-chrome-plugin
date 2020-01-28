@@ -218,3 +218,46 @@ export const loadConnection = currentOptionFieldset => {
     }
   });
 };
+
+// Validates the form
+// receives object with elements required for validation
+// shows visual indicators on fields with error in isTheFormIncorrect()
+export const validateForm = formElementsObj => {
+  const {
+    sendFormBtn,
+    testConnectionBtn,
+    fieldsetFromFacebook,
+    connectionOptionsFieldset
+  } = formElementsObj;
+
+  let isFieldsetFromFacebookIncorrect;
+  let isConnectionOptionsFieldsetIncorrect;
+
+  if (!fieldsetFromFacebook) {
+    // fieldsetFromFacebook should be always checked (thus given here)
+    // if not, something went wrong and validation won't work
+    throw new Error(
+      'not passed fieldsetFromFacebook to validateForm, neccessary for proper form validation'
+    );
+  }
+  isFieldsetFromFacebookIncorrect = Boolean(
+    isTheFormIncorrect(fieldsetFromFacebook)
+  );
+
+  // connectionOptionsFieldset is given (to be validated) only if user selected any option
+  if (connectionOptionsFieldset) {
+    isConnectionOptionsFieldsetIncorrect = Boolean(
+      isTheFormIncorrect(connectionOptionsFieldset)
+    );
+  }
+
+  // DISABLING / ENABLING BUTTONS
+  if (sendFormBtn) {
+    sendFormBtn.disabled =
+      isFieldsetFromFacebookIncorrect || isConnectionOptionsFieldsetIncorrect;
+  }
+
+  if (testConnectionBtn) {
+    testConnectionBtn.disabled = isConnectionOptionsFieldsetIncorrect;
+  }
+};

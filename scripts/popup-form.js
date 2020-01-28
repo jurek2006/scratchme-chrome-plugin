@@ -4,10 +4,10 @@ import {
   disableInput,
   showItemMessage,
   isTheFormIncorrect,
-  hasError,
   getMessageElement,
   getInputs,
-  loadConnection
+  loadConnection,
+  validateForm
 } from './modules/helpers.js';
 
 const showFormScratchMe = () => {
@@ -176,26 +176,6 @@ const showFormScratchMe = () => {
     }
   };
 
-  // Listen to all input event
-  const handleInputEvent = e => {
-    // Validate the field
-    let error = hasError(e.target);
-
-    // Button disabled when the form is incorrect
-    // Checking fieldset with fields from facebook and fieldset for chosen sending option (e.g. GoogleSheets or Cooper)
-    if (sendFormBtn) {
-      sendFormBtn.disabled =
-        Boolean(isTheFormIncorrect(fieldsetFromFacebook)) ||
-        Boolean(isTheFormIncorrect(connectionOptionsFieldset));
-    }
-
-    if (testConnectionBtn) {
-      testConnectionBtn.disabled = Boolean(
-        isTheFormIncorrect(connectionOptionsFieldset)
-      );
-    }
-  };
-
   const handleChangeSelectFormat = e => {
     const targetValue = e.target.value;
     const contentOfSelectedOption = document.querySelectorAll(
@@ -234,17 +214,12 @@ const showFormScratchMe = () => {
         loadConnection(connectionOptionsFieldset);
       }
 
-      // if there's a test-connection button in selected option
-      // check if option's fieldset is valid and enable the button if so
-      if (testConnectionBtn) {
-        testConnectionBtn.disabled = Boolean(
-          isTheFormIncorrect(connectionOptionsFieldset)
-        );
-      }
-
-      sendFormBtn.disabled =
-        Boolean(isTheFormIncorrect(fieldsetFromFacebook)) ||
-        Boolean(isTheFormIncorrect(connectionOptionsFieldset));
+      validateForm({
+        sendFormBtn,
+        testConnectionBtn,
+        fieldsetFromFacebook,
+        connectionOptionsFieldset
+      });
     }
 
     // if selected option with code - generate code
@@ -337,8 +312,19 @@ const showFormScratchMe = () => {
     }
   };
 
-  // Listen to all input events
-  scratchMeForm.addEventListener('input', handleInputEvent, true);
+  scratchMeForm.addEventListener(
+    'input',
+    () => {
+      validateForm({
+        sendFormBtn,
+        testConnectionBtn,
+        fieldsetFromFacebook,
+        connectionOptionsFieldset
+      });
+    },
+    true
+  );
+
   // Choose a format
   selectDataFormat.addEventListener('change', handleChangeSelectFormat, false);
 
