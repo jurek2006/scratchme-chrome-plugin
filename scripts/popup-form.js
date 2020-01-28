@@ -5,9 +5,9 @@ import {
   showItemMessage,
   isTheFormIncorrect,
   hasError,
-  showError,
   getMessageElement,
-  getInputs
+  getInputs,
+  loadConnection
 } from './modules/helpers.js';
 
 const showFormScratchMe = () => {
@@ -176,30 +176,6 @@ const showFormScratchMe = () => {
     }
   };
 
-  // Remove the error message
-  const removeError = field => {
-    // Remove error class to field
-    field.classList.remove('error');
-
-    // Remove ARIA role from the field
-    field.removeAttribute('aria-describedby');
-
-    // Get field id or name
-    const id = field.id || field.name;
-    if (!id) return;
-
-    // Check if an error message is in the DOM
-    let message = field.form.querySelector(
-      '.error-message#error-for-' + id + ''
-    );
-    if (!message) return;
-
-    // If so, hide it
-    message.innerHTML = '';
-    message.style.display = 'none';
-    message.style.visibility = 'hidden';
-  };
-
   // Listen to all input event
   const handleInputEvent = e => {
     // Validate the field
@@ -218,15 +194,6 @@ const showFormScratchMe = () => {
         isTheFormIncorrect(connectionOptionsFieldset)
       );
     }
-
-    // If there's an error, show it
-    if (error) {
-      showError(e.target, error);
-      return;
-    }
-
-    // Otherwise, remove any existing error message
-    removeError(e.target);
   };
 
   const handleChangeSelectFormat = e => {
@@ -260,6 +227,13 @@ const showFormScratchMe = () => {
         'button.js-send-data-btn'
       );
 
+      // LOADING CONNECTION OPTIONS
+      if (saveConnectionBtn) {
+        // if there's a save-connection btn for the option
+        // it means there can be stored connection options
+        loadConnection(connectionOptionsFieldset);
+      }
+
       // if there's a test-connection button in selected option
       // check if option's fieldset is valid and enable the button if so
       if (testConnectionBtn) {
@@ -267,6 +241,10 @@ const showFormScratchMe = () => {
           isTheFormIncorrect(connectionOptionsFieldset)
         );
       }
+
+      sendFormBtn.disabled =
+        Boolean(isTheFormIncorrect(fieldsetFromFacebook)) ||
+        Boolean(isTheFormIncorrect(connectionOptionsFieldset));
     }
 
     // if selected option with code - generate code

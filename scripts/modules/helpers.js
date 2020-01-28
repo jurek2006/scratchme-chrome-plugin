@@ -100,6 +100,7 @@ export const hasError = field => {
 };
 
 // Validates and checks that form fields in formItem are correct. Return the first field with an error.
+// marks fields with error
 export const isTheFormIncorrect = formItem => {
   // formItem can be form or fieldset element
 
@@ -116,6 +117,8 @@ export const isTheFormIncorrect = formItem => {
       if (!hasErrors) {
         hasErrors = fields[i];
       }
+    } else {
+      removeError(fields[i]);
     }
   }
 
@@ -165,6 +168,28 @@ export const showError = (field, error) => {
   messageElem.style.visibility = 'visible';
 };
 
+// Remove the error message
+export const removeError = field => {
+  // Remove error class to field
+  field.classList.remove('error');
+
+  // Remove ARIA role from the field
+  field.removeAttribute('aria-describedby');
+
+  // Get field id or name
+  const id = field.id || field.name;
+  if (!id) return;
+
+  // Check if an error message is in the DOM
+  let message = field.form.querySelector('.error-message#error-for-' + id + '');
+  if (!message) return;
+
+  // If so, hide it
+  message.innerHTML = '';
+  message.style.display = 'none';
+  message.style.visibility = 'hidden';
+};
+
 // from all inputs in form grap input's name and value and put it in associative array
 export const getInputs = form => {
   const inputsArray = form.querySelectorAll('input');
@@ -175,4 +200,21 @@ export const getInputs = form => {
   });
 
   return inputsObj;
+};
+
+// loads selected connection settings from local storage
+// and sets value in connecion options fieldset
+export const loadConnection = currentOptionFieldset => {
+  const retrievedObject = localStorage.getItem(currentOptionFieldset.id);
+  const connectionData = JSON.parse(retrievedObject);
+
+  // set fields with retrieved connection data
+  Object.entries(connectionData).forEach(([key, value]) => {
+    const inputElement = currentOptionFieldset.querySelector(
+      `input[name="${key}"]`
+    );
+    if (inputElement) {
+      inputElement.value = value;
+    }
+  });
 };
