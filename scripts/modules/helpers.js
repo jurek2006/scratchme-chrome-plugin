@@ -222,6 +222,7 @@ export const loadConnection = currentOptionFieldset => {
 // Validates the form
 // receives object with elements required for validation
 // shows visual indicators on fields with error in isTheFormIncorrect()
+// disables/enables buttons
 export const validateForm = formElementsObj => {
   const {
     sendFormBtn,
@@ -252,12 +253,10 @@ export const validateForm = formElementsObj => {
   }
 
   // DISABLING / ENABLING BUTTONS
-  if (sendFormBtn) {
-    sendFormBtn.disabled =
-      isFieldsetFromFacebookIncorrect || isConnectionOptionsFieldsetIncorrect;
-  }
+  disableInput(
+    sendFormBtn,
+    isFieldsetFromFacebookIncorrect || isConnectionOptionsFieldsetIncorrect
+  );
 
-  if (testConnectionBtn) {
-    testConnectionBtn.disabled = isConnectionOptionsFieldsetIncorrect;
-  }
+  disableInput(testConnectionBtn, isConnectionOptionsFieldsetIncorrect);
 };
