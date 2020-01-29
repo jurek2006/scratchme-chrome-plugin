@@ -220,6 +220,11 @@ const showFormScratchMe = () => {
         fieldsetFromFacebook,
         connectionOptionsFieldset
       });
+
+      // disable save-connection btn both
+      // - when options loaded(no need to save - data already saved)
+      // - when loading failed (options in formset are empty)
+      disableInput(saveConnectionBtn, true);
     }
 
     // if selected option with code - generate code
@@ -272,6 +277,7 @@ const showFormScratchMe = () => {
       );
       showItemMessage(messageElem, 'Connection options saved', 'success');
       disableInput(testConnectionBtn, true);
+      disableInput(saveConnectionBtn, true);
     } catch (error) {
       showItemMessage(messageElem, 'Failed saving connection options', 'error');
       disableInput(testConnectionBtn, false);
@@ -312,18 +318,24 @@ const showFormScratchMe = () => {
     }
   };
 
-  scratchMeForm.addEventListener(
-    'input',
-    () => {
-      validateForm({
-        sendFormBtn,
-        testConnectionBtn,
-        fieldsetFromFacebook,
-        connectionOptionsFieldset
-      });
-    },
-    true
-  );
+  const handleInputEvent = e => {
+    validateForm({
+      sendFormBtn,
+      testConnectionBtn,
+      fieldsetFromFacebook,
+      connectionOptionsFieldset
+    });
+
+    // disable save-connection button only if changed input is from fieldset with connection options
+    disableInput(
+      saveConnectionBtn,
+      Boolean(e.target.closest('fieldset.content-of-selected-option'))
+    );
+  };
+
+  // ADD EVENT LISTENERS
+
+  scratchMeForm.addEventListener('input', handleInputEvent, true);
 
   // Choose a format
   selectDataFormat.addEventListener('change', handleChangeSelectFormat, false);
