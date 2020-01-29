@@ -351,7 +351,6 @@ const showFormScratchMe = () => {
   sendGoogleSheetsBtn.addEventListener(
     'click',
     handleClickSendForm.bind(null, () =>
-      // pass function to handle sending data to google spreadsheets
       googleSheetsModule.sendDataToSave(
         [
           postIdInput.value,
@@ -369,11 +368,13 @@ const showFormScratchMe = () => {
     false
   );
 
-  // TEMP - pass real function for testing connection
   testConnectionGoogleSheetsBtn.addEventListener(
     'click',
     handleClickTestConnection.bind(null, () =>
-      Promise.resolve('Connected to fake GSheets')
+      googleSheetsModule.testConnection({
+        sheetId: googleSpreadSheetId.value,
+        sheetTabName: googleSpreadSheetTabName.value
+      })
     ),
     false
   );
