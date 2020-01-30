@@ -389,9 +389,7 @@ const showFormScratchMe = () => {
 
   testConnectionCooperBtn.addEventListener(
     'click',
-    handleClickTestConnection.bind(null, () =>
-      Promise.resolve('Connected successfully')
-    ),
+    handleClickTestConnection.bind(null, cooperModule.testConnection),
     false
   );
 

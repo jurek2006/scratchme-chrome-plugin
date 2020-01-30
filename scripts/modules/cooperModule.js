@@ -4,4 +4,8 @@ const sendDataToSave = () => {
   return Promise.reject('Sending data to CooperCRM not implemented');
 };
 
-export default { sendDataToSave };
+const testConnection = () => {
+  return Promise.reject('CooperCRM not implemented');
+};
+
+export default { sendDataToSave, testConnection };
