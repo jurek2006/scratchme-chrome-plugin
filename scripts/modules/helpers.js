@@ -208,6 +208,8 @@ export const loadConnection = currentOptionFieldset => {
   const retrievedObject = localStorage.getItem(currentOptionFieldset.id);
   const connectionData = JSON.parse(retrievedObject);
 
+  if (!connectionData) return;
+
   // set fields with retrieved connection data
   Object.entries(connectionData).forEach(([key, value]) => {
     const inputElement = currentOptionFieldset.querySelector(
