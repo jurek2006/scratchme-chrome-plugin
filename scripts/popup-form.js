@@ -1,5 +1,6 @@
 import googleSheetsModule from './modules/googleSheetsModule.js';
 import cooperModule from './modules/cooperModule.js';
+import dummyApiModule from './modules/dummyApiModule.js';
 import {
   disableInput,
   showItemMessage,
@@ -11,6 +12,15 @@ import {
 } from './modules/helpers.js';
 
 const showFormScratchMe = () => {
+  // FLEXIBLE ELEMENTS
+  let connectionOptionsFieldset; // flexible container - assigned when selected sending(storing) option (for validating fields only for chosen option)
+
+  // Buttons
+  let sendFormBtn; // flexible button for sending form - is assigned according to selected storing option
+  let testConnectionBtn; // flexible button for testing selected connection - assigned when option selected
+  let saveConnectionBtn; // flexible button for saving selected connection - assigned when option selected
+
+  // DEFINED ELEMENTS
   const popup = document.querySelector('.popup');
 
   // Form
@@ -31,41 +41,41 @@ const showFormScratchMe = () => {
   const selectDataFormat = document.getElementById('select-data-format');
   const codeAreaContent = document.getElementById('code-area-content');
 
-  // Google Sheets data
+  // Google Sheets connection data
   const googleSpreadSheetId = document.getElementById('google-spreadsheet-id');
   const googleSpreadSheetTabName = document.getElementById(
     'google-spreadsheet-tab-name'
   );
-
-  // System CRM data
-  const sysAccessTokenInput = document.getElementById('access-token');
-  const sysAppNameInput = document.getElementById('application-name');
-  const sysUserAppEmailInput = document.getElementById(
-    'user-application-email'
-  );
-
-  let connectionOptionsFieldset; // flexible container - assigned when selected sending(storing) option (for validating fields only for chosen option)
-
-  // Buttons
-  let sendFormBtn; // flexible button for sending form - is assigned according to selected storing option
-  let testConnectionBtn; // flexible button for testing selected connection - assigned when option selected
-  let saveConnectionBtn; // flexible button for saving selected connection - assigned when option selected
-
-  // get all saveConnetion buttons (all do the same)
-  const saveConnectionButtonsArray = document.querySelectorAll(
-    'button.js-save-connection-btn'
-  );
-
   // Google Sheets buttons
   const sendGoogleSheetsBtn = document.getElementById('send-to-google-sheets');
   const testConnectionGoogleSheetsBtn = document.getElementById(
     'test-connection-google-sheets'
   );
 
-  // Cooper buttons
+  // Dummy API connection data
+  const dummyApiUserId = document.getElementById('dummy-api-user-id');
+  const dummyApiUserName = document.getElementById('dummy-api-user-name');
+  // Dummy API buttons
+  const sendDummyApiBtn = document.getElementById('send-to-dummy-api');
+  const testConnectionDummyApiBtn = document.getElementById(
+    'test-connection-dummy-api'
+  );
+
+  // Cooper CRM connection data
+  const sysAccessTokenInput = document.getElementById('access-token');
+  const sysAppNameInput = document.getElementById('application-name');
+  const sysUserAppEmailInput = document.getElementById(
+    'user-application-email'
+  );
+  // Cooper CRM buttons
   const sendCooperBtn = document.getElementById('send-to-cooper');
   const testConnectionCooperBtn = document.getElementById(
     'test-connection-cooper'
+  );
+
+  // get all saveConnetion buttons (on every option they do the same)
+  const saveConnectionButtonsArray = document.querySelectorAll(
+    'button.js-save-connection-btn'
   );
 
   // Other buttons
@@ -374,6 +384,39 @@ const showFormScratchMe = () => {
       googleSheetsModule.testConnection({
         sheetId: googleSpreadSheetId.value,
         sheetTabName: googleSpreadSheetTabName.value
+      })
+    ),
+    false
+  );
+
+  // set handlers for DUMMY API BUTTONS
+
+  sendDummyApiBtn.addEventListener(
+    'click',
+    handleClickSendForm.bind(null, () =>
+      dummyApiModule.sendDataToSave(
+        {
+          postId: postIdInput.value,
+          postAuthor: postAuthorInput.value,
+          postContent: postContentTextarea.value,
+          postDatetime: postDatetimeInput.value,
+          postUrl: postUrlInput.value
+        },
+        {
+          userId: dummyApiUserId.value,
+          userName: dummyApiUserName.value
+        }
+      )
+    ),
+    false
+  );
+
+  testConnectionDummyApiBtn.addEventListener(
+    'click',
+    handleClickTestConnection.bind(null, () =>
+      dummyApiModule.testConnection({
+        userId: dummyApiUserId.value,
+        userName: dummyApiUserName.value
       })
     ),
     false
