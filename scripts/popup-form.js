@@ -17,7 +17,7 @@ const showFormScratchMe = () => {
   const scratchMeForm = document.getElementById('scratch-me-form');
 
   // Form fieldset with fields to be filled from facebook
-  const fieldsetFromFacebook = document.getElementById('from-facebook');
+  const fromFacebookFieldset = document.getElementById('from-facebook');
 
   // Facebook data
   const postAuthorInput = document.getElementById('post-author');
@@ -32,16 +32,18 @@ const showFormScratchMe = () => {
   const codeAreaContent = document.getElementById('code-area-content');
 
   // Google Sheets data
-  const googleSpreadSheetId = document.getElementById('google-spreadsheet-id');
-  const googleSpreadSheetTabName = document.getElementById(
+  const googleSpreadSheetIdInput = document.getElementById(
+    'google-spreadsheet-id'
+  );
+  const googleSpreadSheetTabNameInput = document.getElementById(
     'google-spreadsheet-tab-name'
   );
 
   // System CRM data
-  const sysAccessTokenInput = document.getElementById('access-token');
-  const sysAppNameInput = document.getElementById('application-name');
-  const sysUserAppEmailInput = document.getElementById(
-    'user-application-email'
+  const cooperAccessTokenInput = document.getElementById('cooper-access-token');
+  const cooperAppNameInput = document.getElementById('cooper-application-name');
+  const cooperUserAppEmailInput = document.getElementById(
+    'cooper-user-application-email'
   );
 
   let connectionOptionsFieldset; // flexible container - assigned when selected sending(storing) option (for validating fields only for chosen option)
@@ -168,9 +170,9 @@ const showFormScratchMe = () => {
 
       case 'curl':
         codeAreaContent.innerHTML = `<code class="curl-language"><span class="code-line">curl --location --request <span class="method">GET</span><span class="value">"https://api.prosperworks.com/developer_api/v1/account"</span><span class="se"> \\</span></span>
-<span class="code-line">--header <span class="value">"X-PW-AccessToken: ${sysAccessTokenInput.value}"</span> <span class="se"> \\</span></span>
-<span class="code-line">--header <span class="value">"X-PW-Application: ${sysAppNameInput.value}"</span> <span class="se"> \\</span></span>
-<span class="code-line">--header <span class="value">"X-PW-UserEmail: ${sysUserAppEmailInput.value}"</span> <span class="se"> \\</span></span>
+<span class="code-line">--header <span class="value">"X-PW-AccessToken: ${cooperAccessTokenInput.value}"</span> <span class="se"> \\</span></span>
+<span class="code-line">--header <span class="value">"X-PW-Application: ${cooperAppNameInput.value}"</span> <span class="se"> \\</span></span>
+<span class="code-line">--header <span class="value">"X-PW-UserEmail: ${cooperUserAppEmailInput.value}"</span> <span class="se"> \\</span></span>
 <span class="code-line">--header <span class="value">"Content-Type: application/json"</span></span></code>`;
         break;
     }
@@ -217,7 +219,7 @@ const showFormScratchMe = () => {
       validateForm({
         sendFormBtn,
         testConnectionBtn,
-        fieldsetFromFacebook,
+        fromFacebookFieldset,
         connectionOptionsFieldset
       });
 
@@ -292,7 +294,7 @@ const showFormScratchMe = () => {
 
     // additional form checking - if form is invalid sending button should be anyway disabled and shouldn't get here
     const hasErrors =
-      isTheFormIncorrect(fieldsetFromFacebook) ||
+      isTheFormIncorrect(fromFacebookFieldset) ||
       isTheFormIncorrect(connectionOptionsFieldset); //checking fields scratched from fb and fields from selected sending option (function returns first field with an error from both)
 
     // If there are errors, don't submit form and focus on first element with error
@@ -322,7 +324,7 @@ const showFormScratchMe = () => {
     validateForm({
       sendFormBtn,
       testConnectionBtn,
-      fieldsetFromFacebook,
+      fromFacebookFieldset,
       connectionOptionsFieldset
     });
 
@@ -360,8 +362,8 @@ const showFormScratchMe = () => {
           postUrlInput.value
         ],
         {
-          sheetId: googleSpreadSheetId.value,
-          sheetTabName: googleSpreadSheetTabName.value
+          sheetId: googleSpreadSheetIdInput.value,
+          sheetTabName: googleSpreadSheetTabNameInput.value
         }
       )
     ),
@@ -372,8 +374,8 @@ const showFormScratchMe = () => {
     'click',
     handleClickTestConnection.bind(null, () =>
       googleSheetsModule.testConnection({
-        sheetId: googleSpreadSheetId.value,
-        sheetTabName: googleSpreadSheetTabName.value
+        sheetId: googleSpreadSheetIdInput.value,
+        sheetTabName: googleSpreadSheetTabNameInput.value
       })
     ),
     false

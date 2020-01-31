@@ -229,22 +229,22 @@ export const validateForm = formElementsObj => {
   const {
     sendFormBtn,
     testConnectionBtn,
-    fieldsetFromFacebook,
+    fromFacebookFieldset,
     connectionOptionsFieldset
   } = formElementsObj;
 
-  let isFieldsetFromFacebookIncorrect;
+  let isfromFacebookFieldsetIncorrect;
   let isConnectionOptionsFieldsetIncorrect;
 
-  if (!fieldsetFromFacebook) {
-    // fieldsetFromFacebook should be always checked (thus given here)
+  if (!fromFacebookFieldset) {
+    // fromFacebookFieldset should be always checked (thus given here)
     // if not, something went wrong and validation won't work
     throw new Error(
-      'not passed fieldsetFromFacebook to validateForm, neccessary for proper form validation'
+      'not passed fromFacebookFieldset to validateForm, neccessary for proper form validation'
     );
   }
-  isFieldsetFromFacebookIncorrect = Boolean(
-    isTheFormIncorrect(fieldsetFromFacebook)
+  isfromFacebookFieldsetIncorrect = Boolean(
+    isTheFormIncorrect(fromFacebookFieldset)
   );
 
   // connectionOptionsFieldset is given (to be validated) only if user selected any option
@@ -257,7 +257,7 @@ export const validateForm = formElementsObj => {
   // DISABLING / ENABLING BUTTONS
   disableInput(
     sendFormBtn,
-    isFieldsetFromFacebookIncorrect || isConnectionOptionsFieldsetIncorrect
+    isfromFacebookFieldsetIncorrect || isConnectionOptionsFieldsetIncorrect
   );
 
   disableInput(testConnectionBtn, isConnectionOptionsFieldsetIncorrect);
