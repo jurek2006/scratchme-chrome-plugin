@@ -131,12 +131,14 @@
               <select id="select-data-format">
                 <option value="">-- Please choose a format --</option>
                 <option value="google-sheets">Google Sheets</option>
+                <option value="dummy-api">DummyAPI</option>
                 <option value="cooper">Cooper CRM</option>
                 <option value="code-json">JSON</option>
                 <option value="code-curl">cURL</option>
               </select>
             </div>
 
+            <!-- Google Spreadsheets connection options -->
             <fieldset
               id="google-sheets"
               class="content-of-selected-option disabled"
@@ -204,6 +206,71 @@
               </div>
             </fieldset>
 
+            <!-- DummyAPI connection options -->
+            <fieldset
+              id="dummy-api"
+              class="content-of-selected-option disabled"
+            >
+              <!-- user ID -->
+              <div class="popup-form-item">
+                <label for="dummy-api-user-id">User ID:</label>
+                <input
+                  type="text"
+                  id="dummy-api-user-id"
+                  placeholder="YOUR_USER_ID"
+                  name="dummy-api-user-id"
+                  required
+                />
+              </div>
+
+              <!-- user name -->
+              <div class="popup-form-item">
+                <label for="dummy-api-user-name">User name:</label>
+                <input
+                  type="text"
+                  id="dummy-api-user-name"
+                  placeholder="YOUR_USER_NAME"
+                  name="dummy-api-user-name"
+                  required
+                />
+              </div>
+
+              <div class="popup-form-item btn-wrapper">
+                <!-- button test-connection for dummy api -->
+                <button
+                  type="button"
+                  id="test-connection-dummy-api"
+                  class="btn btn-1 js-test-connection-btn"
+                  disabled
+                >
+                  Test connection
+                </button>
+
+                <!-- button save-connection for dummy api -->
+                <button
+                  type="button"
+                  id="save-connection-dummy-api"
+                  class="btn btn-1 js-save-connection-btn"
+                  disabled
+                >
+                  Save connection
+                </button>
+              </div>
+
+              <!-- button send to dummy api -->
+              <div class="popup-form-item btn-wrapper">
+                <button
+                  type="submit"
+                  class="btn btn-2 js-send-data-btn"
+                  id="send-to-dummy-api"
+                  disabled
+                >
+                  Send to Dummy Api
+                </button>
+              </div>
+            </fieldset>
+
+            <!-- CooperCRM Spreadsheets connection options -->
             <fieldset id="cooper" class="content-of-selected-option disabled">
               <!-- Access Token input -->
               <div class="popup-form-item">
