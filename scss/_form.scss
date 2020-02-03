@@ -1,86 +1,94 @@
 .popup-form {
-    padding: 15px;
-    background: #fefefe;
-    box-shadow: 0 0 5px $form-shadow;
-    border-radius: $border-radius-val;
+  padding: 15px;
+  background: #fefefe;
+  box-shadow: 0 0 5px $form-shadow;
+  border-radius: $border-radius-val;
+}
+
+.popup-form-item {
+  margin-top: 14px;
+}
+
+.popup-form-item label {
+  display: block;
+  font-family: 'Alegreya Sans', Cantarell, Arial, sans-serif;
+  font-size: $lg-font-size;
+  font-weight: 700;
+  margin-bottom: 6px;
+  color: $form-label-color;
+}
+
+.popup-form-item input,
+.popup-form-item textarea {
+  display: block;
+  width: 100%;
+}
+
+.popup-form-item input,
+.popup-form-item textarea,
+.popup-form-item select {
+  padding: 5px 8px;
+  margin-bottom: 5px;
+  background: #ffffff;
+  color: $form-color;
+  font-family: Cantarell, Arial, sans-serif;
+  line-height: 1.5;
+  border: none;
+  outline: none;
+  box-shadow: 0 0 1px $form-shadow-color, 0 0 0 2px $form-border-color;
+  transition: box-shadow 0.2s ease-in;
+
+  &:hover {
+    box-shadow: 0 0 4px $form-shadow-hover-color, 0 0 0 2px $form-border-color;
   }
-  
-  .popup-form-item {
-    margin-top: 14px;
+
+  &:focus {
+    box-shadow: 0 0 4px $form-shadow-focus-color, 0 0 0 2px $form-border-color;
   }
-  
-  .popup-form-item label {
-    display: block;
-    font-family: 'Alegreya Sans', Cantarell, Arial, sans-serif;
-    font-size: $lg-font-size;
-    font-weight: 700;
-    margin-bottom: 6px;
-    color: $form-label-color;
+
+  &:focus-within {
+    box-shadow: 0 0 8px $form-shadow-focus-color, 0 0 0 2px $form-border-color;
   }
-  
-  .popup-form-item input, .popup-form-item textarea {
-    display: block;
-    width: 100%;
+
+  &:active {
+    box-shadow: 0 0 10px $form-shadow-focus-color, 0 0 0 2px $form-border-color;
   }
-  
-  .popup-form-item input, .popup-form-item textarea, .popup-form-item select {
-    padding: 5px 8px;
-    margin-bottom: 5px;
-    background: #ffffff;
-    color: $form-color;
-    font-family: Cantarell, Arial, sans-serif;
-    line-height: 1.5;
-    border: none;
-    outline: none;
-    box-shadow: 0 0 1px $form-shadow-color, 0 0 0 2px $form-border-color;
-    transition: box-shadow .2s ease-in;
-    
-    &:hover {
-      box-shadow: 0 0 4px $form-shadow-hover-color, 0 0 0 2px $form-border-color;
-    }
-    
-    &:focus {
-      box-shadow: 0 0 4px $form-shadow-focus-color, 0 0 0 2px $form-border-color;
-    }
-    
-    &:focus-within {
-      box-shadow: 0 0 8px $form-shadow-focus-color, 0 0 0 2px $form-border-color;
-    }
-    
-    &:active {
-      box-shadow: 0 0 10px $form-shadow-focus-color, 0 0 0 2px $form-border-color;
-    }
-  }
-  
-  .popup-form-item input.error::-webkit-input-placeholder {
-    color: $form-error-color;
-  }
-  
-  .popup-form-item input.error {
-    box-shadow: 0 0 8px $form-error-color, 0 0 0 2px $form-error-color;
-  }
-  
-  .popup-form-item select {
-    margin-bottom: 10px;
-  }
-  
-  .popup-form-item textarea {
-    resize: vertical;
-  }
-  
-  .popup-form-item .error-message, .popup-form-item .success-message {
-    font-size: $md-font-size;
-    font-weight: 700;
-  }
-  
-  .popup-form-item .error-message {
-    color: $form-error-color;
-  }
-  
-  .popup-form-item .success-message {
-    color: $form-success-color;
-  }
-  
-  .content-of-selected-option.disabled {
-      display: none;
-  }
+}
+
+.popup-form-item input.error::-webkit-input-placeholder {
+  color: $form-error-color;
+}
+
+.popup-form-item input.error {
+  box-shadow: 0 0 8px $form-error-color, 0 0 0 2px $form-error-color;
+}
+
+.popup-form-item select {
+  margin-bottom: 10px;
+}
+
+.popup-form-item textarea {
+  resize: vertical;
+}
+
+.popup-form-item .error-message,
+.popup-form-item .success-message {
+  font-size: $md-font-size;
+  font-weight: 700;
+}
+
+.popup-form-item .error-message {
+  color: $form-error-color;
+}
+
+.popup-form-item .success-message {
+  color: $form-success-color;
+}
+
+.content-of-selected-option.disabled {
+  display: none;
+}
+
+.popup-form-fieldset {
+  border: none;
+}

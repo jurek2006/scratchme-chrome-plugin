@@ -1,65 +1,76 @@
 #copy-to-clipboard-content {
-    position: absolute;
-    top: -100%;
-    left: -100%;
-    opacity: 0;
-    z-index: -999;
-    overflow: hidden;
-    width: 100%;
+  position: absolute;
+  top: -100%;
+  left: -100%;
+  opacity: 0;
+  z-index: -999;
+  overflow: hidden;
+  width: 100%;
 }
-  
+
 #code-area-content {
-    font-family: monospace;
-    font-size: $md-font-size;
-    line-height: 1.5;
-    border-radius: $border-radius-val;
-    box-shadow: 1px 1px 5px rgba(0,0,0,.45);
-    padding: 10px 5px;
-    overflow: auto;
-    background: $code-area-bg;
-    color: $code-area-color;
-    counter-reset: line;
-  
-    span.code-line {
-  
-        &:before {
-            padding: 0 5px;
-            margin-right: 5px;
-            color: $code-line-color;
-            counter-increment: line;
-            content: counter(line);
-        }
+  font-family: monospace;
+  font-size: $md-font-size;
+  line-height: 1.5;
+  border-radius: $border-radius-val;
+  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.45);
+  padding: 10px 5px;
+  overflow: auto;
+  background: $code-area-bg;
+  color: $code-area-color;
+  counter-reset: line;
+
+  span.code-line {
+    &:before {
+      padding: 0 5px;
+      margin-right: 5px;
+      color: $code-line-color;
+      counter-increment: line;
+      content: counter(line);
     }
+  }
 }
-  
+
 .json-language {
-    .key { color: $code-color-3 }
-    .number { color: $code-color-1 }
-    .string { color: $code-color-2 }
+  .key {
+    color: $code-color-3;
+  }
+  .number {
+    color: $code-color-1;
+  }
+  .string {
+    color: $code-color-2;
+  }
 }
-  
+
 .curl-language {
-    .method { color: $code-color-1 }
-    .value { color: $code-color-2 }
-    .se { color: $code-color-3 }
+  .method {
+    color: $code-color-1;
+  }
+  .value {
+    color: $code-color-2;
+  }
+  .se {
+    color: $code-color-3;
+  }
 }
-  
-/* Let's get this party started */ 
-#code-area-content::-webkit-scrollbar { 
-    width: 8px; 
-    height: 8px;
-    background: #2F3137;
-} 
-  
-/* Handle */ 
-#code-area-content::-webkit-scrollbar-thumb { 
-    background: $scrollbar-thumb-color; 
-  
-    &:hover {
-      background: $scrollbar-thumb-color * 1.1;
-    }
-} 
-  
-::-webkit-scrollbar-thumb:window-inactive { 
-    background: $scrollbar-interactive-color; 
+
+/* Let's get this party started */
+#code-area-content::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+  background: #2f3137;
+}
+
+/* Handle */
+#code-area-content::-webkit-scrollbar-thumb {
+  background: $scrollbar-thumb-color;
+
+  &:hover {
+    background: $scrollbar-thumb-color;
+  }
+}
+
+::-webkit-scrollbar-thumb:window-inactive {
+  background: $scrollbar-interactive-color;
 }

@@ -6,8 +6,6 @@
 @import './code-area';
 @import './buttons';
 
-
-
 html * {
   box-sizing: border-box;
   margin: 0;
@@ -32,19 +30,19 @@ html * {
   height: 100vh;
 }
 
-.popup-content, .confirmation-sent {
+.popup-content,
+.confirmation-sent {
   position: absolute;
   top: 0;
-  left: 50%;    
+  left: 50%;
   width: 100%;
   padding: 20px;
-  transition: opacity .7s ease, transform 1s ease;
+  transition: opacity 0.7s ease, transform 1s ease;
 }
 
 .popup-content {
-  transform: translate(-50%,0);
+  transform: translate(-50%, 0);
 }
-
 
 .confirmation-sent {
   display: flex;
@@ -55,45 +53,46 @@ html * {
   font-size: $lg-font-size;
   opacity: 1;
   z-index: 9;
-  transform: translate(100%,0);
-  
+  transform: translate(100%, 0);
+
   .success-icon {
     .material-icons {
-        font-size: 100px;
-        font-weight: 700;
-        color: $form-success-color;
+      font-size: 100px;
+      font-weight: 700;
+      color: $form-success-color;
     }
   }
 }
 
 .popup.success {
   .confirmation-sent {
-      opacity: 1;
-      transform: translate(-50%,0);
+    opacity: 1;
+    transform: translate(-50%, 0);
   }
 
   .popup-content {
-      opacity: 0;
-      transform: translate(-200%, 0);
+    opacity: 0;
+    transform: translate(-200%, 0);
   }
 }
 
-.popup-header, .popup-footer {
+.popup-header,
+.popup-footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 8px 0;
-  
+
   a {
     font-size: $md-font-size;
     text-decoration: none;
     color: $popup-link-color;
     font-weight: 700;
     opacity: 1;
-    transition: opacity .3s ease-in;
-    
+    transition: opacity 0.3s ease-in;
+
     &:hover {
-      opacity: .8;
+      opacity: 0.8;
     }
   }
 }
