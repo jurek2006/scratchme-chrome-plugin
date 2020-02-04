@@ -190,7 +190,7 @@ export const removeError = field => {
   message.style.visibility = 'hidden';
 };
 
-// from all inputs in form grap input's name and value and put it in associative array
+// for all inputs in form grab input's name and value and put it in associative array
 export const getInputs = form => {
   const inputsArray = form.querySelectorAll('input');
 
@@ -202,11 +202,32 @@ export const getInputs = form => {
   return inputsObj;
 };
 
+// stores data object in local storage - returns true if successfully
+export const saveInLocalStorage = (keyInLocalStorage, dataToSaveObject) => {
+  try {
+    localStorage.setItem(keyInLocalStorage, JSON.stringify(dataToSaveObject));
+    return true;
+  } catch (error) {
+    console.error(`Failed to save data in localStorage`, error);
+    return false;
+  }
+};
+
+// restores data object from local storage (for given keyInLocalStorage)
+export const readFromLocalStorage = keyInLocalStorage => {
+  try {
+    const retrievedObject = localStorage.getItem(keyInLocalStorage);
+    return JSON.parse(retrievedObject);
+  } catch (error) {
+    console.error(`Failed to read data from localStorage`, error);
+    return false;
+  }
+};
+
 // loads selected connection settings from local storage
-// and sets value in connecion options fieldset
+// and sets values in connecion options fieldset
 export const loadConnection = currentOptionFieldset => {
-  const retrievedObject = localStorage.getItem(currentOptionFieldset.id);
-  const connectionData = JSON.parse(retrievedObject);
+  const connectionData = readFromLocalStorage(currentOptionFieldset.id);
 
   if (!connectionData) return;
 

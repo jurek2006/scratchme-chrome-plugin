@@ -7,6 +7,8 @@ import {
   isTheFormIncorrect,
   getMessageElement,
   getInputs,
+  saveInLocalStorage,
+  readFromLocalStorage,
   loadConnection,
   validateForm
 } from './modules/helpers.js';
@@ -84,10 +86,24 @@ const showFormScratchMe = () => {
   const copyToClipBtn = document.getElementById('copy-to-clip-btn');
   const clearDataBtn = document.getElementById('clear-data-btn');
 
-  // get post data stored by background.js
+  // get post data stored by background.js (data scratched from facebook)
   chrome.storage.sync.get(['postData'], storage => {
     setFieldsValue(storage.postData);
+    restoreSelectedConnection(); // has to be after setting fields values
   });
+
+  // saves last selected connection option
+  const rememberSelectedConnection = optionValue => {
+    saveInLocalStorage('lastSelectedOption', optionValue);
+  };
+
+  // restores last selected connection option
+  const restoreSelectedConnection = () => {
+    const restoredConnectionId = readFromLocalStorage('lastSelectedOption');
+
+    selectDataFormat.value = restoredConnectionId; // set connection in select
+    changeConnectionOption(restoredConnectionId); // change connection for read one
+  };
 
   const copyToClipboard = e => {
     e.preventDefault();
@@ -122,7 +138,7 @@ const showFormScratchMe = () => {
         codeAreaContent.innerHTML = '';
       });
     } catch (error) {
-      console.log('Error: ' + error);
+      console.error('Error: ' + error);
     }
   };
 
@@ -189,8 +205,10 @@ const showFormScratchMe = () => {
     }
   };
 
-  const handleChangeSelectFormat = e => {
-    const targetValue = e.target.value;
+  // changes connection option for given selectedValue which should be equal with option's fieldset id
+  const changeConnectionOption = selectedValue => {
+    rememberSelectedConnection(selectedValue);
+
     const contentOfSelectedOption = document.querySelectorAll(
       '.content-of-selected-option'
     );
@@ -199,7 +217,7 @@ const showFormScratchMe = () => {
       content.classList.add('disabled');
 
     const selectedContent = document.getElementById(
-      `${targetValue.slice(0, 4) === 'code' ? 'code-area' : targetValue}`
+      `${selectedValue.slice(0, 4) === 'code' ? 'code-area' : selectedValue}`
     );
 
     if (selectedContent) {
@@ -241,9 +259,13 @@ const showFormScratchMe = () => {
     }
 
     // if selected option with code - generate code
-    if (targetValue.slice(0, 4) === 'code') {
-      generateCode(targetValue.slice(5));
+    if (selectedValue.slice(0, 4) === 'code') {
+      generateCode(selectedValue.slice(5));
     }
+  };
+
+  const handleChangeSelectFormat = e => {
+    changeConnectionOption(e.target.value);
   };
 
   // invokes passed function for testing connection
@@ -262,7 +284,7 @@ const showFormScratchMe = () => {
       })
       .catch(error => {
         // connection error occured
-        console.log('Error in testing connection', error);
+        console.error('Error in testing connection', error);
 
         showItemMessage(messageElem, `Connection failed: ${error}`, 'error');
         disableInput(saveConnectionBtn, true);
@@ -278,20 +300,17 @@ const showFormScratchMe = () => {
     const activeFieldset = e.target.closest(
       'fieldset.content-of-selected-option'
     );
+    // save inputs names & values in localStorage with fieldset id as a key
+    const isSavedSuccessfully = saveInLocalStorage(
+      activeFieldset.id,
+      getInputs(activeFieldset)
+    );
 
-    // get fieldset inputs names & values
-    const connectionOptions = getInputs(activeFieldset);
-
-    // store options
-    try {
-      localStorage.setItem(
-        activeFieldset.id,
-        JSON.stringify(connectionOptions)
-      );
+    if (isSavedSuccessfully) {
       showItemMessage(messageElem, 'Connection options saved', 'success');
       disableInput(testConnectionBtn, true);
       disableInput(saveConnectionBtn, true);
-    } catch (error) {
+    } else {
       showItemMessage(messageElem, 'Failed saving connection options', 'error');
       disableInput(testConnectionBtn, false);
     }
