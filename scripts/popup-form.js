@@ -101,8 +101,10 @@ const showFormScratchMe = () => {
   const restoreSelectedConnection = () => {
     const restoredConnectionId = readFromLocalStorage('lastSelectedOption');
 
-    selectDataFormat.value = restoredConnectionId; // set connection in select
-    changeConnectionOption(restoredConnectionId); // change connection for read one
+    if (restoredConnectionId) {
+      selectDataFormat.value = restoredConnectionId; // set connection in select
+      changeConnectionOption(restoredConnectionId); // change connection for read one
+    }
   };
 
   const copyToClipboard = e => {
