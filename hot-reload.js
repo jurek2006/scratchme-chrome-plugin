@@ -20,15 +20,24 @@ const timestampForFilesInDirectory = dir =>
     files.map(f => f.name + f.lastModifiedDate).join()
   );
 
+// reloads all chrome tabs with facebook host
+// if current window is popup - closes it and then reloads tabs
 const reload = () => {
-  chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
-    // NB: see https://github.com/xpl/crx-hotreload/issues/5
-
-    if (tabs[0]) {
-      chrome.tabs.reload(tabs[0].id);
-    }
-
-    chrome.runtime.reload();
+  chrome.tabs.query({ url: '*://*.facebook.com/*' }, tabs => {
+    chrome.windows.getCurrent(currentWindow => {
+      if (currentWindow.type === 'popup') {
+        // if current window is popup - close it
+        chrome.windows.remove(currentWindow.id, function() {
+          reload(); // invoke reloading again when popup closed
+        });
+      } else {
+        tabs.forEach(tab => {
+          console.log('reload facebook tab', tab.url);
+          chrome.tabs.reload(tab.id);
+        });
+        chrome.runtime.reload();
+      }
+    });
   });
 };
 
