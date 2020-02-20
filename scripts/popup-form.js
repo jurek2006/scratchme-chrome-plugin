@@ -13,6 +13,53 @@ import {
   validateForm
 } from './modules/helpers.js';
 
+class ConnectionOptions {
+  constructor() {
+    this._options = {};
+  }
+
+  registerNew(connectionOption) {
+    Object.assign(this._options, { [connectionOption.id]: connectionOption });
+  }
+
+  all() {
+    console.log('all connection options', this._options);
+  }
+}
+
+class ConnectionOption {
+  constructor(fields) {
+    Object.assign(this, fields);
+    this._addAllButtonsEventListeners();
+  }
+
+  _addAllButtonsEventListeners() {
+    if (this.buttons) {
+      for (const currentButton in this.buttons) {
+        this._addEventListener(this.buttons[currentButton]);
+      }
+    }
+  }
+
+  _addEventListener(button) {
+    if (button.element && button.actions && button.actions.length > 0) {
+      button.actions.forEach(action => {
+        if (!action.event || !action.actionFunction) return;
+        console.log(`adding handler to ${action.event}`);
+        button.element.addEventListener(
+          action.event,
+          action.actionFunction.bind(this), // sets whole option as this
+          false
+        );
+      });
+    }
+  }
+
+  get sendFormBtn() {
+    return this.buttons.sendFormBtn.element;
+  }
+}
+
 const showFormScratchMe = () => {
   // FLEXIBLE ELEMENTS
   let connectionOptionsFieldset; // flexible container - assigned when selected sending(storing) option (for validating fields only for chosen option)
@@ -59,7 +106,7 @@ const showFormScratchMe = () => {
   const selectDataFormat = document.getElementById('select-data-format');
   const codeAreaContent = document.getElementById('code-area-content');
 
-  //   TEMP
+  //   TEMP - old
   const googleSheets = {
     formElements: {
       googleSpreadSheetIdInput: document.getElementById(
@@ -76,6 +123,45 @@ const showFormScratchMe = () => {
       )
     }
   };
+  // TEMP
+  const googleSheetsNNN = new ConnectionOption({
+    id: 'googleSheets',
+    formElements: {
+      googleSpreadSheetIdInput: document.getElementById(
+        'google-spreadsheet-id'
+      ),
+      googleSpreadSheetTabNameInput: document.getElementById(
+        'google-spreadsheet-tab-name'
+      )
+    },
+    buttons: {
+      sendFormBtn: {
+        element: document.getElementById('send-to-google-sheets')
+      },
+      testConnectionBtn: {
+        element: document.getElementById('test-connection-google-sheets'),
+        actions: [
+          {
+            event: 'click',
+            actionFunction: function() {
+              console.log('clicked test', this);
+            }
+          },
+          {
+            event: 'mouseenter',
+            actionFunction: function() {
+              console.log('mouseenter test', this);
+            }
+          }
+        ]
+      }
+    }
+  });
+
+  const connectionOptions = new ConnectionOptions();
+  connectionOptions.all();
+  connectionOptions.registerNew(googleSheetsNNN);
+  connectionOptions.all();
 
   // Google Sheets data - TEMP - old
   //   const googleSpreadSheetIdInput = document.getElementById(
@@ -89,6 +175,66 @@ const showFormScratchMe = () => {
   //   const testConnectionGoogleSheetsBtn = document.getElementById(
   //     'test-connection-google-sheets'
   //   );
+
+  const dummyApiNNN = new ConnectionOption({
+    id: 'dummyApi',
+    formElements: {
+      userId: document.getElementById('dummy-api-user-id'),
+      userName: document.getElementById('dummy-api-user-name')
+    },
+    buttons: {
+      sendFormBtn: {
+        element: document.getElementById('send-to-dummy-api'),
+        actions: [
+          {
+            event: 'click',
+            actionFunction: function() {
+              console.log('clicked', this);
+            }
+          },
+          {
+            event: 'mouseenter',
+            actionFunction: function() {
+              console.log('mouseenter', this);
+            }
+          }
+        ]
+      },
+      testConnectionBtn: {
+        element: document.getElementById('test-connection-dummy-api'),
+        actions: [
+          {
+            event: 'click',
+            actionFunction: function() {
+              console.log('clicked test', this);
+            }
+          },
+          {
+            event: 'mouseenter',
+            actionFunction: function() {
+              console.log('mouseenter test', this);
+            }
+          }
+        ]
+      }
+    }
+  });
+  //   const dummyApiNNN = new ConnectionOption({
+  //     id: 'dummyApi',
+  //     formElements: {
+  //       userId: document.getElementById('dummy-api-user-id'),
+  //       userName: document.getElementById('dummy-api-user-name')
+  //     },
+  //     buttons: {
+  //       sendFormBtn: document.getElementById('send-to-dummy-api'),
+  //       testConnectionBtn: document.getElementById('test-connection-dummy-api')
+  //     }
+  //   });
+
+  connectionOptions.registerNew(dummyApiNNN);
+
+  console.log('gsSend', googleSheetsNNN.sendFormBtn);
+  console.log('dummySend', dummyApiNNN.sendFormBtn);
 
   // Dummy API connection data
   const dummyApiUserId = document.getElementById('dummy-api-user-id');
