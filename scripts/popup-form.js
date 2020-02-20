@@ -28,33 +28,67 @@ const showFormScratchMe = () => {
   // Form
   const scratchMeForm = document.getElementById('scratch-me-form');
 
+  // TEMP
+  const fromFacebook = {
+    fieldset: document.getElementById('from-facebook'),
+    formElements: {
+      postAuthorInput: document.getElementById('post-author'),
+      postDatetimeInput: document.getElementById('post-datetime'),
+      postTitleInput: document.getElementById('post-title'),
+      postContentTextarea: document.getElementById('post-content'),
+      postUrlInput: document.getElementById('post-url'),
+      postIdInput: document.getElementById('post-id')
+    }
+  };
+
+  console.log('fromFacebook', fromFacebook);
+
+  // TEMP OLD - to delete
   // Form fieldset with fields to be filled from facebook
-  const fromFacebookFieldset = document.getElementById('from-facebook');
+  //   const fromFacebookFieldset = document.getElementById('from-facebook');
 
   // Facebook data
-  const postAuthorInput = document.getElementById('post-author');
-  const postDatetimeInput = document.getElementById('post-datetime');
-  const postTitleInput = document.getElementById('post-title');
-  const postContentTextarea = document.getElementById('post-content');
-  const postUrlInput = document.getElementById('post-url');
-  const postIdInput = document.getElementById('post-id');
+  //   const postAuthorInput = document.getElementById('post-author');
+  //   const postDatetimeInput = document.getElementById('post-datetime');
+  //   const postTitleInput = document.getElementById('post-title');
+  //   const postContentTextarea = document.getElementById('post-content');
+  //   const postUrlInput = document.getElementById('post-url');
+  //   const postIdInput = document.getElementById('post-id');
 
   // Select and display format e.g JSON/Cooper/cURL
   const selectDataFormat = document.getElementById('select-data-format');
   const codeAreaContent = document.getElementById('code-area-content');
 
-  // Google Sheets data
-  const googleSpreadSheetIdInput = document.getElementById(
-    'google-spreadsheet-id'
-  );
-  const googleSpreadSheetTabNameInput = document.getElementById(
-    'google-spreadsheet-tab-name'
-  );
-  // Google Sheets buttons
-  const sendGoogleSheetsBtn = document.getElementById('send-to-google-sheets');
-  const testConnectionGoogleSheetsBtn = document.getElementById(
-    'test-connection-google-sheets'
-  );
+  //   TEMP
+  const googleSheets = {
+    formElements: {
+      googleSpreadSheetIdInput: document.getElementById(
+        'google-spreadsheet-id'
+      ),
+      googleSpreadSheetTabNameInput: document.getElementById(
+        'google-spreadsheet-tab-name'
+      )
+    },
+    buttons: {
+      sendGoogleSheetsBtn: document.getElementById('send-to-google-sheets'),
+      testConnectionGoogleSheetsBtn: document.getElementById(
+        'test-connection-google-sheets'
+      )
+    }
+  };
+
+  // Google Sheets data - TEMP - old
+  //   const googleSpreadSheetIdInput = document.getElementById(
+  //     'google-spreadsheet-id'
+  //   );
+  //   const googleSpreadSheetTabNameInput = document.getElementById(
+  //     'google-spreadsheet-tab-name'
+  //   );
+  //   // Google Sheets buttons
+  //   const sendGoogleSheetsBtn = document.getElementById('send-to-google-sheets');
+  //   const testConnectionGoogleSheetsBtn = document.getElementById(
+  //     'test-connection-google-sheets'
+  //   );
 
   // Dummy API connection data
   const dummyApiUserId = document.getElementById('dummy-api-user-id');
@@ -131,12 +165,12 @@ const showFormScratchMe = () => {
 
     try {
       chrome.storage.sync.remove(['postData'], items => {
-        postAuthorInput.value = '';
-        postContentTextarea.value = '';
-        postDatetimeInput.value = '';
-        postIdInput.value = '';
-        postUrlInput.value = '';
-        postTitleInput.value = '';
+        fromFacebook.formElements.postAuthorInput.value = '';
+        fromFacebook.formElements.postContentTextarea.value = '';
+        fromFacebook.formElements.postDatetimeInput.value = '';
+        fromFacebook.formElements.postIdInput.value = '';
+        fromFacebook.formElements.postUrlInput.value = '';
+        fromFacebook.formElements.postTitleInput.value = '';
         codeAreaContent.innerHTML = '';
       });
     } catch (error) {
@@ -160,25 +194,24 @@ const showFormScratchMe = () => {
 
     const { postId, author, url, content, uTime } = postData;
 
-    postAuthorInput.value = author;
-    postDatetimeInput.value = setDateTimeValue(uTime);
-    postTitleInput.value = `${postId ? postId + ' - ' : ''}${content.slice(
-      0,
-      20
-    )}... - ${author}`;
-    postContentTextarea.value = content;
-    postUrlInput.value = url;
-    postIdInput.value = postId || '0';
+    fromFacebook.formElements.postAuthorInput.value = author;
+    fromFacebook.formElements.postDatetimeInput.value = setDateTimeValue(uTime);
+    fromFacebook.formElements.postTitleInput.value = `${
+      postId ? postId + ' - ' : ''
+    }${content.slice(0, 20)}... - ${author}`;
+    fromFacebook.formElements.postContentTextarea.value = content;
+    fromFacebook.formElements.postUrlInput.value = url;
+    fromFacebook.formElements.postIdInput.value = postId || '0';
   };
 
   const generateCode = codeName => {
     const data = {
-      postId: postIdInput.value,
-      postTitle: postTitleInput.value,
-      author: postAuthorInput.value,
-      content: postContentTextarea.value,
-      datetime: postDatetimeInput.value,
-      postUrl: postUrlInput.value
+      postId: fromFacebook.formElements.postIdInput.value,
+      postTitle: fromFacebook.formElements.postTitleInput.value,
+      author: fromFacebook.formElements.postAuthorInput.value,
+      content: fromFacebook.formElements.postContentTextarea.value,
+      datetime: fromFacebook.formElements.postDatetimeInput.value,
+      postUrl: fromFacebook.formElements.postUrlInput.value
     };
 
     // Copy to clipboard
@@ -187,12 +220,12 @@ const showFormScratchMe = () => {
     switch (codeName) {
       case 'json':
         codeAreaContent.innerHTML = `<code class="json-language"><span class="code-line">{</span>
-<span class="code-line">  <span class="key">"id":</span> <span class="number">${postIdInput.value}</span>,</span>
-<span class="code-line">  <span class="key">"title":</span> <span class="string">"${postTitleInput.value}"</span>,</span>
-<span class="code-line">  <span class="key">"author":</span> <span class="string">"${postAuthorInput.value}"</span>,</span>
-<span class="code-line">  <span class="key">"content":</span> <span class="string">"${postContentTextarea.value}"</span>,</span>
-<span class="code-line">  <span class="key">"date":</span> <span class="string">"${postDatetimeInput.value}"</span>,</span>
-<span class="code-line">  <span class="key">"post_url":</span> <span class="string">"${postUrlInput.value}"</span></span>
+<span class="code-line">  <span class="key">"id":</span> <span class="number">${fromFacebook.formElements.postIdInput.value}</span>,</span>
+<span class="code-line">  <span class="key">"title":</span> <span class="string">"${fromFacebook.formElements.postTitleInput.value}"</span>,</span>
+<span class="code-line">  <span class="key">"author":</span> <span class="string">"${fromFacebook.formElements.postAuthorInput.value}"</span>,</span>
+<span class="code-line">  <span class="key">"content":</span> <span class="string">"${fromFacebook.formElements.postContentTextarea.value}"</span>,</span>
+<span class="code-line">  <span class="key">"date":</span> <span class="string">"${fromFacebook.formElements.postDatetimeInput.value}"</span>,</span>
+<span class="code-line">  <span class="key">"post_url":</span> <span class="string">"${fromFacebook.formElements.postUrlInput.value}"</span></span>
 <span class="code-line">}</span></code>`;
 
         break;
@@ -250,7 +283,7 @@ const showFormScratchMe = () => {
       validateForm({
         sendFormBtn,
         testConnectionBtn,
-        fromFacebookFieldset,
+        fromFacebookFieldset: fromFacebook.fieldset,
         connectionOptionsFieldset
       });
 
@@ -326,7 +359,7 @@ const showFormScratchMe = () => {
 
     // additional form checking - if form is invalid sending button should be anyway disabled and shouldn't get here
     const hasErrors =
-      isTheFormIncorrect(fromFacebookFieldset) ||
+      isTheFormIncorrect(fromFacebook.fieldset) ||
       isTheFormIncorrect(connectionOptionsFieldset); //checking fields scratched from fb and fields from selected sending option (function returns first field with an error from both)
 
     // If there are errors, don't submit form and focus on first element with error
@@ -356,7 +389,7 @@ const showFormScratchMe = () => {
     validateForm({
       sendFormBtn,
       testConnectionBtn,
-      fromFacebookFieldset,
+      fromFacebookFieldset: fromFacebook.fieldset,
       connectionOptionsFieldset
     });
 
@@ -382,32 +415,35 @@ const showFormScratchMe = () => {
 
   // set handlers for GOOGLE SHEETS BUTTONS
 
-  sendGoogleSheetsBtn.addEventListener(
+  googleSheets.buttons.sendGoogleSheetsBtn.addEventListener(
     'click',
     handleClickSendForm.bind(null, () =>
       googleSheetsModule.sendDataToSave(
+        //   TEMP
         [
-          postIdInput.value,
-          postAuthorInput.value,
-          postContentTextarea.value,
-          postDatetimeInput.value,
-          postUrlInput.value
+          fromFacebook.formElements.postIdInput.value,
+          fromFacebook.formElements.postAuthorInput.value,
+          fromFacebook.formElements.postContentTextarea.value,
+          fromFacebook.formElements.postDatetimeInput.value,
+          fromFacebook.formElements.postUrlInput.value
         ],
         {
-          sheetId: googleSpreadSheetIdInput.value,
-          sheetTabName: googleSpreadSheetTabNameInput.value
+          sheetId: googleSheets.formElements.googleSpreadSheetIdInput.value,
+          sheetTabName:
+            googleSheets.formElements.googleSpreadSheetTabNameInput.value
         }
       )
     ),
     false
   );
 
-  testConnectionGoogleSheetsBtn.addEventListener(
+  googleSheets.buttons.testConnectionGoogleSheetsBtn.addEventListener(
     'click',
     handleClickTestConnection.bind(null, () =>
       googleSheetsModule.testConnection({
-        sheetId: googleSpreadSheetIdInput.value,
-        sheetTabName: googleSpreadSheetTabNameInput.value
+        sheetId: googleSheets.formElements.googleSpreadSheetIdInput.value,
+        sheetTabName:
+          googleSheets.formElements.googleSpreadSheetTabNameInput.value
       })
     ),
     false
@@ -418,13 +454,14 @@ const showFormScratchMe = () => {
   sendDummyApiBtn.addEventListener(
     'click',
     handleClickSendForm.bind(null, () =>
+      // TEMP
       dummyApiModule.sendDataToSave(
         {
-          postId: postIdInput.value,
-          postAuthor: postAuthorInput.value,
-          postContent: postContentTextarea.value,
-          postDatetime: postDatetimeInput.value,
-          postUrl: postUrlInput.value
+          postId: fromFacebook.formElements.postIdInput.value,
+          postAuthor: fromFacebook.formElements.postAuthorInput.value,
+          postContent: fromFacebook.formElements.postContentTextarea.value,
+          postDatetime: fromFacebook.formElements.postDatetimeInput.value,
+          postUrl: fromFacebook.formElements.postUrlInput.value
         },
         {
           userId: dummyApiUserId.value,
