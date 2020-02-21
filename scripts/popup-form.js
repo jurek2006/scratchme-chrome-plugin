@@ -31,6 +31,22 @@ class ConnectionOption {
   constructor(fields) {
     Object.assign(this, fields);
     this._addAllButtonsEventListeners();
+    this._registerTestBtn();
+  }
+
+  _testingConnectionFunction() {
+    console.log('testConnectionFunction in class', this);
+  }
+
+  testConnection() {
+    console.log('testConnection in class', this);
+    this._testingConnectionFunction();
+  }
+
+  _registerTestBtn() {
+    const button = this.buttons.testConnectionBtn.element;
+    const handler = this.testConnection;
+    button.addEventListener('click', this.testConnection.bind(this), false);
   }
 
   _addAllButtonsEventListeners() {
@@ -126,6 +142,7 @@ const showFormScratchMe = () => {
   // TEMP
   const googleSheetsNNN = new ConnectionOption({
     id: 'googleSheets',
+    fieldset: document.getElementById('google-sheets'),
     formElements: {
       googleSpreadSheetIdInput: document.getElementById(
         'google-spreadsheet-id'
@@ -177,7 +194,15 @@ const showFormScratchMe = () => {
   //   );
 
   const dummyApiNNN = new ConnectionOption({
+    testConnection() {
+      console.log('testConnection in instance', this);
+      this._testingConnectionFunction();
+    },
+    // _testingConnectionFunction() {
+    //   console.log('testConnectionFunction in instance', this);
+    // },
     id: 'dummyApi',
+    fieldset: document.getElementById('dummy-api'),
     formElements: {
       userId: document.getElementById('dummy-api-user-id'),
       userName: document.getElementById('dummy-api-user-name')
@@ -191,34 +216,40 @@ const showFormScratchMe = () => {
             actionFunction: function() {
               console.log('clicked', this);
             }
-          },
-          {
-            event: 'mouseenter',
-            actionFunction: function() {
-              console.log('mouseenter', this);
-            }
           }
+          // {
+          //   event: 'mouseenter',
+          //   actionFunction: function() {
+          //     console.log('mouseenter', this);
+          //   }
+          // }
         ]
       },
       testConnectionBtn: {
-        element: document.getElementById('test-connection-dummy-api'),
-        actions: [
-          {
-            event: 'click',
-            actionFunction: function() {
-              console.log('clicked test', this);
-            }
-          },
-          {
-            event: 'mouseenter',
-            actionFunction: function() {
-              console.log('mouseenter test', this);
-            }
-          }
-        ]
+        element: document.getElementById('test-connection-dummy-api')
+        // actions: [
+        //   {
+        //     event: 'click',
+        //     actionFunction: this.testConnection
+        //     // actionFunction: function() {
+        //     //   console.log(
+        //     //     'clicked test dummy',
+        //     //     this.formElements.userId.value,
+        //     //     this.formElements.userName.value
+        //     //   );
+        //     //   handleClickTestConnection.bind(null, () =>
+        //     //     dummyApiModule.testConnection({
+        //     //       userId: this.formElements.userId.value,
+        //     //       userName: this.formElements.userName.value
+        //     //     })
+        //     //   );
+        //     // }
+        //   }
+        // ]
       }
     }
   });
+
   //   const dummyApiNNN = new ConnectionOption({
   //     id: 'dummyApi',
   //     formElements: {
@@ -618,16 +649,16 @@ const showFormScratchMe = () => {
     false
   );
 
-  testConnectionDummyApiBtn.addEventListener(
-    'click',
-    handleClickTestConnection.bind(null, () =>
-      dummyApiModule.testConnection({
-        userId: dummyApiUserId.value,
-        userName: dummyApiUserName.value
-      })
-    ),
-    false
-  );
+  //   testConnectionDummyApiBtn.addEventListener(
+  //     'click',
+  //     handleClickTestConnection.bind(null, () =>
+  //       dummyApiModule.testConnection({
+  //         userId: dummyApiUserId.value,
+  //         userName: dummyApiUserName.value
+  //       })
+  //     ),
+  //     false
+  //   );
 
   // set handlers for COOPER BUTTONS
 
