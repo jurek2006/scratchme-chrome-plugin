@@ -179,6 +179,159 @@ class ConnectionOption {
   }
 }
 
+const fromFacebook = {
+  fieldset: document.getElementById('from-facebook'),
+  formElements: {
+    postAuthorInput: document.getElementById('post-author'),
+    postDatetimeInput: document.getElementById('post-datetime'),
+    postTitleInput: document.getElementById('post-title'),
+    postContentTextarea: document.getElementById('post-content'),
+    postUrlInput: document.getElementById('post-url'),
+    postIdInput: document.getElementById('post-id')
+  }
+};
+
+const googleSheetsNNN = new ConnectionOption({
+  _testingConnectionFunction() {
+    console.log('testing connection', {
+      sheetId: this.formElements.googleSpreadSheetIdInput.value,
+      sheetTabName: this.formElements.googleSpreadSheetTabNameInput.value
+    });
+    // return Promise.resolve('Success in instance function');
+    return googleSheetsModule.testConnection({
+      sheetId: this.formElements.googleSpreadSheetIdInput.value,
+      sheetTabName: this.formElements.googleSpreadSheetTabNameInput.value
+    });
+  },
+  _sendingDataFunction() {
+    console.log('sending data in instance', fromFacebook.formElements, {
+      sheetId: this.formElements.googleSpreadSheetIdInput.value,
+      sheetTabName: this.formElements.googleSpreadSheetTabNameInput.value
+    });
+    // return Promise.resolve('Success in sending in instance function');
+
+    return googleSheetsModule.sendDataToSave(
+      //   TEMP
+      [
+        fromFacebook.formElements.postIdInput.value,
+        fromFacebook.formElements.postAuthorInput.value,
+        fromFacebook.formElements.postContentTextarea.value,
+        fromFacebook.formElements.postDatetimeInput.value,
+        fromFacebook.formElements.postUrlInput.value
+      ],
+      {
+        sheetId: this.formElements.googleSpreadSheetIdInput.value,
+        sheetTabName: this.formElements.googleSpreadSheetTabNameInput.value
+      }
+    );
+  },
+  id: 'googleSheets',
+  fieldset: document.getElementById('google-sheets'),
+  formElements: {
+    googleSpreadSheetIdInput: document.getElementById('google-spreadsheet-id'),
+    googleSpreadSheetTabNameInput: document.getElementById(
+      'google-spreadsheet-tab-name'
+    )
+  },
+  buttons: {
+    sendFormBtn: {
+      element: document.getElementById('send-to-google-sheets')
+    },
+    testConnectionBtn: {
+      element: document.getElementById('test-connection-google-sheets'),
+      actions: [
+        // {
+        //   event: 'click',
+        //   actionFunction: function() {
+        //     console.log('clicked test', this);
+        //   }
+        // }
+        // {
+        //   event: 'mouseenter',
+        //   actionFunction: function() {
+        //     console.log('mouseenter test', this);
+        //   }
+        // }
+      ]
+    },
+    saveConnectionBtn: {
+      element: document.getElementById('save-connection-google-sheets')
+    }
+  }
+});
+
+const dummyApiNNN = new ConnectionOption({
+  // testConnection() {
+  //   console.log('testConnection in instance', this);
+  //   this._testingConnectionFunction();
+  // },
+  _testingConnectionFunction() {
+    console.log('testing connection', {
+      userId: this.formElements.userId.value,
+      userName: this.formElements.userName.value
+    });
+    // return Promise.resolve('Success in instance function');
+    return dummyApiModule.testConnection({
+      userId: this.formElements.userId.value,
+      userName: this.formElements.userName.value
+    });
+  },
+  id: 'dummyApi',
+  fieldset: document.getElementById('dummy-api'),
+  formElements: {
+    userId: document.getElementById('dummy-api-user-id'),
+    userName: document.getElementById('dummy-api-user-name')
+  },
+  buttons: {
+    sendFormBtn: {
+      element: document.getElementById('send-to-dummy-api'),
+      actions: [
+        // {
+        //   event: 'click',
+        //   actionFunction: function() {
+        //     console.log('clicked', this);
+        //   }
+        // }
+        // {
+        //   event: 'mouseenter',
+        //   actionFunction: function() {
+        //     console.log('mouseenter', this);
+        //   }
+        // }
+      ]
+    },
+    testConnectionBtn: {
+      element: document.getElementById('test-connection-dummy-api')
+      // actions: [
+      //   {
+      //     event: 'click',
+      //     actionFunction: this.testConnection
+      //     // actionFunction: function() {
+      //     //   console.log(
+      //     //     'clicked test dummy',
+      //     //     this.formElements.userId.value,
+      //     //     this.formElements.userName.value
+      //     //   );
+      //     //   handleClickTestConnection.bind(null, () =>
+      //     //     dummyApiModule.testConnection({
+      //     //       userId: this.formElements.userId.value,
+      //     //       userName: this.formElements.userName.value
+      //     //     })
+      //     //   );
+      //     // }
+      //   }
+      // ]
+    },
+    saveConnectionBtn: {
+      element: document.getElementById('save-connection-dummy-api')
+    }
+  }
+});
+
+const connectionOptions = new ConnectionOptions();
+connectionOptions.registerNew(googleSheetsNNN);
+connectionOptions.registerNew(dummyApiNNN);
+
 const showFormScratchMe = () => {
   // FLEXIBLE ELEMENTS
   let connectionOptionsFieldset; // flexible container - assigned when selected sending(storing) option (for validating fields only for chosen option)
@@ -195,17 +348,17 @@ const showFormScratchMe = () => {
   const scratchMeForm = document.getElementById('scratch-me-form');
 
   // TEMP - placed outside
-  const fromFacebook = {
-    fieldset: document.getElementById('from-facebook'),
-    formElements: {
-      postAuthorInput: document.getElementById('post-author'),
-      postDatetimeInput: document.getElementById('post-datetime'),
-      postTitleInput: document.getElementById('post-title'),
-      postContentTextarea: document.getElementById('post-content'),
-      postUrlInput: document.getElementById('post-url'),
-      postIdInput: document.getElementById('post-id')
-    }
-  };
+  // const fromFacebook = {
+  //   fieldset: document.getElementById('from-facebook'),
+  //   formElements: {
+  //     postAuthorInput: document.getElementById('post-author'),
+  //     postDatetimeInput: document.getElementById('post-datetime'),
+  //     postTitleInput: document.getElementById('post-title'),
+  //     postContentTextarea: document.getElementById('post-content'),
+  //     postUrlInput: document.getElementById('post-url'),
+  //     postIdInput: document.getElementById('post-id')
+  //   }
+  // };
 
   // TEMP OLD - to delete
   // Form fieldset with fields to be filled from facebook
@@ -223,181 +376,145 @@ const showFormScratchMe = () => {
   const selectDataFormat = document.getElementById('select-data-format');
   const codeAreaContent = document.getElementById('code-area-content');
 
-  //   TEMP - old
-  const googleSheets = {
-    formElements: {
-      googleSpreadSheetIdInput: document.getElementById(
-        'google-spreadsheet-id'
-      ),
-      googleSpreadSheetTabNameInput: document.getElementById(
-        'google-spreadsheet-tab-name'
-      )
-    },
-    buttons: {
-      sendGoogleSheetsBtn: document.getElementById('send-to-google-sheets'),
-      testConnectionGoogleSheetsBtn: document.getElementById(
-        'test-connection-google-sheets'
-      )
-    }
-  };
-
   // TEMP
-  const googleSheetsNNN = new ConnectionOption({
-    _testingConnectionFunction() {
-      console.log('testing connection', {
-        sheetId: this.formElements.googleSpreadSheetIdInput.value,
-        sheetTabName: this.formElements.googleSpreadSheetTabNameInput.value
-      });
-      // return Promise.resolve('Success in instance function');
-      return googleSheetsModule.testConnection({
-        sheetId: this.formElements.googleSpreadSheetIdInput.value,
-        sheetTabName: this.formElements.googleSpreadSheetTabNameInput.value
-      });
-    },
-    _sendingDataFunction() {
-      console.log('sending data in instance', fromFacebook.formElements, {
-        sheetId: this.formElements.googleSpreadSheetIdInput.value,
-        sheetTabName: this.formElements.googleSpreadSheetTabNameInput.value
-      });
-      // return Promise.resolve('Success in sending in instance function');
+  // const googleSheetsNNN = new ConnectionOption({
+  //   _testingConnectionFunction() {
+  //     console.log('testing connection', {
+  //       sheetId: this.formElements.googleSpreadSheetIdInput.value,
+  //       sheetTabName: this.formElements.googleSpreadSheetTabNameInput.value
+  //     });
+  //     // return Promise.resolve('Success in instance function');
+  //     return googleSheetsModule.testConnection({
+  //       sheetId: this.formElements.googleSpreadSheetIdInput.value,
+  //       sheetTabName: this.formElements.googleSpreadSheetTabNameInput.value
+  //     });
+  //   },
+  //   _sendingDataFunction() {
+  //     console.log('sending data in instance', fromFacebook.formElements, {
+  //       sheetId: this.formElements.googleSpreadSheetIdInput.value,
+  //       sheetTabName: this.formElements.googleSpreadSheetTabNameInput.value
+  //     });
+  //     // return Promise.resolve('Success in sending in instance function');
 
-      return googleSheetsModule.sendDataToSave(
-        //   TEMP
-        [
-          fromFacebook.formElements.postIdInput.value,
-          fromFacebook.formElements.postAuthorInput.value,
-          fromFacebook.formElements.postContentTextarea.value,
-          fromFacebook.formElements.postDatetimeInput.value,
-          fromFacebook.formElements.postUrlInput.value
-        ],
-        {
-          sheetId: this.formElements.googleSpreadSheetIdInput.value,
-          sheetTabName: this.formElements.googleSpreadSheetTabNameInput.value
-        }
-      );
-    },
-    id: 'googleSheets',
-    fieldset: document.getElementById('google-sheets'),
-    formElements: {
-      googleSpreadSheetIdInput: document.getElementById(
-        'google-spreadsheet-id'
-      ),
-      googleSpreadSheetTabNameInput: document.getElementById(
-        'google-spreadsheet-tab-name'
-      )
-    },
-    buttons: {
-      sendFormBtn: {
-        element: document.getElementById('send-to-google-sheets')
-      },
-      testConnectionBtn: {
-        element: document.getElementById('test-connection-google-sheets'),
-        actions: [
-          // {
-          //   event: 'click',
-          //   actionFunction: function() {
-          //     console.log('clicked test', this);
-          //   }
-          // }
-          // {
-          //   event: 'mouseenter',
-          //   actionFunction: function() {
-          //     console.log('mouseenter test', this);
-          //   }
-          // }
-        ]
-      },
-      saveConnectionBtn: {
-        element: document.getElementById('save-connection-google-sheets')
-      }
-    }
-  });
+  //     return googleSheetsModule.sendDataToSave(
+  //       //   TEMP
+  //       [
+  //         fromFacebook.formElements.postIdInput.value,
+  //         fromFacebook.formElements.postAuthorInput.value,
+  //         fromFacebook.formElements.postContentTextarea.value,
+  //         fromFacebook.formElements.postDatetimeInput.value,
+  //         fromFacebook.formElements.postUrlInput.value
+  //       ],
+  //       {
+  //         sheetId: this.formElements.googleSpreadSheetIdInput.value,
+  //         sheetTabName: this.formElements.googleSpreadSheetTabNameInput.value
+  //       }
+  //     );
+  //   },
+  //   id: 'googleSheets',
+  //   fieldset: document.getElementById('google-sheets'),
+  //   formElements: {
+  //     googleSpreadSheetIdInput: document.getElementById(
+  //       'google-spreadsheet-id'
+  //     ),
+  //     googleSpreadSheetTabNameInput: document.getElementById(
+  //       'google-spreadsheet-tab-name'
+  //     )
+  //   },
+  //   buttons: {
+  //     sendFormBtn: {
+  //       element: document.getElementById('send-to-google-sheets')
+  //     },
+  //     testConnectionBtn: {
+  //       element: document.getElementById('test-connection-google-sheets'),
+  //       actions: [
+  //         // {
+  //         //   event: 'click',
+  //         //   actionFunction: function() {
+  //         //     console.log('clicked test', this);
+  //         //   }
+  //         // }
+  //         // {
+  //         //   event: 'mouseenter',
+  //         //   actionFunction: function() {
+  //         //     console.log('mouseenter test', this);
+  //         //   }
+  //         // }
+  //       ]
+  //     },
+  //     saveConnectionBtn: {
+  //       element: document.getElementById('save-connection-google-sheets')
+  //     }
+  //   }
+  // });
 
-  const connectionOptions = new ConnectionOptions();
-  connectionOptions.all();
-  connectionOptions.registerNew(googleSheetsNNN);
-  connectionOptions.all();
-
-  // Google Sheets data - TEMP - old
-  //   const googleSpreadSheetIdInput = document.getElementById(
-  //     'google-spreadsheet-id'
-  //   );
-  //   const googleSpreadSheetTabNameInput = document.getElementById(
-  //     'google-spreadsheet-tab-name'
-  //   );
-  //   // Google Sheets buttons
-  //   const sendGoogleSheetsBtn = document.getElementById('send-to-google-sheets');
-  //   const testConnectionGoogleSheetsBtn = document.getElementById(
-  //     'test-connection-google-sheets'
-  //   );
-
-  const dummyApiNNN = new ConnectionOption({
-    // testConnection() {
-    //   console.log('testConnection in instance', this);
-    //   this._testingConnectionFunction();
-    // },
-    _testingConnectionFunction() {
-      console.log('testing connection', {
-        userId: this.formElements.userId.value,
-        userName: this.formElements.userName.value
-      });
-      // return Promise.resolve('Success in instance function');
-      return dummyApiModule.testConnection({
-        userId: this.formElements.userId.value,
-        userName: this.formElements.userName.value
-      });
-    },
-    id: 'dummyApi',
-    fieldset: document.getElementById('dummy-api'),
-    formElements: {
-      userId: document.getElementById('dummy-api-user-id'),
-      userName: document.getElementById('dummy-api-user-name')
-    },
-    buttons: {
-      sendFormBtn: {
-        element: document.getElementById('send-to-dummy-api'),
-        actions: [
-          // {
-          //   event: 'click',
-          //   actionFunction: function() {
-          //     console.log('clicked', this);
-          //   }
-          // }
-          // {
-          //   event: 'mouseenter',
-          //   actionFunction: function() {
-          //     console.log('mouseenter', this);
-          //   }
-          // }
-        ]
-      },
-      testConnectionBtn: {
-        element: document.getElementById('test-connection-dummy-api')
-        // actions: [
-        //   {
-        //     event: 'click',
-        //     actionFunction: this.testConnection
-        //     // actionFunction: function() {
-        //     //   console.log(
-        //     //     'clicked test dummy',
-        //     //     this.formElements.userId.value,
-        //     //     this.formElements.userName.value
-        //     //   );
-        //     //   handleClickTestConnection.bind(null, () =>
-        //     //     dummyApiModule.testConnection({
-        //     //       userId: this.formElements.userId.value,
-        //     //       userName: this.formElements.userName.value
-        //     //     })
-        //     //   );
-        //     // }
-        //   }
-        // ]
-      },
-      saveConnectionBtn: {
-        element: document.getElementById('save-connection-dummy-api')
-      }
-    }
-  });
+  // const dummyApiNNN = new ConnectionOption({
+  //   // testConnection() {
+  //   //   console.log('testConnection in instance', this);
+  //   //   this._testingConnectionFunction();
+  //   // },
+  //   _testingConnectionFunction() {
+  //     console.log('testing connection', {
+  //       userId: this.formElements.userId.value,
+  //       userName: this.formElements.userName.value
+  //     });
+  //     // return Promise.resolve('Success in instance function');
+  //     return dummyApiModule.testConnection({
+  //       userId: this.formElements.userId.value,
+  //       userName: this.formElements.userName.value
+  //     });
+  //   },
+  //   id: 'dummyApi',
+  //   fieldset: document.getElementById('dummy-api'),
+  //   formElements: {
+  //     userId: document.getElementById('dummy-api-user-id'),
+  //     userName: document.getElementById('dummy-api-user-name')
+  //   },
+  //   buttons: {
+  //     sendFormBtn: {
+  //       element: document.getElementById('send-to-dummy-api'),
+  //       actions: [
+  //         // {
+  //         //   event: 'click',
+  //         //   actionFunction: function() {
+  //         //     console.log('clicked', this);
+  //         //   }
+  //         // }
+  //         // {
+  //         //   event: 'mouseenter',
+  //         //   actionFunction: function() {
+  //         //     console.log('mouseenter', this);
+  //         //   }
+  //         // }
+  //       ]
+  //     },
+  //     testConnectionBtn: {
+  //       element: document.getElementById('test-connection-dummy-api')
+  //       // actions: [
+  //       //   {
+  //       //     event: 'click',
+  //       //     actionFunction: this.testConnection
+  //       //     // actionFunction: function() {
+  //       //     //   console.log(
+  //       //     //     'clicked test dummy',
+  //       //     //     this.formElements.userId.value,
+  //       //     //     this.formElements.userName.value
+  //       //     //   );
+  //       //     //   handleClickTestConnection.bind(null, () =>
+  //       //     //     dummyApiModule.testConnection({
+  //       //     //       userId: this.formElements.userId.value,
+  //       //     //       userName: this.formElements.userName.value
+  //       //     //     })
+  //       //     //   );
+  //       //     // }
+  //       //   }
+  //       // ]
+  //     },
+  //     saveConnectionBtn: {
+  //       element: document.getElementById('save-connection-dummy-api')
+  //     }
+  //   }
+  // });
 
   //   const dummyApiNNN = new ConnectionOption({
   //     id: 'dummyApi',
@@ -411,19 +528,14 @@ const showFormScratchMe = () => {
   //     }
   //   });
 
-  connectionOptions.registerNew(dummyApiNNN);
-
-  console.log('gsSend', googleSheetsNNN.sendFormBtn);
-  console.log('dummySend', dummyApiNNN.sendFormBtn);
-
-  // Dummy API connection data
-  const dummyApiUserId = document.getElementById('dummy-api-user-id');
-  const dummyApiUserName = document.getElementById('dummy-api-user-name');
-  // Dummy API buttons
-  const sendDummyApiBtn = document.getElementById('send-to-dummy-api');
-  const testConnectionDummyApiBtn = document.getElementById(
-    'test-connection-dummy-api'
-  );
+  // // Dummy API connection data
+  // const dummyApiUserId = document.getElementById('dummy-api-user-id');
+  // const dummyApiUserName = document.getElementById('dummy-api-user-name');
+  // // Dummy API buttons
+  // const sendDummyApiBtn = document.getElementById('send-to-dummy-api');
+  // const testConnectionDummyApiBtn = document.getElementById(
+  //   'test-connection-dummy-api'
+  // );
 
   // Cooper CRM data
   const cooperAccessTokenInput = document.getElementById('cooper-access-token');
