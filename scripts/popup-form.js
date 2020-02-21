@@ -167,8 +167,20 @@ const showFormScratchMe = () => {
       )
     }
   };
+
   // TEMP
   const googleSheetsNNN = new ConnectionOption({
+    _testingConnectionFunction() {
+      console.log('testing connection', {
+        sheetId: this.formElements.googleSpreadSheetIdInput.value,
+        sheetTabName: this.formElements.googleSpreadSheetTabNameInput.value
+      });
+      // return Promise.resolve('Success in instance function');
+      return googleSheetsModule.testConnection({
+        sheetId: this.formElements.googleSpreadSheetIdInput.value,
+        sheetTabName: this.formElements.googleSpreadSheetTabNameInput.value
+      });
+    },
     id: 'googleSheets',
     fieldset: document.getElementById('google-sheets'),
     formElements: {
@@ -191,13 +203,13 @@ const showFormScratchMe = () => {
             actionFunction: function() {
               console.log('clicked test', this);
             }
-          },
-          {
-            event: 'mouseenter',
-            actionFunction: function() {
-              console.log('mouseenter test', this);
-            }
           }
+          // {
+          //   event: 'mouseenter',
+          //   actionFunction: function() {
+          //     console.log('mouseenter test', this);
+          //   }
+          // }
         ]
       }
     }
@@ -226,9 +238,17 @@ const showFormScratchMe = () => {
     //   console.log('testConnection in instance', this);
     //   this._testingConnectionFunction();
     // },
-    // _testingConnectionFunction() {
-    //   return Promise.resolve('Success in instance function');
-    // },
+    _testingConnectionFunction() {
+      console.log('testing connection', {
+        userId: this.formElements.userId.value,
+        userName: this.formElements.userName.value
+      });
+      // return Promise.resolve('Success in instance function');
+      return dummyApiModule.testConnection({
+        userId: this.formElements.userId.value,
+        userName: this.formElements.userName.value
+      });
+    },
     id: 'dummyApi',
     fieldset: document.getElementById('dummy-api'),
     formElements: {
@@ -642,17 +662,17 @@ const showFormScratchMe = () => {
     false
   );
 
-  googleSheets.buttons.testConnectionGoogleSheetsBtn.addEventListener(
-    'click',
-    handleClickTestConnection.bind(null, () =>
-      googleSheetsModule.testConnection({
-        sheetId: googleSheets.formElements.googleSpreadSheetIdInput.value,
-        sheetTabName:
-          googleSheets.formElements.googleSpreadSheetTabNameInput.value
-      })
-    ),
-    false
-  );
+  // googleSheets.buttons.testConnectionGoogleSheetsBtn.addEventListener(
+  //   'click',
+  //   handleClickTestConnection.bind(null, () =>
+  //     googleSheetsModule.testConnection({
+  //       sheetId: googleSheets.formElements.googleSpreadSheetIdInput.value,
+  //       sheetTabName:
+  //         googleSheets.formElements.googleSpreadSheetTabNameInput.value
+  //     })
+  //   ),
+  //   false
+  // );
 
   // set handlers for DUMMY API BUTTONS
 
