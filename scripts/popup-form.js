@@ -14,6 +14,12 @@ import {
   getMessageElementNew
 } from './modules/helpers.js';
 
+const closeWindow = () => {
+  chrome.windows.getCurrent(win =>
+    setTimeout(() => chrome.windows.remove(win.id), 4000)
+  );
+};
+
 class ConnectionOptions {
   constructor() {
     this._options = {};
@@ -34,6 +40,7 @@ class ConnectionOption {
     this._addAllButtonsEventListeners();
     this._registerTestBtn();
     this._registerSaveBtn();
+    this._registerSendBtn();
   }
 
   _testingConnectionFunction() {
@@ -41,6 +48,31 @@ class ConnectionOption {
     return Promise.reject(
       'No _testingConnectionFunction() defined for instance '
     );
+  }
+  _sendingDataFunction() {
+    return Promise.reject('No _sendingDataFunction() defined for instance ');
+  }
+
+  sendData({ button }) {
+    console.log('send data', button, this);
+    const messageElem = getMessageElement(this.id, button);
+
+    // add additional form checking
+
+    this._sendingDataFunction()
+      .then(() => {
+        // show succes and hide popup after defined time
+        // popup.classList.add('success');
+        // clearExtractedData(false);
+        // chrome.windows.getCurrent(win =>
+        //   setTimeout(() => chrome.windows.remove(win.id), 4000)
+        // );
+        closeWindow();
+      })
+      .catch(error => {
+        showItemMessage(messageElem, error, 'error');
+        disableInput(button, true);
+      });
   }
 
   saveConnection({ button }) {
@@ -111,6 +143,14 @@ class ConnectionOption {
       false
     );
   }
+  _registerSendBtn() {
+    const button = this.buttons.sendFormBtn.element;
+    button.addEventListener(
+      'click',
+      this.sendData.bind(this, { button }),
+      false
+    );
+  }
 
   _addAllButtonsEventListeners() {
     if (this.buttons) {
@@ -154,7 +194,7 @@ const showFormScratchMe = () => {
   // Form
   const scratchMeForm = document.getElementById('scratch-me-form');
 
-  // TEMP
+  // TEMP - placed outside
   const fromFacebook = {
     fieldset: document.getElementById('from-facebook'),
     formElements: {
@@ -166,8 +206,6 @@ const showFormScratchMe = () => {
       postIdInput: document.getElementById('post-id')
     }
   };
-
-  console.log('fromFacebook', fromFacebook);
 
   // TEMP OLD - to delete
   // Form fieldset with fields to be filled from facebook
@@ -216,6 +254,28 @@ const showFormScratchMe = () => {
         sheetTabName: this.formElements.googleSpreadSheetTabNameInput.value
       });
     },
+    _sendingDataFunction() {
+      console.log('sending data in instance', fromFacebook.formElements, {
+        sheetId: this.formElements.googleSpreadSheetIdInput.value,
+        sheetTabName: this.formElements.googleSpreadSheetTabNameInput.value
+      });
+      // return Promise.resolve('Success in sending in instance function');
+
+      return googleSheetsModule.sendDataToSave(
+        //   TEMP
+        [
+          fromFacebook.formElements.postIdInput.value,
+          fromFacebook.formElements.postAuthorInput.value,
+          fromFacebook.formElements.postContentTextarea.value,
+          fromFacebook.formElements.postDatetimeInput.value,
+          fromFacebook.formElements.postUrlInput.value
+        ],
+        {
+          sheetId: this.formElements.googleSpreadSheetIdInput.value,
+          sheetTabName: this.formElements.googleSpreadSheetTabNameInput.value
+        }
+      );
+    },
     id: 'googleSheets',
     fieldset: document.getElementById('google-sheets'),
     formElements: {
@@ -233,12 +293,12 @@ const showFormScratchMe = () => {
       testConnectionBtn: {
         element: document.getElementById('test-connection-google-sheets'),
         actions: [
-          {
-            event: 'click',
-            actionFunction: function() {
-              console.log('clicked test', this);
-            }
-          }
+          // {
+          //   event: 'click',
+          //   actionFunction: function() {
+          //     console.log('clicked test', this);
+          //   }
+          // }
           // {
           //   event: 'mouseenter',
           //   actionFunction: function() {
@@ -297,12 +357,12 @@ const showFormScratchMe = () => {
       sendFormBtn: {
         element: document.getElementById('send-to-dummy-api'),
         actions: [
-          {
-            event: 'click',
-            actionFunction: function() {
-              console.log('clicked', this);
-            }
-          }
+          // {
+          //   event: 'click',
+          //   actionFunction: function() {
+          //     console.log('clicked', this);
+          //   }
+          // }
           // {
           //   event: 'mouseenter',
           //   actionFunction: function() {
@@ -681,27 +741,27 @@ const showFormScratchMe = () => {
 
   // set handlers for GOOGLE SHEETS BUTTONS
 
-  googleSheets.buttons.sendGoogleSheetsBtn.addEventListener(
-    'click',
-    handleClickSendForm.bind(null, () =>
-      googleSheetsModule.sendDataToSave(
-        //   TEMP
-        [
-          fromFacebook.formElements.postIdInput.value,
-          fromFacebook.formElements.postAuthorInput.value,
-          fromFacebook.formElements.postContentTextarea.value,
-          fromFacebook.formElements.postDatetimeInput.value,
-          fromFacebook.formElements.postUrlInput.value
-        ],
-        {
-          sheetId: googleSheets.formElements.googleSpreadSheetIdInput.value,
-          sheetTabName:
-            googleSheets.formElements.googleSpreadSheetTabNameInput.value
-        }
-      )
-    ),
-    false
-  );
+  // googleSheets.buttons.sendGoogleSheetsBtn.addEventListener(
+  //   'click',
+  //   handleClickSendForm.bind(null, () =>
+  //     googleSheetsModule.sendDataToSave(
+  //       //   TEMP
+  //       [
+  //         fromFacebook.formElements.postIdInput.value,
+  //         fromFacebook.formElements.postAuthorInput.value,
+  //         fromFacebook.formElements.postContentTextarea.value,
+  //         fromFacebook.formElements.postDatetimeInput.value,
+  //         fromFacebook.formElements.postUrlInput.value
+  //       ],
+  //       {
+  //         sheetId: googleSheets.formElements.googleSpreadSheetIdInput.value,
+  //         sheetTabName:
+  //           googleSheets.formElements.googleSpreadSheetTabNameInput.value
+  //       }
+  //     )
+  //   ),
+  //   false
+  // );
 
   // googleSheets.buttons.testConnectionGoogleSheetsBtn.addEventListener(
   //   'click',
@@ -717,26 +777,26 @@ const showFormScratchMe = () => {
 
   // set handlers for DUMMY API BUTTONS
 
-  sendDummyApiBtn.addEventListener(
-    'click',
-    handleClickSendForm.bind(null, () =>
-      // TEMP
-      dummyApiModule.sendDataToSave(
-        {
-          postId: fromFacebook.formElements.postIdInput.value,
-          postAuthor: fromFacebook.formElements.postAuthorInput.value,
-          postContent: fromFacebook.formElements.postContentTextarea.value,
-          postDatetime: fromFacebook.formElements.postDatetimeInput.value,
-          postUrl: fromFacebook.formElements.postUrlInput.value
-        },
-        {
-          userId: dummyApiUserId.value,
-          userName: dummyApiUserName.value
-        }
-      )
-    ),
-    false
-  );
+  // sendDummyApiBtn.addEventListener(
+  //   'click',
+  //   handleClickSendForm.bind(null, () =>
+  //     // TEMP
+  //     dummyApiModule.sendDataToSave(
+  //       {
+  //         postId: fromFacebook.formElements.postIdInput.value,
+  //         postAuthor: fromFacebook.formElements.postAuthorInput.value,
+  //         postContent: fromFacebook.formElements.postContentTextarea.value,
+  //         postDatetime: fromFacebook.formElements.postDatetimeInput.value,
+  //         postUrl: fromFacebook.formElements.postUrlInput.value
+  //       },
+  //       {
+  //         userId: dummyApiUserId.value,
+  //         userName: dummyApiUserName.value
+  //       }
+  //     )
+  //   ),
+  //   false
+  // );
 
   //   testConnectionDummyApiBtn.addEventListener(
   //     'click',
