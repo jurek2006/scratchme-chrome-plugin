@@ -52,18 +52,22 @@ class ConnectionOption {
     // console.log(messageElem, button);
     // showItemMessage(messageElem, 'is working?', 'success');
 
+    // need to have here 'test-connection' button to disable/enable
+    const saveConnectionBtn = this.buttons.saveConnectionBtn.element;
+    console.log('saveConnectionBtn', saveConnectionBtn);
+
     this._testingConnectionFunction()
       .then(response => {
         // connected successfully
         showItemMessage(messageElem, response, 'success');
-        // disableInput(saveConnectionBtn, false);
+        disableInput(saveConnectionBtn, false);
       })
       .catch(error => {
         // connection error occured
         // console.error('Error in testing connection', error);
 
         showItemMessage(messageElem, `Connection failed: ${error}`, 'error');
-        // disableInput(saveConnectionBtn, true);
+        disableInput(saveConnectionBtn, true);
       });
   }
 
@@ -211,6 +215,9 @@ const showFormScratchMe = () => {
           //   }
           // }
         ]
+      },
+      saveConnectionBtn: {
+        element: document.getElementById('save-connection-google-sheets')
       }
     }
   });
@@ -294,6 +301,9 @@ const showFormScratchMe = () => {
         //     // }
         //   }
         // ]
+      },
+      saveConnectionBtn: {
+        element: document.getElementById('save-connection-dummy-api')
       }
     }
   });
@@ -634,9 +644,9 @@ const showFormScratchMe = () => {
 
   // set handler for ALL SAVE CONNECTION BUTTONS
   // for each connection option (they share the same handler)
-  saveConnectionButtonsArray.forEach(saveBtn => {
-    saveBtn.addEventListener('click', handleClickSaveConnection);
-  });
+  // saveConnectionButtonsArray.forEach(saveBtn => {
+  //   saveBtn.addEventListener('click', handleClickSaveConnection);
+  // });
 
   // set handlers for GOOGLE SHEETS BUTTONS
 
