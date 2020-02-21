@@ -10,7 +10,8 @@ import {
   saveInLocalStorage,
   readFromLocalStorage,
   loadConnection,
-  validateForm
+  validateForm,
+  getMessageElementNew
 } from './modules/helpers.js';
 
 class ConnectionOptions {
@@ -35,18 +36,45 @@ class ConnectionOption {
   }
 
   _testingConnectionFunction() {
-    console.log('testConnectionFunction in class', this);
+    // console.log('testConnectionFunction in class', this);
+    return Promise.reject(
+      'No _testingConnectionFunction() defined for instance '
+    );
   }
 
-  testConnection() {
-    console.log('testConnection in class', this);
-    this._testingConnectionFunction();
+  testConnection({ button }) {
+    // console.log('testConnection in class', this);
+    // this._testingConnectionFunction();
+
+    // get(create if doesn't exist) element with id based on id of current option
+    // let messageElem = getMessageElementNew(this.id, this.fieldset);
+    let messageElem = getMessageElement(this.id, button);
+    // console.log(messageElem, button);
+    // showItemMessage(messageElem, 'is working?', 'success');
+
+    this._testingConnectionFunction()
+      .then(response => {
+        // connected successfully
+        showItemMessage(messageElem, response, 'success');
+        // disableInput(saveConnectionBtn, false);
+      })
+      .catch(error => {
+        // connection error occured
+        // console.error('Error in testing connection', error);
+
+        showItemMessage(messageElem, `Connection failed: ${error}`, 'error');
+        // disableInput(saveConnectionBtn, true);
+      });
   }
 
   _registerTestBtn() {
     const button = this.buttons.testConnectionBtn.element;
     const handler = this.testConnection;
-    button.addEventListener('click', this.testConnection.bind(this), false);
+    button.addEventListener(
+      'click',
+      this.testConnection.bind(this, { button }),
+      false
+    );
   }
 
   _addAllButtonsEventListeners() {
@@ -194,12 +222,12 @@ const showFormScratchMe = () => {
   //   );
 
   const dummyApiNNN = new ConnectionOption({
-    testConnection() {
-      console.log('testConnection in instance', this);
-      this._testingConnectionFunction();
-    },
+    // testConnection() {
+    //   console.log('testConnection in instance', this);
+    //   this._testingConnectionFunction();
+    // },
     // _testingConnectionFunction() {
-    //   console.log('testConnectionFunction in instance', this);
+    //   return Promise.resolve('Success in instance function');
     // },
     id: 'dummyApi',
     fieldset: document.getElementById('dummy-api'),

@@ -124,7 +124,7 @@ export const isTheFormIncorrect = formItem => {
 
   return hasErrors;
 };
-
+// TEMP - old version
 export const getMessageElement = (id, targetElem, isErrorMessage = false) => {
   let messageElem = targetElem.form.querySelector(
     (isErrorMessage
@@ -138,6 +138,30 @@ export const getMessageElement = (id, targetElem, isErrorMessage = false) => {
     messageElem.id = (isErrorMessage ? 'error-for-' : 'message-for-') + id;
 
     targetElem.parentNode.insertBefore(messageElem, targetElem.parent);
+  }
+
+  return messageElem;
+};
+
+// TEMP - experimental, rather not neede at the moment
+export const getMessageElementNew = (
+  id,
+  targetElem,
+  isErrorMessage = false
+) => {
+  let messageElem = targetElem.querySelector(
+    (isErrorMessage
+      ? '.error-message#error-for-'
+      : '.result-message#message-for-') + id
+  );
+
+  if (!messageElem) {
+    messageElem = document.createElement('div');
+    messageElem.className = isErrorMessage ? 'error-message' : 'result-message';
+    messageElem.id = (isErrorMessage ? 'error-for-' : 'message-for-') + id;
+
+    // targetElem.parentNode.insertBefore(messageElem, targetElem.parent);
+    targetElem.appendChild(messageElem);
   }
 
   return messageElem;
