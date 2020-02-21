@@ -33,6 +33,7 @@ class ConnectionOption {
     Object.assign(this, fields);
     this._addAllButtonsEventListeners();
     this._registerTestBtn();
+    this._registerSaveBtn();
   }
 
   _testingConnectionFunction() {
@@ -42,13 +43,36 @@ class ConnectionOption {
     );
   }
 
+  saveConnection({ button }) {
+    console.log('save connection', button, this);
+    const messageElem = getMessageElement(this.id, button);
+
+    // get activeFieldset of options
+    const activeFieldset = this.fieldset;
+
+    // save inputs names & values in localStorage with fieldset id as a key
+    const isSavedSuccessfully = saveInLocalStorage(
+      activeFieldset.id,
+      getInputs(activeFieldset)
+    );
+
+    if (isSavedSuccessfully) {
+      showItemMessage(messageElem, 'Connection options saved', 'success');
+      disableInput(testConnectionBtn, true);
+      disableInput(saveConnectionBtn, true);
+    } else {
+      showItemMessage(messageElem, 'Failed saving connection options', 'error');
+      disableInput(testConnectionBtn, false);
+    }
+  }
+
   testConnection({ button }) {
     // console.log('testConnection in class', this);
     // this._testingConnectionFunction();
 
     // get(create if doesn't exist) element with id based on id of current option
     // let messageElem = getMessageElementNew(this.id, this.fieldset);
-    let messageElem = getMessageElement(this.id, button);
+    const messageElem = getMessageElement(this.id, button);
     // console.log(messageElem, button);
     // showItemMessage(messageElem, 'is working?', 'success');
 
@@ -73,10 +97,17 @@ class ConnectionOption {
 
   _registerTestBtn() {
     const button = this.buttons.testConnectionBtn.element;
-    const handler = this.testConnection;
     button.addEventListener(
       'click',
       this.testConnection.bind(this, { button }),
+      false
+    );
+  }
+  _registerSaveBtn() {
+    const button = this.buttons.saveConnectionBtn.element;
+    button.addEventListener(
+      'click',
+      this.saveConnection.bind(this, { button }),
       false
     );
   }
@@ -561,30 +592,30 @@ const showFormScratchMe = () => {
       });
   };
 
-  const handleClickSaveConnection = e => {
-    e.preventDefault();
+  // const handleClickSaveConnection = e => {
+  //   e.preventDefault();
 
-    const messageElem = getMessageElement(e.target.id, e.target);
+  //   const messageElem = getMessageElement(e.target.id, e.target);
 
-    // get activeFieldset of options (based on which button was clicked - get button's ancestor)
-    const activeFieldset = e.target.closest(
-      'fieldset.content-of-selected-option'
-    );
-    // save inputs names & values in localStorage with fieldset id as a key
-    const isSavedSuccessfully = saveInLocalStorage(
-      activeFieldset.id,
-      getInputs(activeFieldset)
-    );
+  //   // get activeFieldset of options (based on which button was clicked - get button's ancestor)
+  //   const activeFieldset = e.target.closest(
+  //     'fieldset.content-of-selected-option'
+  //   );
+  //   // save inputs names & values in localStorage with fieldset id as a key
+  //   const isSavedSuccessfully = saveInLocalStorage(
+  //     activeFieldset.id,
+  //     getInputs(activeFieldset)
+  //   );
 
-    if (isSavedSuccessfully) {
-      showItemMessage(messageElem, 'Connection options saved', 'success');
-      disableInput(testConnectionBtn, true);
-      disableInput(saveConnectionBtn, true);
-    } else {
-      showItemMessage(messageElem, 'Failed saving connection options', 'error');
-      disableInput(testConnectionBtn, false);
-    }
-  };
+  //   if (isSavedSuccessfully) {
+  //     showItemMessage(messageElem, 'Connection options saved', 'success');
+  //     disableInput(testConnectionBtn, true);
+  //     disableInput(saveConnectionBtn, true);
+  //   } else {
+  //     showItemMessage(messageElem, 'Failed saving connection options', 'error');
+  //     disableInput(testConnectionBtn, false);
+  //   }
+  // };
 
   const handleClickSendForm = (sendFunction, e) => {
     e.preventDefault();
