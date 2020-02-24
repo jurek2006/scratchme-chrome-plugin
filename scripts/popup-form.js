@@ -1,6 +1,9 @@
 import googleSheetsModule from './modules/googleSheetsModule.js';
 import cooperModule from './modules/cooperModule.js';
 import dummyApiModule from './modules/dummyApiModule.js';
+import { ConnectionOption } from './classes/ConnectionOption.js';
+import { ScratchMe } from './classes/ScratchMe.js';
+
 import {
   disableInput,
   showItemMessage,
@@ -20,165 +23,7 @@ const closeWindow = () => {
   );
 };
 
-class ConnectionOptions {
-  constructor() {
-    this._options = {};
-  }
-
-  registerNew(connectionOption) {
-    Object.assign(this._options, { [connectionOption.id]: connectionOption });
-  }
-
-  all() {
-    console.log('all connection options', this._options);
-  }
-}
-
-class ConnectionOption {
-  constructor(fields) {
-    Object.assign(this, fields);
-    this._addAllButtonsEventListeners();
-    this._registerTestBtn();
-    this._registerSaveBtn();
-    this._registerSendBtn();
-  }
-
-  _testingConnectionFunction() {
-    // console.log('testConnectionFunction in class', this);
-    return Promise.reject(
-      'No _testingConnectionFunction() defined for instance '
-    );
-  }
-  _sendingDataFunction() {
-    return Promise.reject('No _sendingDataFunction() defined for instance ');
-  }
-
-  sendData({ button }) {
-    console.log('send data', button, this);
-    const messageElem = getMessageElement(this.id, button);
-
-    // add additional form checking
-
-    this._sendingDataFunction()
-      .then(() => {
-        // show succes and hide popup after defined time
-        // popup.classList.add('success');
-        // clearExtractedData(false);
-        // chrome.windows.getCurrent(win =>
-        //   setTimeout(() => chrome.windows.remove(win.id), 4000)
-        // );
-        closeWindow();
-      })
-      .catch(error => {
-        showItemMessage(messageElem, error, 'error');
-        disableInput(button, true);
-      });
-  }
-
-  saveConnection({ button }) {
-    console.log('save connection', button, this);
-    const messageElem = getMessageElement(this.id, button);
-
-    // get activeFieldset of options
-    const activeFieldset = this.fieldset;
-
-    // save inputs names & values in localStorage with fieldset id as a key
-    const isSavedSuccessfully = saveInLocalStorage(
-      activeFieldset.id,
-      getInputs(activeFieldset)
-    );
-
-    if (isSavedSuccessfully) {
-      showItemMessage(messageElem, 'Connection options saved', 'success');
-      disableInput(testConnectionBtn, true);
-      disableInput(saveConnectionBtn, true);
-    } else {
-      showItemMessage(messageElem, 'Failed saving connection options', 'error');
-      disableInput(testConnectionBtn, false);
-    }
-  }
-
-  testConnection({ button }) {
-    // console.log('testConnection in class', this);
-    // this._testingConnectionFunction();
-
-    // get(create if doesn't exist) element with id based on id of current option
-    // let messageElem = getMessageElementNew(this.id, this.fieldset);
-    const messageElem = getMessageElement(this.id, button);
-    // console.log(messageElem, button);
-    // showItemMessage(messageElem, 'is working?', 'success');
-
-    // need to have here 'test-connection' button to disable/enable
-    const saveConnectionBtn = this.buttons.saveConnectionBtn.element;
-    console.log('saveConnectionBtn', saveConnectionBtn);
-
-    this._testingConnectionFunction()
-      .then(response => {
-        // connected successfully
-        showItemMessage(messageElem, response, 'success');
-        disableInput(saveConnectionBtn, false);
-      })
-      .catch(error => {
-        // connection error occured
-        // console.error('Error in testing connection', error);
-
-        showItemMessage(messageElem, `Connection failed: ${error}`, 'error');
-        disableInput(saveConnectionBtn, true);
-      });
-  }
-
-  _registerTestBtn() {
-    const button = this.buttons.testConnectionBtn.element;
-    button.addEventListener(
-      'click',
-      this.testConnection.bind(this, { button }),
-      false
-    );
-  }
-  _registerSaveBtn() {
-    const button = this.buttons.saveConnectionBtn.element;
-    button.addEventListener(
-      'click',
-      this.saveConnection.bind(this, { button }),
-      false
-    );
-  }
-  _registerSendBtn() {
-    const button = this.buttons.sendFormBtn.element;
-    button.addEventListener(
-      'click',
-      this.sendData.bind(this, { button }),
-      false
-    );
-  }
-
-  _addAllButtonsEventListeners() {
-    if (this.buttons) {
-      for (const currentButton in this.buttons) {
-        this._addEventListener(this.buttons[currentButton]);
-      }
-    }
-  }
-
-  _addEventListener(button) {
-    if (button.element && button.actions && button.actions.length > 0) {
-      button.actions.forEach(action => {
-        if (!action.event || !action.actionFunction) return;
-        console.log(`adding handler to ${action.event}`);
-        button.element.addEventListener(
-          action.event,
-          action.actionFunction.bind(this), // sets whole option as this
-          false
-        );
-      });
-    }
-  }
-
-  get sendFormBtn() {
-    return this.buttons.sendFormBtn.element;
-  }
-}
-
+// CONST - to delete
 const fromFacebook = {
   fieldset: document.getElementById('from-facebook'),
   formElements: {
@@ -193,17 +38,13 @@ const fromFacebook = {
 
 const googleSheetsNNN = new ConnectionOption({
   _testingConnectionFunction() {
-    console.log('testing connection', {
-      sheetId: this.formElements.googleSpreadSheetIdInput.value,
-      sheetTabName: this.formElements.googleSpreadSheetTabNameInput.value
-    });
-    // return Promise.resolve('Success in instance function');
     return googleSheetsModule.testConnection({
       sheetId: this.formElements.googleSpreadSheetIdInput.value,
       sheetTabName: this.formElements.googleSpreadSheetTabNameInput.value
     });
   },
   _sendingDataFunction() {
+    const fromFacebook = this.scratchMe.fromFacebook;
     console.log('sending data in instance', fromFacebook.formElements, {
       sheetId: this.formElements.googleSpreadSheetIdInput.value,
       sheetTabName: this.formElements.googleSpreadSheetTabNameInput.value
@@ -328,21 +169,28 @@ const dummyApiNNN = new ConnectionOption({
   }
 });
 
-const connectionOptions = new ConnectionOptions();
-connectionOptions.registerNew(googleSheetsNNN);
-connectionOptions.registerNew(dummyApiNNN);
+// get post data stored by background.js (data scratched from facebook)
+
+// chrome.storage.sync.get(['postData'], storage => {
+//   setFieldsValue(storage.postData);
+//   restoreSelectedConnection(); // has to be after setting fields values
+// });
+
+const scratchMe = new ScratchMe();
+scratchMe.registerNew(googleSheetsNNN);
+scratchMe.registerNew(dummyApiNNN);
 
 const showFormScratchMe = () => {
-  // FLEXIBLE ELEMENTS
-  let connectionOptionsFieldset; // flexible container - assigned when selected sending(storing) option (for validating fields only for chosen option)
+  // // FLEXIBLE ELEMENTS
+  // let connectionOptionsFieldset; // flexible container - assigned when selected sending(storing) option (for validating fields only for chosen option)
 
-  // Buttons
-  let sendFormBtn; // flexible button for sending form - is assigned according to selected storing option
-  let testConnectionBtn; // flexible button for testing selected connection - assigned when option selected
-  let saveConnectionBtn; // flexible button for saving selected connection - assigned when option selected
+  // // Buttons
+  // let sendFormBtn; // flexible button for sending form - is assigned according to selected storing option
+  // let testConnectionBtn; // flexible button for testing selected connection - assigned when option selected
+  // let saveConnectionBtn; // flexible button for saving selected connection - assigned when option selected
 
   // DEFINED ELEMENTS
-  const popup = document.querySelector('.popup');
+  // const popup = document.querySelector('.popup');
 
   // Form
   const scratchMeForm = document.getElementById('scratch-me-form');
@@ -559,10 +407,10 @@ const showFormScratchMe = () => {
   const clearDataBtn = document.getElementById('clear-data-btn');
 
   // get post data stored by background.js (data scratched from facebook)
-  chrome.storage.sync.get(['postData'], storage => {
-    setFieldsValue(storage.postData);
-    restoreSelectedConnection(); // has to be after setting fields values
-  });
+  // chrome.storage.sync.get(['postData'], storage => {
+  //   setFieldsValue(storage.postData);
+  //   restoreSelectedConnection(); // has to be after setting fields values
+  // });
 
   // saves last selected connection option
   const rememberSelectedConnection = optionValue => {
@@ -616,31 +464,20 @@ const showFormScratchMe = () => {
     }
   };
 
-  const setDateTimeValue = unixTime => {
-    const date = unixTime ? new Date(unixTime * 1000) : new Date(Date.now());
+  // const setFieldsValue = postData => {
+  //   if (!postData) return;
 
-    const month = ('0' + (date.getMonth() + 1)).slice(-2);
-    const dayMonth = ('0' + date.getDate()).slice(-2);
-    const hours = (date.getHours() < 10 ? '0' : '') + date.getHours();
-    const minutes = (date.getMinutes() < 10 ? '0' : '') + date.getMinutes();
+  //   const { postId, author, url, content, uTime } = postData;
 
-    return `${date.getFullYear()}-${month}-${dayMonth}T${hours}:${minutes}`;
-  };
-
-  const setFieldsValue = postData => {
-    if (!postData) return;
-
-    const { postId, author, url, content, uTime } = postData;
-
-    fromFacebook.formElements.postAuthorInput.value = author;
-    fromFacebook.formElements.postDatetimeInput.value = setDateTimeValue(uTime);
-    fromFacebook.formElements.postTitleInput.value = `${
-      postId ? postId + ' - ' : ''
-    }${content.slice(0, 20)}... - ${author}`;
-    fromFacebook.formElements.postContentTextarea.value = content;
-    fromFacebook.formElements.postUrlInput.value = url;
-    fromFacebook.formElements.postIdInput.value = postId || '0';
-  };
+  //   fromFacebook.formElements.postAuthorInput.value = author;
+  //   fromFacebook.formElements.postDatetimeInput.value = setDateTimeValue(uTime);
+  //   fromFacebook.formElements.postTitleInput.value = `${
+  //     postId ? postId + ' - ' : ''
+  //   }${content.slice(0, 20)}... - ${author}`;
+  //   fromFacebook.formElements.postContentTextarea.value = content;
+  //   fromFacebook.formElements.postUrlInput.value = url;
+  //   fromFacebook.formElements.postIdInput.value = postId || '0';
+  // };
 
   const generateCode = codeName => {
     const data = {
