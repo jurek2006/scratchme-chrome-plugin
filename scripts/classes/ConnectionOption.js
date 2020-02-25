@@ -61,13 +61,7 @@ export class ConnectionOption {
 
     this._sendingDataFunction()
       .then(() => {
-        // show succes and hide popup after defined time
-        // popup.classList.add('success');
-        // clearExtractedData(false);
-        // chrome.windows.getCurrent(win =>
-        //   setTimeout(() => chrome.windows.remove(win.id), 4000)
-        // );
-        closeWindow();
+        this.scratchMe.closeWindowOnSuccess();
       })
       .catch(error => {
         showItemMessage(messageElem, error, 'error');

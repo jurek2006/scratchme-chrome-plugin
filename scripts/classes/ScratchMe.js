@@ -4,8 +4,13 @@ export class ScratchMe {
   constructor() {
     this._options = {};
     this._setFromFacebook();
-    this.popup = document.querySelector('.popup');
     this.form = document.getElementById('scratch-me-form');
+    this.closeWindowOnSuccess = function() {
+      document.querySelector('.popup').classList.add('success');
+      chrome.windows.getCurrent(win =>
+        setTimeout(() => chrome.windows.remove(win.id), 3000)
+      );
+    };
     // this._setFieldsValue();
     this._setConnectionOptionChanger();
     // this._setInputsValidator();
