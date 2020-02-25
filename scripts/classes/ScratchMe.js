@@ -1,12 +1,25 @@
-import { setDateTimeValue } from '../modules/helpers.js';
+import { setDateTimeValue, isTheFormIncorrect } from '../modules/helpers.js';
 
 export class ScratchMe {
   constructor() {
     this._options = {};
     this._setFromFacebook();
     this.popup = document.querySelector('.popup');
+    this.form = document.getElementById('scratch-me-form');
     this._setFieldsValue();
     this._setConnectionOptionChanger();
+    // this._setInputsValidator();
+  }
+
+  _setInputsValidator() {
+    this.form.addEventListener(
+      'input',
+      e =>
+        console.log(
+          `Input dla ${e.target.value}. Validity ${e.target.validity.valid}`
+        ),
+      true
+    );
   }
 
   // _getData() {
@@ -29,6 +42,15 @@ export class ScratchMe {
         postIdInput: document.getElementById('post-id')
       }
     };
+    this.fromFacebook.fieldset.addEventListener(
+      'input',
+      e => {
+        this.fromFacebook.isValid = !isTheFormIncorrect(
+          this.fromFacebook.fieldset
+        );
+      },
+      true
+    );
   }
 
   // TEMP - add hide all outside
