@@ -6,7 +6,7 @@ export class ScratchMe {
     this._setFromFacebook();
     this.popup = document.querySelector('.popup');
     this.form = document.getElementById('scratch-me-form');
-    this._setFieldsValue();
+    // this._setFieldsValue();
     this._setConnectionOptionChanger();
     // this._setInputsValidator();
   }
@@ -42,12 +42,20 @@ export class ScratchMe {
         postIdInput: document.getElementById('post-id')
       }
     };
+    this._setFieldsValue()
+      .then(() => {
+        this.fromFacebook.isValid = !isTheFormIncorrect(
+          this.fromFacebook.fieldset
+        );
+      })
+      .catch(error => console.log('error', error));
     this.fromFacebook.fieldset.addEventListener(
       'input',
       e => {
         this.fromFacebook.isValid = !isTheFormIncorrect(
           this.fromFacebook.fieldset
         );
+        this.activeConnectionOption && this.activeConnectionOption.rerender();
       },
       true
     );
@@ -63,7 +71,8 @@ export class ScratchMe {
 
   _changeCurrentConnectionOption(selectedOptionId) {
     this._hideAllConnectionOptions();
-    this._options[selectedOptionId].setVisible();
+    this.activeConnectionOption = this._options[selectedOptionId].setVisible();
+    console.log('active connection option', this.activeConnectionOption);
   }
 
   _setConnectionOptionChanger() {
@@ -81,27 +90,32 @@ export class ScratchMe {
   }
 
   _setFieldsValue() {
-    chrome.storage.sync.get(['postData'], storage => {
-      // return storage.postData;
-      // setFieldsValue(storage.postData);
-      // restoreSelectedConnection(); // has to be after setting fields values
-      const postData = storage.postData;
+    return new Promise(resolve => {
+      chrome.storage.sync.get(['postData'], storage => {
+        // return storage.postData;
+        // setFieldsValue(storage.postData);
+        // restoreSelectedConnection(); // has to be after setting fields values
 
-      console.log('get data', postData);
-      if (!postData) return;
-      // TEMP
-      const { postId, author, url, content, uTime } = postData;
+        // TEMP - improve
+        const postData = storage.postData;
 
-      this.fromFacebook.formElements.postAuthorInput.value = author;
-      this.fromFacebook.formElements.postDatetimeInput.value = setDateTimeValue(
-        uTime
-      );
-      this.fromFacebook.formElements.postTitleInput.value = `${
-        postId ? postId + ' - ' : ''
-      }${content.slice(0, 20)}... - ${author}`;
-      this.fromFacebook.formElements.postContentTextarea.value = content;
-      this.fromFacebook.formElements.postUrlInput.value = url;
-      this.fromFacebook.formElements.postIdInput.value = postId || '0';
+        console.log('get data', postData);
+        if (!postData) resolve();
+        // TEMP
+        const { postId, author, url, content, uTime } = postData;
+
+        this.fromFacebook.formElements.postAuthorInput.value = author;
+        this.fromFacebook.formElements.postDatetimeInput.value = setDateTimeValue(
+          uTime
+        );
+        this.fromFacebook.formElements.postTitleInput.value = `${
+          postId ? postId + ' - ' : ''
+        }${content.slice(0, 20)}... - ${author}`;
+        this.fromFacebook.formElements.postContentTextarea.value = content;
+        this.fromFacebook.formElements.postUrlInput.value = url;
+        this.fromFacebook.formElements.postIdInput.value = postId || '0';
+        resolve();
+      });
     });
   }
 

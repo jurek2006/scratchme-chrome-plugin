@@ -19,6 +19,28 @@ export class ConnectionOption {
     this._registerTestBtn();
     this._registerSaveBtn();
     this._registerSendBtn();
+    this._addFieldsValidation();
+  }
+
+  rerender() {
+    console.log('rerendering', this);
+    disableInput(this.buttons.testConnectionBtn.element, !this.isValid);
+    disableInput(
+      this.buttons.sendFormBtn.element,
+      !(this.isValid && this.scratchMe.fromFacebook.isValid)
+    );
+  }
+
+  _addFieldsValidation() {
+    this.isValid = !isTheFormIncorrect(this.fieldset);
+    this.fieldset.addEventListener(
+      'input',
+      e => {
+        this.isValid = !isTheFormIncorrect(this.fieldset);
+        this.rerender();
+      },
+      true
+    );
   }
 
   _testingConnectionFunction() {
@@ -157,11 +179,14 @@ export class ConnectionOption {
   }
 
   setVisible() {
+    this.isActive = true;
     this.fieldset.classList.remove('disabled');
+    return this; // return active connection option
     console.log(`Enable connection option ${this.id}`, this.fieldset);
   }
 
   setHidden() {
+    this.isActive = false;
     this.fieldset.classList.add('disabled');
     console.log(`Hide connection option ${this.id}`, this.fieldset);
   }
