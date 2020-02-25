@@ -66,7 +66,7 @@ const googleSheetsNNN = new ConnectionOption({
       }
     );
   },
-  id: 'googleSheets',
+  id: 'google-sheets',
   fieldset: document.getElementById('google-sheets'),
   formElements: {
     googleSpreadSheetIdInput: document.getElementById('google-spreadsheet-id'),
@@ -117,7 +117,7 @@ const dummyApiNNN = new ConnectionOption({
       userName: this.formElements.userName.value
     });
   },
-  id: 'dummyApi',
+  id: 'dummy-api',
   fieldset: document.getElementById('dummy-api'),
   formElements: {
     userId: document.getElementById('dummy-api-user-id'),
@@ -386,21 +386,21 @@ const showFormScratchMe = () => {
   // );
 
   // Cooper CRM data
-  const cooperAccessTokenInput = document.getElementById('cooper-access-token');
-  const cooperAppNameInput = document.getElementById('cooper-application-name');
-  const cooperUserAppEmailInput = document.getElementById(
-    'cooper-user-application-email'
-  );
-  // Cooper CRM buttons
-  const sendCooperBtn = document.getElementById('send-to-cooper');
-  const testConnectionCooperBtn = document.getElementById(
-    'test-connection-cooper'
-  );
+  // const cooperAccessTokenInput = document.getElementById('cooper-access-token');
+  // const cooperAppNameInput = document.getElementById('cooper-application-name');
+  // const cooperUserAppEmailInput = document.getElementById(
+  //   'cooper-user-application-email'
+  // );
+  // // Cooper CRM buttons
+  // const sendCooperBtn = document.getElementById('send-to-cooper');
+  // const testConnectionCooperBtn = document.getElementById(
+  //   'test-connection-cooper'
+  // );
 
-  // get all saveConnetion buttons (on every option they do the same)
-  const saveConnectionButtonsArray = document.querySelectorAll(
-    'button.js-save-connection-btn'
-  );
+  // // get all saveConnetion buttons (on every option they do the same)
+  // const saveConnectionButtonsArray = document.querySelectorAll(
+  //   'button.js-save-connection-btn'
+  // );
 
   // Other buttons
   const copyToClipBtn = document.getElementById('copy-to-clip-btn');
@@ -581,25 +581,25 @@ const showFormScratchMe = () => {
   // invokes passed function for testing connection
   // shows relevant message about success or error returned from the function
   // enables saveConnectionButton if connection succeeded (disabled when failed)
-  const handleClickTestConnection = (testConnectionFunction, e) => {
-    e.preventDefault();
-    // get(create if doesn't exist) element with id basen on id of clicked button
-    let messageElem = getMessageElement(e.target.id, e.target);
+  // const handleClickTestConnection = (testConnectionFunction, e) => {
+  //   e.preventDefault();
+  //   // get(create if doesn't exist) element with id basen on id of clicked button
+  //   let messageElem = getMessageElement(e.target.id, e.target);
 
-    testConnectionFunction()
-      .then(response => {
-        // connected successfully
-        showItemMessage(messageElem, response, 'success');
-        disableInput(saveConnectionBtn, false);
-      })
-      .catch(error => {
-        // connection error occured
-        console.error('Error in testing connection', error);
+  //   testConnectionFunction()
+  //     .then(response => {
+  //       // connected successfully
+  //       showItemMessage(messageElem, response, 'success');
+  //       disableInput(saveConnectionBtn, false);
+  //     })
+  //     .catch(error => {
+  //       // connection error occured
+  //       console.error('Error in testing connection', error);
 
-        showItemMessage(messageElem, `Connection failed: ${error}`, 'error');
-        disableInput(saveConnectionBtn, true);
-      });
-  };
+  //       showItemMessage(messageElem, `Connection failed: ${error}`, 'error');
+  //       disableInput(saveConnectionBtn, true);
+  //     });
+  // };
 
   // const handleClickSaveConnection = e => {
   //   e.preventDefault();
@@ -626,39 +626,39 @@ const showFormScratchMe = () => {
   //   }
   // };
 
-  const handleClickSendForm = (sendFunction, e) => {
-    e.preventDefault();
+  // const handleClickSendForm = (sendFunction, e) => {
+  //   e.preventDefault();
 
-    // send id of clicked button to get or created message element in current option
-    let messageElem = getMessageElement(e.target.id, e.target);
+  //   // send id of clicked button to get or created message element in current option
+  //   let messageElem = getMessageElement(e.target.id, e.target);
 
-    // additional form checking - if form is invalid sending button should be anyway disabled and shouldn't get here
-    const hasErrors =
-      isTheFormIncorrect(fromFacebook.fieldset) ||
-      isTheFormIncorrect(connectionOptionsFieldset); //checking fields scratched from fb and fields from selected sending option (function returns first field with an error from both)
+  //   // additional form checking - if form is invalid sending button should be anyway disabled and shouldn't get here
+  //   const hasErrors =
+  //     isTheFormIncorrect(fromFacebook.fieldset) ||
+  //     isTheFormIncorrect(connectionOptionsFieldset); //checking fields scratched from fb and fields from selected sending option (function returns first field with an error from both)
 
-    // If there are errors, don't submit form and focus on first element with error
-    if (hasErrors) {
-      hasErrors.focus();
-      showItemMessage(messageElem, 'Please, complete the form', 'error');
-      disableInput(sendFormBtn, true);
-    } else {
-      // if there's no error call given sendFunction (must return promise)
-      sendFunction()
-        .then(() => {
-          // show succes and hide popup after defined time
-          popup.classList.add('success');
-          clearExtractedData(false);
-          chrome.windows.getCurrent(win =>
-            setTimeout(() => chrome.windows.remove(win.id), 4000)
-          );
-        })
-        .catch(error => {
-          showItemMessage(messageElem, error, 'error');
-          disableInput(sendFormBtn, true);
-        });
-    }
-  };
+  //   // If there are errors, don't submit form and focus on first element with error
+  //   if (hasErrors) {
+  //     hasErrors.focus();
+  //     showItemMessage(messageElem, 'Please, complete the form', 'error');
+  //     disableInput(sendFormBtn, true);
+  //   } else {
+  //     // if there's no error call given sendFunction (must return promise)
+  //     sendFunction()
+  //       .then(() => {
+  //         // show succes and hide popup after defined time
+  //         popup.classList.add('success');
+  //         clearExtractedData(false);
+  //         chrome.windows.getCurrent(win =>
+  //           setTimeout(() => chrome.windows.remove(win.id), 4000)
+  //         );
+  //       })
+  //       .catch(error => {
+  //         showItemMessage(messageElem, error, 'error');
+  //         disableInput(sendFormBtn, true);
+  //       });
+  //   }
+  // };
 
   const handleInputEvent = e => {
     validateForm({
@@ -677,10 +677,10 @@ const showFormScratchMe = () => {
 
   // ADD EVENT LISTENERS
 
-  scratchMeForm.addEventListener('input', handleInputEvent, true);
+  // scratchMeForm.addEventListener('input', handleInputEvent, true);
 
   // Choose a format
-  selectDataFormat.addEventListener('change', handleChangeSelectFormat, false);
+  // selectDataFormat.addEventListener('change', handleChangeSelectFormat, false);
 
   // set handler for ALL SAVE CONNECTION BUTTONS
   // for each connection option (they share the same handler)
@@ -760,19 +760,19 @@ const showFormScratchMe = () => {
 
   // set handlers for COOPER BUTTONS
 
-  sendCooperBtn.addEventListener(
-    'click',
-    handleClickSendForm.bind(null, cooperModule.sendDataToSave),
-    false
-  );
+  // sendCooperBtn.addEventListener(
+  //   'click',
+  //   handleClickSendForm.bind(null, cooperModule.sendDataToSave),
+  //   false
+  // );
 
-  testConnectionCooperBtn.addEventListener(
-    'click',
-    handleClickTestConnection.bind(null, cooperModule.testConnection),
-    false
-  );
+  // testConnectionCooperBtn.addEventListener(
+  //   'click',
+  //   handleClickTestConnection.bind(null, cooperModule.testConnection),
+  //   false
+  // );
 
-  clearDataBtn.addEventListener('click', clearExtractedData, false);
+  // clearDataBtn.addEventListener('click', clearExtractedData, false);
 };
 
 if (document.readyState === 'loading') {

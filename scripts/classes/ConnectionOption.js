@@ -155,4 +155,14 @@ export class ConnectionOption {
   get sendFormBtn() {
     return this.buttons.sendFormBtn.element;
   }
+
+  setVisible() {
+    this.fieldset.classList.remove('disabled');
+    console.log(`Enable connection option ${this.id}`, this.fieldset);
+  }
+
+  setHidden() {
+    this.fieldset.classList.add('disabled');
+    console.log(`Hide connection option ${this.id}`, this.fieldset);
+  }
 }

@@ -6,6 +6,7 @@ export class ScratchMe {
     this._setFromFacebook();
     this.popup = document.querySelector('.popup');
     this._setFieldsValue();
+    this._setConnectionOptionChanger();
   }
 
   // _getData() {
@@ -28,6 +29,33 @@ export class ScratchMe {
         postIdInput: document.getElementById('post-id')
       }
     };
+  }
+
+  // TEMP - add hide all outside
+  _hideAllConnectionOptions() {
+    // hide all connection options
+    for (const [optionId, option] of Object.entries(this._options)) {
+      option.setHidden();
+    }
+  }
+
+  _changeCurrentConnectionOption(selectedOptionId) {
+    this._hideAllConnectionOptions();
+    this._options[selectedOptionId].setVisible();
+  }
+
+  _setConnectionOptionChanger() {
+    // const scratchMeForm = document.getElementById('scratch-me-form');
+
+    const selectDataFormat = document.getElementById('select-data-format');
+
+    selectDataFormat.addEventListener(
+      'change',
+      e => {
+        this._changeCurrentConnectionOption(e.target.value);
+      },
+      false
+    );
   }
 
   _setFieldsValue() {
@@ -57,7 +85,9 @@ export class ScratchMe {
 
   registerNew(connectionOption) {
     //   TEMP change for association table & change method name
-    Object.assign(this._options, { [connectionOption.id]: connectionOption });
+    Object.assign(this._options, {
+      [connectionOption.id]: connectionOption
+    });
     // TEMP - set reference to whole scratchMe object in every connectionOption
     this._options[connectionOption.id].scratchMe = this;
   }
