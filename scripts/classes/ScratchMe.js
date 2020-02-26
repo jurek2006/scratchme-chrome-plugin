@@ -1,3 +1,4 @@
+import { ConnectionOptions } from './ConnectionOptions.js';
 import {
   setDateTimeValue,
   isTheFormIncorrect,
@@ -6,7 +7,8 @@ import {
 
 export class ScratchMe {
   constructor() {
-    this._options = {};
+    // this._options = {};
+    this.connectionOptions = new ConnectionOptions(this);
     this._setFromFacebook();
     this.form = document.getElementById('scratch-me-form');
     this.closeWindowOnSuccess = function() {
@@ -18,6 +20,7 @@ export class ScratchMe {
     // this._setFieldsValue();
     this._setConnectionOptionChanger();
     // this._setInputsValidator();
+    console.log(this.connectionOptions);
   }
 
   init() {
@@ -98,20 +101,24 @@ export class ScratchMe {
       option.setHidden();
     }
   }
+  // TEMP - old one
+  // _changeCurrentConnectionOption(selectedOptionId) {
+  //   console.log(
+  //     'change current',
+  //     selectedOptionId,
+  //     this._options[selectedOptionId],
+  //     this._options
+  //   );
+  //   this._hideAllConnectionOptions();
+  //   this.activeConnectionOption =
+  //     this._options[selectedOptionId] &&
+  //     this._options[selectedOptionId].setVisible();
+  //   console.log('active connection option', this.activeConnectionOption);
+  // }
 
-  _changeCurrentConnectionOption(selectedOptionId) {
-    console.log(
-      'change current',
-      selectedOptionId,
-      this._options[selectedOptionId],
-      this._options
-    );
-    this._hideAllConnectionOptions();
-    this.activeConnectionOption =
-      this._options[selectedOptionId] &&
-      this._options[selectedOptionId].setVisible();
-    console.log('active connection option', this.activeConnectionOption);
-  }
+  // _changeCurrentConnectionOption(selectedOptionId) {
+  //   this.connectionOptions.setActive(selectedOptionId);
+  // }
 
   _setConnectionOptionChanger() {
     // const scratchMeForm = document.getElementById('scratch-me-form');
@@ -122,7 +129,7 @@ export class ScratchMe {
     selectDataFormat.addEventListener(
       'change',
       e => {
-        this._changeCurrentConnectionOption(e.target.value);
+        this.connectionOptions.setActive(e.target.value);
       },
       false
     );

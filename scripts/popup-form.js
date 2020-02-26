@@ -177,9 +177,11 @@ const dummyApiNNN = new ConnectionOption({
 // });
 
 const scratchMe = new ScratchMe();
-scratchMe.registerNew(googleSheetsNNN);
-scratchMe.registerNew(dummyApiNNN);
-scratchMe.init();
+// scratchMe.registerNew(googleSheetsNNN);
+// scratchMe.registerNew(dummyApiNNN);
+scratchMe.connectionOptions.registerNew(googleSheetsNNN);
+scratchMe.connectionOptions.registerNew(dummyApiNNN);
+// scratchMe.init();
 
 const showFormScratchMe = () => {
   // // FLEXIBLE ELEMENTS
