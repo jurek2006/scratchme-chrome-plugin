@@ -18,4 +18,8 @@ export class ConnectionOptions {
       this._options[selectedOptionId] &&
       this._options[selectedOptionId].setVisible();
   }
+
+  get active() {
+    return this._active;
+  }
 }

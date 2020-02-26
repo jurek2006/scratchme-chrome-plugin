@@ -88,7 +88,9 @@ export class ScratchMe {
         this.fromFacebook.isValid = !isTheFormIncorrect(
           this.fromFacebook.fieldset
         );
-        this.activeConnectionOption && this.activeConnectionOption.rerender();
+        this.connectionOptions.active &&
+          this.connectionOptions.active.rerender();
+        // this.connectionOptions && this.connectionOptions.rerender();
       },
       true
     );
@@ -101,24 +103,6 @@ export class ScratchMe {
       option.setHidden();
     }
   }
-  // TEMP - old one
-  // _changeCurrentConnectionOption(selectedOptionId) {
-  //   console.log(
-  //     'change current',
-  //     selectedOptionId,
-  //     this._options[selectedOptionId],
-  //     this._options
-  //   );
-  //   this._hideAllConnectionOptions();
-  //   this.activeConnectionOption =
-  //     this._options[selectedOptionId] &&
-  //     this._options[selectedOptionId].setVisible();
-  //   console.log('active connection option', this.activeConnectionOption);
-  // }
-
-  // _changeCurrentConnectionOption(selectedOptionId) {
-  //   this.connectionOptions.setActive(selectedOptionId);
-  // }
 
   _setConnectionOptionChanger() {
     // const scratchMeForm = document.getElementById('scratch-me-form');
@@ -163,18 +147,5 @@ export class ScratchMe {
         resolve();
       });
     });
-  }
-
-  registerNew(connectionOption) {
-    //   TEMP change for association table & change method name
-    Object.assign(this._options, {
-      [connectionOption.id]: connectionOption
-    });
-    // TEMP - set reference to whole scratchMe object in every connectionOption
-    this._options[connectionOption.id].scratchMe = this;
-  }
-
-  all() {
-    console.log('all connection options', this._options);
   }
 }
