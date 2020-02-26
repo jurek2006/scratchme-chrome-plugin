@@ -1,4 +1,8 @@
-import { setDateTimeValue, isTheFormIncorrect } from '../modules/helpers.js';
+import {
+  setDateTimeValue,
+  isTheFormIncorrect,
+  readFromLocalStorage
+} from '../modules/helpers.js';
 
 export class ScratchMe {
   constructor() {
@@ -14,6 +18,27 @@ export class ScratchMe {
     // this._setFieldsValue();
     this._setConnectionOptionChanger();
     // this._setInputsValidator();
+  }
+
+  init() {
+    this._restoreSelectedConnection();
+  }
+
+  _restoreSelectedConnection() {
+    const restoredConnectionOptionId = readFromLocalStorage(
+      'lastSelectedOption'
+    );
+    console.log('restore connection option', restoredConnectionOptionId);
+    this._changeCurrentConnectionOption(restoredConnectionOptionId);
+
+    // TEMP
+    const selectDataFormat = document.getElementById('select-data-format');
+    selectDataFormat.value = restoredConnectionOptionId; // set connection in select
+
+    // if (restoredConnectionId) {
+    //   selectDataFormat.value = restoredConnectionId; // set connection in select
+    //   changeConnectionOption(restoredConnectionId); // change connection for read one
+    // }
   }
 
   _setInputsValidator() {
@@ -75,14 +100,23 @@ export class ScratchMe {
   }
 
   _changeCurrentConnectionOption(selectedOptionId) {
+    console.log(
+      'change current',
+      selectedOptionId,
+      this._options[selectedOptionId],
+      this._options
+    );
     this._hideAllConnectionOptions();
-    this.activeConnectionOption = this._options[selectedOptionId].setVisible();
+    this.activeConnectionOption =
+      this._options[selectedOptionId] &&
+      this._options[selectedOptionId].setVisible();
     console.log('active connection option', this.activeConnectionOption);
   }
 
   _setConnectionOptionChanger() {
     // const scratchMeForm = document.getElementById('scratch-me-form');
 
+    // TEMP
     const selectDataFormat = document.getElementById('select-data-format');
 
     selectDataFormat.addEventListener(

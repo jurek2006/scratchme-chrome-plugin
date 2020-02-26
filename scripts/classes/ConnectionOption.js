@@ -23,7 +23,7 @@ export class ConnectionOption {
   }
 
   rerender() {
-    console.log('rerendering', this);
+    // console.log('rerendering', this);
     disableInput(this.buttons.testConnectionBtn.element, !this.isValid);
     disableInput(
       this.buttons.sendFormBtn.element,
@@ -172,11 +172,36 @@ export class ConnectionOption {
     return this.buttons.sendFormBtn.element;
   }
 
+  _restoreFromLocalStorage() {
+    const areAllInputsEmpty =
+      Object.values(this.formElements).filter(el => el.value).length === 0;
+    if (areAllInputsEmpty) {
+      console.log('All empty, possible load');
+      const connectionData = readFromLocalStorage(this.id);
+
+      if (!connectionData) return;
+
+      // set fields with retrieved connection data
+      Object.entries(connectionData).forEach(([key, value]) => {
+        // const inputElement = currentOptionFieldset.querySelector(
+        //   `input[name="${key}"]`
+        // );
+        // if (inputElement) {
+        //   inputElement.value = value;
+        // }
+        const inputElement = this.formElements;
+        console.log('Set to element', inputElement, key, value);
+      });
+    } else {
+      console.log('Not all empty');
+    }
+  }
+
   setVisible() {
     this.isActive = true;
     this.fieldset.classList.remove('disabled');
+    this._restoreFromLocalStorage();
     return this; // return active connection option
-    console.log(`Enable connection option ${this.id}`, this.fieldset);
   }
 
   setHidden() {
