@@ -122,6 +122,7 @@ export const isTheFormIncorrect = formItem => {
     }
   }
 
+  formItem.isValid = hasErrors ? false : true;
   return hasErrors;
 };
 // TEMP - old version

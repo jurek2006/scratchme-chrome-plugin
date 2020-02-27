@@ -7,7 +7,7 @@ import {
 
 export class ScratchMe {
   constructor() {
-    // this._options = {};
+    this.dataToSave = null;
     this.connectionOptions = new ConnectionOptions(this);
     this._setFromFacebook();
     this.form = document.getElementById('scratch-me-form');
@@ -55,14 +55,6 @@ export class ScratchMe {
     );
   }
 
-  // _getData() {
-  //   chrome.storage.sync.get(['postData'], storage => {
-  //     return storage.postData;
-  //     // setFieldsValue(storage.postData);
-  //     // restoreSelectedConnection(); // has to be after setting fields values
-  //   });
-  // }
-
   _setFromFacebook() {
     this.fromFacebook = {
       fieldset: document.getElementById('from-facebook'),
@@ -75,33 +67,22 @@ export class ScratchMe {
         postIdInput: document.getElementById('post-id')
       }
     };
-    this._setFieldsValue()
-      .then(() => {
-        this.fromFacebook.isValid = !isTheFormIncorrect(
-          this.fromFacebook.fieldset
-        );
-      })
-      .catch(error => console.log('error', error));
+
     this.fromFacebook.fieldset.addEventListener(
       'input',
       e => {
-        this.fromFacebook.isValid = !isTheFormIncorrect(
-          this.fromFacebook.fieldset
-        );
+        isTheFormIncorrect(this.fromFacebook.fieldset);
         this.connectionOptions.active &&
           this.connectionOptions.active.rerender();
-        // this.connectionOptions && this.connectionOptions.rerender();
       },
       true
     );
-  }
 
-  // TEMP - add hide all outside
-  _hideAllConnectionOptions() {
-    // hide all connection options
-    for (const [optionId, option] of Object.entries(this._options)) {
-      option.setHidden();
-    }
+    this._setFieldsValue()
+      .then(() => {
+        isTheFormIncorrect(this.fromFacebook.fieldset);
+      })
+      .catch(error => console.log('error', error));
   }
 
   _setConnectionOptionChanger() {

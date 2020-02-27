@@ -23,7 +23,7 @@ export class ConnectionOption {
   }
 
   rerender() {
-    // console.log('rerendering', this);
+    console.log('rerendering', this);
     disableInput(this.buttons.testConnectionBtn.element, !this.isValid);
     disableInput(
       this.buttons.sendFormBtn.element,
