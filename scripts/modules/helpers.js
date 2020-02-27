@@ -122,7 +122,7 @@ export const isTheFormIncorrect = formItem => {
     }
   }
 
-  formItem.isValid = hasErrors ? false : true;
+  // formItem.isValid = hasErrors ? false : true; // not really needed ?
   return hasErrors;
 };
 // TEMP - old version

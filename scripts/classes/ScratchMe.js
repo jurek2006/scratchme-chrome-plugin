@@ -1,4 +1,5 @@
 import { ConnectionOptions } from './ConnectionOptions.js';
+import { Fieldset } from './Fieldset.js';
 import {
   setDateTimeValue,
   isTheFormIncorrect,
@@ -56,33 +57,35 @@ export class ScratchMe {
   }
 
   _setFromFacebook() {
-    this.fromFacebook = {
-      fieldset: document.getElementById('from-facebook'),
-      formElements: {
-        postAuthorInput: document.getElementById('post-author'),
-        postDatetimeInput: document.getElementById('post-datetime'),
-        postTitleInput: document.getElementById('post-title'),
-        postContentTextarea: document.getElementById('post-content'),
-        postUrlInput: document.getElementById('post-url'),
-        postIdInput: document.getElementById('post-id')
-      }
-    };
-
-    this.fromFacebook.fieldset.addEventListener(
-      'input',
-      e => {
-        isTheFormIncorrect(this.fromFacebook.fieldset);
-        this.connectionOptions.active &&
-          this.connectionOptions.active.rerender();
-      },
-      true
+    this.scratchedDataFieldset = new Fieldset(
+      document.getElementById('from-facebook')
     );
 
-    this._setFieldsValue()
-      .then(() => {
-        isTheFormIncorrect(this.fromFacebook.fieldset);
-      })
-      .catch(error => console.log('error', error));
+    this._getPostData().then(({ postId, author, url, content, uTime }) => {
+      this.scratchedDataFieldset.setFieldsValues({
+        postAuthorInput: author,
+        postDatetimeInput: setDateTimeValue(uTime),
+        postTitleInput: `${postId ? postId + ' - ' : ''}${content.slice(
+          0,
+          20
+        )}... - ${author}`,
+        postContentTextarea: content,
+        postUrlInput: url,
+        postIdInput: postId || '0'
+      });
+    });
+
+    // this.fromFacebook = {
+    //   fieldset: document.getElementById('from-facebook'),
+    //   formElements: {
+    //     postAuthorInput: document.getElementById('post-author'),
+    //     postDatetimeInput: document.getElementById('post-datetime'),
+    //     postTitleInput: document.getElementById('post-title'),
+    //     postContentTextarea: document.getElementById('post-content'),
+    //     postUrlInput: document.getElementById('post-url'),
+    //     postIdInput: document.getElementById('post-id')
+    //   }
+    // };
   }
 
   _setConnectionOptionChanger() {
@@ -100,32 +103,10 @@ export class ScratchMe {
     );
   }
 
-  _setFieldsValue() {
+  _getPostData() {
     return new Promise(resolve => {
       chrome.storage.sync.get(['postData'], storage => {
-        // return storage.postData;
-        // setFieldsValue(storage.postData);
-        // restoreSelectedConnection(); // has to be after setting fields values
-
-        // TEMP - improve
-        const postData = storage.postData;
-
-        console.log('get data', postData);
-        if (!postData) resolve();
-        // TEMP
-        const { postId, author, url, content, uTime } = postData;
-
-        this.fromFacebook.formElements.postAuthorInput.value = author;
-        this.fromFacebook.formElements.postDatetimeInput.value = setDateTimeValue(
-          uTime
-        );
-        this.fromFacebook.formElements.postTitleInput.value = `${
-          postId ? postId + ' - ' : ''
-        }${content.slice(0, 20)}... - ${author}`;
-        this.fromFacebook.formElements.postContentTextarea.value = content;
-        this.fromFacebook.formElements.postUrlInput.value = url;
-        this.fromFacebook.formElements.postIdInput.value = postId || '0';
-        resolve();
+        resolve(storage.postData);
       });
     });
   }
