@@ -18,10 +18,7 @@ export class ScratchMe {
         setTimeout(() => chrome.windows.remove(win.id), 3000)
       );
     };
-    // this._setFieldsValue();
     this._setConnectionOptionChanger();
-    // this._setInputsValidator();
-    console.log(this.connectionOptions);
   }
 
   init() {
@@ -45,21 +42,19 @@ export class ScratchMe {
     // }
   }
 
-  _setInputsValidator() {
-    this.form.addEventListener(
-      'input',
-      e =>
-        console.log(
-          `Input dla ${e.target.value}. Validity ${e.target.validity.valid}`
-        ),
-      true
-    );
-  }
-
   _setFromFacebook() {
     this.scratchedDataFieldset = new Fieldset(
       document.getElementById('from-facebook')
     );
+
+    this.scratchedDataFieldset.setNamedFormElements({
+      postAuthorInput: '#post-author',
+      postDatetimeInput: '#post-datetime',
+      postTitleInput: '#post-title',
+      postContentTextarea: '#post-content',
+      postUrlInput: '#post-url',
+      postIdInput: '#post-id'
+    });
 
     this._getPostData().then(({ postId, author, url, content, uTime }) => {
       this.scratchedDataFieldset.setFieldsValues({
@@ -75,6 +70,7 @@ export class ScratchMe {
       });
     });
 
+    // TEMP - old to delete
     // this.fromFacebook = {
     //   fieldset: document.getElementById('from-facebook'),
     //   formElements: {

@@ -5,7 +5,7 @@ export class Fieldset {
     this._fieldset = fieldsetElementInDom;
     this._setFieldsChangesWatcher();
     //   TEMP
-    this._setNamedFormElements();
+    this.setNamedFormElements();
   }
 
   get isValid() {
@@ -17,16 +17,35 @@ export class Fieldset {
   }
 
   // TEMP - make more generic
-  _setNamedFormElements() {
-    console.log(this._fieldset);
-    this._formElements = {
-      postAuthorInput: this._fieldset.querySelector('#post-author'),
-      postDatetimeInput: this._fieldset.querySelector('#post-datetime'),
-      postTitleInput: this._fieldset.querySelector('#post-title'),
-      postContentTextarea: this._fieldset.querySelector('#post-content'),
-      postUrlInput: this._fieldset.querySelector('#post-url'),
-      postIdInput: this._fieldset.querySelector('#post-id')
-    };
+  // setNamedFormElements() {
+  //   console.log(this._fieldset);
+  //   this._formElements = {
+  //     postAuthorInput: this._fieldset.querySelector('#post-author'),
+  //     postDatetimeInput: this._fieldset.querySelector('#post-datetime'),
+  //     postTitleInput: this._fieldset.querySelector('#post-title'),
+  //     postContentTextarea: this._fieldset.querySelector('#post-content'),
+  //     postUrlInput: this._fieldset.querySelector('#post-url'),
+  //     postIdInput: this._fieldset.querySelector('#post-id')
+  //   };
+  // }
+
+  setNamedFormElements(namedFormElementsObj) {
+    for (const formElementName in namedFormElementsObj) {
+      if (!this._formElements) this._formElements = {};
+
+      const foundDomElement =
+        this._fieldset &&
+        this._fieldset.querySelector(namedFormElementsObj[formElementName]);
+      // assign Dom Element (if exists) to named element in _formElements
+      // create property in _formElements for given name if found DOM
+      if (foundDomElement) {
+        this._formElements[formElementName] = foundDomElement;
+      } else {
+        console.log(
+          `There is no element for ${namedFormElementsObj[formElementName]} in fieldset`
+        );
+      }
+    }
   }
 
   setFieldsValues(propertiesValuesObj) {
@@ -57,6 +76,8 @@ export class Fieldset {
         true
       );
   }
+
+  _generateFormOutput(emptyWhenInvalid = true) {}
 
   // default action on input
   // can be overwritten with setActionOnInput in instance
