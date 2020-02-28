@@ -15,24 +15,46 @@ export class Fieldset {
   }
 
   // defining custom action function in instance
-  setActionOnInput(actionFunction) {
+  registerActionOnInput(actionFunction) {
     this._actionOnInput = actionFunction;
   }
 
-  setNamedFormElements(namedFormElementsObj) {
-    for (const formElementName in namedFormElementsObj) {
-      if (!this._formElements) this._formElements = {};
+  registerNamedFormElements(formElementsObj) {
+    this._registerElements({
+      formElementsObj,
+      propertyToStoreElementsIn: '_formElements'
+    });
+  }
+
+  registerNamedFormButtons(formElementsObj) {
+    this._registerElements({
+      formElementsObj,
+      propertyToStoreElementsIn: '_formButtons'
+    });
+  }
+
+  _registerElements({ formElementsObj, propertyToStoreElementsIn }) {
+    // propertyToStoreElementsIn is i.e. this._formElements, this._formButtons
+    // if the property doesn't exist is created
+
+    if (!this[propertyToStoreElementsIn]) this[propertyToStoreElementsIn] = {};
+
+    for (const formElementName in formElementsObj) {
+      // if (!propertyToStoreElementsIn) propertyToStoreElementsIn = {};
 
       const foundDomElement =
         this._fieldset &&
-        this._fieldset.querySelector(namedFormElementsObj[formElementName]);
-      // assign Dom Element (if exists) to named element in _formElements
-      // create property in _formElements for given name if found DOM
+        this._fieldset.querySelector(formElementsObj[formElementName]);
+      // assign Dom Element (if exists) to as element in property
+      // create element's property in propertyToStoreElementsIn for given name if found DOM
+      // i.e. if passed propertyToStoreElementsIn === '._formElements' and formElementsObj
+      // is { postAuthor: '#post-author'} stores in this._formElements.postAuthor reference
+      // to #post - author element (found in current fieldset (this._fieldset))
       if (foundDomElement) {
-        this._formElements[formElementName] = foundDomElement;
+        this[propertyToStoreElementsIn][formElementName] = foundDomElement;
       } else {
         console.log(
-          `There is no element for ${namedFormElementsObj[formElementName]} in fieldset`
+          `There is no element for ${formElementsObj[formElementName]} in fieldset`
         );
       }
     }
@@ -92,12 +114,11 @@ export class Fieldset {
     }
   }
 
-  // default action on input
-  // can be overwritten with setActionOnInput in instance
+  // default custom action on input (every change in input value)
+  // can be overwritten with registerActionOnInput in instance
   // if deleted (commented) === no default action
-  _actionOnInput() {
-    // ... placeholder
-    //   TEMP
-    console.dir(this);
-  }
+  // _actionOnInput() {
+  //   // ... placeholder
+  //   console.log('Not defined actionOnInput function for:', this);
+  // }
 }

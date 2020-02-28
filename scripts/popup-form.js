@@ -27,9 +27,13 @@ const googleSheetsMMM = new ConnectionOption({
   id: 'google-sheets',
   fieldsetElementInDom: document.getElementById('google-sheets')
 });
-googleSheetsMMM.setNamedFormElements({
+googleSheetsMMM.registerNamedFormElements({
   googleSpreadSheetIdInput: '#google-spreadsheet-id',
   googleSpreadSheetTabNameInput: '#google-spreadsheet-tab-name'
+});
+googleSheetsMMM.registerNamedFormButtons({
+  sendFormBtn: '#send-to-google-sheets',
+  testConnectionBtn: '#test-connection-google-sheets'
 });
 
 const googleSheetsNNN = new ConnectionOption({
@@ -102,7 +106,7 @@ const dummyApiMMM = new ConnectionOption({
   id: 'dummy-api',
   fieldsetElementInDom: document.getElementById('dummy-api')
 });
-dummyApiMMM.setNamedFormElements({
+dummyApiMMM.registerNamedFormElements({
   userId: '#dummy-api-user-id',
   userName: '#dummy-api-user-name'
 });

@@ -47,7 +47,7 @@ export class ScratchMe {
       fieldsetElementInDom: document.getElementById('from-facebook')
     });
 
-    this.scratchedDataFieldset.setActionOnInput(() => {
+    this.scratchedDataFieldset.registerActionOnInput(() => {
       this.outputDataToSave = this.scratchedDataFieldset.formOutput;
       this.connectionOptions.active &&
         this.connectionOptions.active.updateStatus({
@@ -55,7 +55,7 @@ export class ScratchMe {
         });
     });
 
-    this.scratchedDataFieldset.setNamedFormElements({
+    this.scratchedDataFieldset.registerNamedFormElements({
       postAuthor: '#post-author',
       postDatetime: '#post-datetime',
       postTitle: '#post-title',
