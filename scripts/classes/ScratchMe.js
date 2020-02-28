@@ -49,7 +49,6 @@ export class ScratchMe {
 
     this.scratchedDataFieldset.setActionOnInput(() => {
       this.outputDataToSave = this.scratchedDataFieldset.formOutput;
-      // this.connectionOptions.active && this.connectionOptions.active.rerender();
       this.connectionOptions.active &&
         this.connectionOptions.active.updateStatus({
           outputDataToSave: this.outputDataToSave
@@ -90,9 +89,6 @@ export class ScratchMe {
       'change',
       e => {
         this.connectionOptions.setActive(e.target.value);
-        // NOT NECCESSARY
-        // this.outputDataToSave =
-        //   this.scratchedDataFieldset && this.scratchedDataFieldset.formOutput;
         this.connectionOptions.active &&
           this.connectionOptions.active.updateStatus({
             outputDataToSave: this.outputDataToSave

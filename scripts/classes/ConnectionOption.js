@@ -22,19 +22,17 @@ export class ConnectionOption {
     this._addFieldsValidation();
   }
 
-  rerender() {
-    // console.log('rerendering', this);
+  updateStatus({ outputDataToSave }) {
+    this._outputDataToSave = outputDataToSave;
+    this._rerender();
+  }
+
+  _rerender() {
     disableInput(this.buttons.testConnectionBtn.element, !this.isValid);
     disableInput(
       this.buttons.sendFormBtn.element,
-      // !(this.isValid && this.scratchMe.fromFacebook.isValid)
-      !this.isValid
+      !this.isValid || !this._outputDataToSave
     );
-  }
-
-  updateStatus({ outputDataToSave }) {
-    this._outputDataToSave = outputDataToSave;
-    // console.log('status', this);
   }
 
   _addFieldsValidation() {
@@ -43,7 +41,7 @@ export class ConnectionOption {
       'input',
       e => {
         this.isValid = !isTheFormIncorrect(this.fieldset);
-        this.rerender();
+        this._rerender();
       },
       true
     );
@@ -65,7 +63,9 @@ export class ConnectionOption {
 
     // add additional form checking
 
-    this._sendingDataFunction({ outputDataToSave: this._outputDataToSave })
+    this._sendingDataFunction({
+      outputDataToSave: this._outputDataToSave
+    })
       .then(() => {
         this.scratchMe.closeWindowOnSuccess();
       })
