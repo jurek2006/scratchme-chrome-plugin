@@ -27,8 +27,14 @@ export class ConnectionOption {
     disableInput(this.buttons.testConnectionBtn.element, !this.isValid);
     disableInput(
       this.buttons.sendFormBtn.element,
-      !(this.isValid && this.scratchMe.fromFacebook.isValid)
+      // !(this.isValid && this.scratchMe.fromFacebook.isValid)
+      !this.isValid
     );
+  }
+
+  updateStatus({ outputDataToSave }) {
+    this._outputDataToSave = outputDataToSave;
+    console.log('status', this);
   }
 
   _addFieldsValidation() {

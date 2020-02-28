@@ -8,7 +8,7 @@ import {
 
 export class ScratchMe {
   constructor() {
-    this.dataToSave = null;
+    this.outputDataToSave = null;
     this.connectionOptions = new ConnectionOptions(this);
     this._setFromFacebook();
     this.form = document.getElementById('scratch-me-form');
@@ -46,6 +46,15 @@ export class ScratchMe {
     this.scratchedDataFieldset = new Fieldset(
       document.getElementById('from-facebook')
     );
+
+    this.scratchedDataFieldset.setActionOnInput(() => {
+      this.outputDataToSave = this.scratchedDataFieldset.formOutput;
+      // this.connectionOptions.active && this.connectionOptions.active.rerender();
+      this.connectionOptions.active &&
+        this.connectionOptions.active.updateStatus({
+          outputDataToSave: this.outputDataToSave
+        });
+    });
 
     this.scratchedDataFieldset.setNamedFormElements({
       postAuthorInput: '#post-author',
@@ -94,6 +103,13 @@ export class ScratchMe {
       'change',
       e => {
         this.connectionOptions.setActive(e.target.value);
+        // NOT NECCESSARY
+        // this.outputDataToSave =
+        //   this.scratchedDataFieldset && this.scratchedDataFieldset.formOutput;
+        this.connectionOptions.active &&
+          this.connectionOptions.active.updateStatus({
+            outputDataToSave: this.outputDataToSave
+          });
       },
       false
     );

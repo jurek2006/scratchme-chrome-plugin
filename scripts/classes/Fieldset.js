@@ -16,19 +16,6 @@ export class Fieldset {
     this._actionOnInput = actionFunction;
   }
 
-  // TEMP - make more generic
-  // setNamedFormElements() {
-  //   console.log(this._fieldset);
-  //   this._formElements = {
-  //     postAuthorInput: this._fieldset.querySelector('#post-author'),
-  //     postDatetimeInput: this._fieldset.querySelector('#post-datetime'),
-  //     postTitleInput: this._fieldset.querySelector('#post-title'),
-  //     postContentTextarea: this._fieldset.querySelector('#post-content'),
-  //     postUrlInput: this._fieldset.querySelector('#post-url'),
-  //     postIdInput: this._fieldset.querySelector('#post-id')
-  //   };
-  // }
-
   setNamedFormElements(namedFormElementsObj) {
     for (const formElementName in namedFormElementsObj) {
       if (!this._formElements) this._formElements = {};
@@ -46,6 +33,8 @@ export class Fieldset {
         );
       }
     }
+
+    this._fieldsChangesHandler && this._fieldsChangesHandler();
   }
 
   setFieldsValues(propertiesValuesObj) {
@@ -61,6 +50,8 @@ export class Fieldset {
         );
       }
     }
+
+    this._fieldsChangesHandler && this._fieldsChangesHandler();
   }
 
   _setFieldsChangesWatcher() {
@@ -68,16 +59,39 @@ export class Fieldset {
       this._fieldset.addEventListener(
         'input',
         e => {
-          //   check if all fieldset is valid
-          this._isValid = !isTheFormIncorrect(this._fieldset);
-          //   fire custom action
-          this._actionOnInput && this._actionOnInput();
+          this._fieldsChangesHandler && this._fieldsChangesHandler();
         },
         true
       );
   }
 
-  _generateFormOutput(emptyWhenInvalid = true) {}
+  // is invoked each time fieldset's inputs are changed
+  _fieldsChangesHandler() {
+    //   check if all fieldset is valid
+    this._isValid = !isTheFormIncorrect(this._fieldset);
+    // generate _formOutpur
+    this._generateFormOutput();
+    //   fire custom action
+    this._actionOnInput && this._actionOnInput();
+  }
+
+  _generateFormOutput() {
+    // if fieldset is invalid or there are no formElements defined sets null
+    if (!this._isValid || !this._formElements) {
+      this._formOutput = null;
+      return;
+    }
+
+    if (!this._formOutput) this._formOutput = {};
+
+    for (const formElement in this._formElements) {
+      this._formOutput[formElement] = this._formElements[formElement].value;
+    }
+  }
+
+  get formOutput() {
+    return this._formOutput;
+  }
 
   // default action on input
   // can be overwritten with setActionOnInput in instance
