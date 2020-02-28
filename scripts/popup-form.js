@@ -238,6 +238,9 @@ const scratchMe = new ScratchMe();
 // scratchMe.connectionOptions.registerNew(googleSheetsNNN);
 scratchMe.connectionOptions.registerNew(googleSheetsMMM);
 scratchMe.connectionOptions.registerNew(dummyApiMMM);
+scratchMe.connectionOptions.registerSelectSwitcher({
+  selectElement: document.getElementById('select-data-format')
+});
 // scratchMe.init();
 
 const showFormScratchMe = () => {

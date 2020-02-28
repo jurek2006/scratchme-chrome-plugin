@@ -18,29 +18,28 @@ export class ScratchMe {
         setTimeout(() => chrome.windows.remove(win.id), 3000)
       );
     };
-    this._setConnectionOptionChanger();
   }
 
-  init() {
-    this._restoreSelectedConnection();
-  }
+  // init() {
+  //   this._restoreSelectedConnection();
+  // }
 
-  _restoreSelectedConnection() {
-    const restoredConnectionOptionId = readFromLocalStorage(
-      'lastSelectedOption'
-    );
-    console.log('restore connection option', restoredConnectionOptionId);
-    this._changeCurrentConnectionOption(restoredConnectionOptionId);
+  // _restoreSelectedConnection() {
+  //   const restoredConnectionOptionId = readFromLocalStorage(
+  //     'lastSelectedOption'
+  //   );
+  //   console.log('restore connection option', restoredConnectionOptionId);
+  //   this._changeCurrentConnectionOption(restoredConnectionOptionId);
 
-    // TEMP
-    const selectDataFormat = document.getElementById('select-data-format');
-    selectDataFormat.value = restoredConnectionOptionId; // set connection in select
+  //   // TEMP
+  //   const selectDataFormat = document.getElementById('select-data-format');
+  //   selectDataFormat.value = restoredConnectionOptionId; // set connection in select
 
-    // if (restoredConnectionId) {
-    //   selectDataFormat.value = restoredConnectionId; // set connection in select
-    //   changeConnectionOption(restoredConnectionId); // change connection for read one
-    // }
-  }
+  //   // if (restoredConnectionId) {
+  //   //   selectDataFormat.value = restoredConnectionId; // set connection in select
+  //   //   changeConnectionOption(restoredConnectionId); // change connection for read one
+  //   // }
+  // }
 
   _setFromFacebook() {
     this.scratchedDataFieldset = new Fieldset({
@@ -77,26 +76,6 @@ export class ScratchMe {
         postId: postId || '0'
       });
     });
-  }
-
-  _setConnectionOptionChanger() {
-    // const scratchMeForm = document.getElementById('scratch-me-form');
-
-    // TEMP
-    const selectDataFormat = document.getElementById('select-data-format');
-
-    selectDataFormat.addEventListener(
-      'change',
-      e => {
-        this.connectionOptions.setActive(e.target.value);
-        this.connectionOptions.active &&
-          this.connectionOptions.active.updateStatus({
-            outputDataToSave: this.outputDataToSave
-          });
-        console.log('change', this.connectionOptions);
-      },
-      false
-    );
   }
 
   _getPostData() {

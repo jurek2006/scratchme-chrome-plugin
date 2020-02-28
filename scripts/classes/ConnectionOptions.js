@@ -19,6 +19,22 @@ export class ConnectionOptions {
       this._options[selectedOptionId].setVisible();
   }
 
+  registerSelectSwitcher({ selectElement }) {
+    this._selectOptionsSwitcher = selectElement;
+
+    this._selectOptionsSwitcher.addEventListener(
+      'change',
+      e => {
+        this.setActive(e.target.value);
+        this.active &&
+          this.active.updateStatus({
+            outputDataToSave: this._scratchMeReference.outputDataToSave
+          });
+      },
+      false
+    );
+  }
+
   get active() {
     return this._active;
   }
