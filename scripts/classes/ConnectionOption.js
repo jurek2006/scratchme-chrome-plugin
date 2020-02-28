@@ -36,32 +36,10 @@ export class ConnectionOption extends Fieldset {
 
   updateStatus({ outputDataToSave }) {
     this._outputDataToSave = outputDataToSave;
-    this._rerender();
+    this._fieldsChangesHandler(); // invoke this._fieldsChangesHandler() to invoke this._actionOnInputwith passing buttons, elements etc.
   }
-
-  _rerender() {
-    // disableInput(this.buttons.testConnectionBtn.element, !this.isValid);
-    // disableInput(
-    //   this.buttons.sendFormBtn.element,
-    //   !this.isValid || !this._outputDataToSave
-    // );
-  }
-
-  // TEMP - do I need sth similar?
-  // _addFieldsValidation() {
-  //   this.isValid = !isTheFormIncorrect(this.fieldset);
-  //   this.fieldset.addEventListener(
-  //     'input',
-  //     e => {
-  //       this.isValid = !isTheFormIncorrect(this.fieldset);
-  //       this._rerender();
-  //     },
-  //     true
-  //   );
-  // }
 
   _testingConnectionFunction() {
-    // console.log('testConnectionFunction in class', this);
     return Promise.reject(
       'No _testingConnectionFunction() defined for instance '
     );

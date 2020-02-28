@@ -35,6 +35,16 @@ googleSheetsMMM.registerNamedFormButtons({
   sendFormBtn: '#send-to-google-sheets',
   testConnectionBtn: '#test-connection-google-sheets'
 });
+googleSheetsMMM.registerActionOnInput(function({
+  buttons,
+  elements,
+  isFieldsetValid,
+  outputDataToSave
+}) {
+  const { sendFormBtn, testConnectionBtn } = buttons;
+  this.enableInput(sendFormBtn, outputDataToSave && isFieldsetValid);
+  this.enableInput(testConnectionBtn, isFieldsetValid);
+});
 
 const googleSheetsNNN = new ConnectionOption({
   _testingConnectionFunction() {

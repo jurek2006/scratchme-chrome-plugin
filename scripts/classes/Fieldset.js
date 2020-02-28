@@ -1,4 +1,4 @@
-import { isTheFormIncorrect } from '../modules/helpers.js';
+import { isTheFormIncorrect, disableInput } from '../modules/helpers.js';
 
 export class Fieldset {
   constructor({ fieldsetElementInDom }) {
@@ -31,6 +31,15 @@ export class Fieldset {
       formElementsObj,
       propertyToStoreElementsIn: '_formButtons'
     });
+  }
+
+  get buttons() {
+    return this._formButtons;
+  }
+
+  // TEMP - refactor
+  enableInput(inputElement, isEnabled) {
+    disableInput(inputElement, !isEnabled);
   }
 
   _registerElements({ formElementsObj, propertyToStoreElementsIn }) {
@@ -97,7 +106,13 @@ export class Fieldset {
     // generate _formOutpur
     this._generateFormOutput();
     //   fire custom action
-    this._actionOnInput && this._actionOnInput();
+    this._actionOnInput &&
+      this._actionOnInput({
+        buttons: this._formButtons,
+        elements: this._formElements,
+        isFieldsetValid: this.isValid,
+        outputDataToSave: this._outputDataToSave
+      });
   }
 
   _generateFormOutput() {
