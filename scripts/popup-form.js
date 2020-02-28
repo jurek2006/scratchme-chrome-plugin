@@ -43,8 +43,22 @@ const googleSheetsNNN = new ConnectionOption({
       sheetTabName: this.formElements.googleSpreadSheetTabNameInput.value
     });
   },
-  _sendingDataFunction() {
-    const fromFacebook = this.scratchMe.fromFacebook;
+  _sendingDataFunction({ outputDataToSave }) {
+    // convert outputDataToSave from object to array of field's values
+    function convertToOrderedDataArray(data, keysInOrder) {
+      if (!data || !keysInOrder) return;
+      return keysInOrder.map(key => data[key]);
+    }
+
+    const postDataToSave = convertToOrderedDataArray(outputDataToSave, [
+      'postIdInput',
+      'postAuthorInput',
+      'postContentTextarea',
+      'postDatetimeInput',
+      'postUrlInput'
+    ]);
+
+    // const fromFacebook = this.scratchMe.fromFacebook;
     console.log('sending data in instance', fromFacebook.formElements, {
       sheetId: this.formElements.googleSpreadSheetIdInput.value,
       sheetTabName: this.formElements.googleSpreadSheetTabNameInput.value
@@ -53,13 +67,7 @@ const googleSheetsNNN = new ConnectionOption({
 
     return googleSheetsModule.sendDataToSave(
       //   TEMP
-      [
-        fromFacebook.formElements.postIdInput.value,
-        fromFacebook.formElements.postAuthorInput.value,
-        fromFacebook.formElements.postContentTextarea.value,
-        fromFacebook.formElements.postDatetimeInput.value,
-        fromFacebook.formElements.postUrlInput.value
-      ],
+      postDataToSave,
       {
         sheetId: this.formElements.googleSpreadSheetIdInput.value,
         sheetTabName: this.formElements.googleSpreadSheetTabNameInput.value
