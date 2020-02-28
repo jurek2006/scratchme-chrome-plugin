@@ -47,6 +47,9 @@ export class ConnectionOption extends Fieldset {
     this.buttons.saveConnectionBtn.addEventListener('click', e => {
       this.saveConnection({ button: this.buttons.saveConnectionBtn });
     });
+    this.buttons.sendFormBtn.addEventListener('click', e => {
+      this.sendData({ button: this.buttons.sendFormBtn });
+    });
   }
 
   _testingConnectionFunction() {
@@ -65,14 +68,15 @@ export class ConnectionOption extends Fieldset {
     // add additional form checking
 
     this._sendingDataFunction({
-      outputDataToSave: this._outputDataToSave
+      outputDataToSave: this._outputDataToSave,
+      connectionOptionDetails: this.formOutput
     })
       .then(() => {
         this.scratchMe.closeWindowOnSuccess();
       })
       .catch(error => {
         showItemMessage(messageElem, error, 'error');
-        disableInput(button, true);
+        this.enableInput(button, false);
       });
   }
 
@@ -105,7 +109,9 @@ export class ConnectionOption extends Fieldset {
     // need to have here 'test-connection' button to disable/enable
     const saveConnectionBtn = this.buttons.saveConnectionBtn;
 
-    this._testingConnectionFunction()
+    this._testingConnectionFunction({
+      connectionOptionDetails: this.formOutput
+    })
       .then(response => {
         // connected successfully
         showItemMessage(messageElem, response, 'success');

@@ -46,8 +46,33 @@ googleSheetsMMM.registerActionOnInput(function({
   this.enableInput(sendFormBtn, outputDataToSave && isFieldsetValid);
   this.enableInput(testConnectionBtn, isFieldsetValid);
 });
-googleSheetsMMM._testingConnectionFunction = function() {
-  return googleSheetsModule.testConnection(this.formOutput);
+googleSheetsMMM._testingConnectionFunction = function({
+  connectionOptionDetails
+}) {
+  return googleSheetsModule.testConnection(connectionOptionDetails);
+};
+
+googleSheetsMMM._sendingDataFunction = function({
+  outputDataToSave,
+  connectionOptionDetails
+}) {
+  function convertToOrderedDataArray(data, keysInOrder) {
+    if (!data || !keysInOrder) return;
+    return keysInOrder.map(key => data[key]);
+  }
+
+  const postDataToSave = convertToOrderedDataArray(outputDataToSave, [
+    'postId',
+    'postAuthor',
+    'postContent',
+    'postDatetime',
+    'postUrl'
+  ]);
+
+  return googleSheetsModule.sendDataToSave(
+    postDataToSave,
+    connectionOptionDetails
+  );
 };
 
 const googleSheetsNNN = new ConnectionOption({
