@@ -1,3 +1,5 @@
+import { readFromLocalStorage } from '../modules/helpers.js';
+
 export class ConnectionOptions {
   constructor(scratchMeReference) {
     this._options = {};
@@ -33,6 +35,16 @@ export class ConnectionOptions {
       },
       false
     );
+
+    this._restoreLastConnectionOption();
+  }
+  _restoreLastConnectionOption() {
+    const lastConnectionOption = readFromLocalStorage('last-connection-option');
+    if (this._selectOptionsSwitcher && lastConnectionOption) {
+      this._selectOptionsSwitcher.value = lastConnectionOption;
+      // fire select change event
+      this._selectOptionsSwitcher.dispatchEvent(new Event('change'));
+    }
   }
 
   get active() {
