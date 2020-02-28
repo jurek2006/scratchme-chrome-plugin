@@ -47,7 +47,6 @@ googleSheetsMMM.registerActionOnInput(function({
   this.enableInput(testConnectionBtn, isFieldsetValid);
 });
 googleSheetsMMM._testingConnectionFunction = function() {
-  console.log('testing', this.formOutput);
   return googleSheetsModule.testConnection(this.formOutput);
 };
 

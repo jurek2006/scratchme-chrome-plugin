@@ -44,6 +44,9 @@ export class ConnectionOption extends Fieldset {
     this.buttons.testConnectionBtn.addEventListener('click', e => {
       this.testConnection({ button: this.buttons.testConnectionBtn });
     });
+    this.buttons.saveConnectionBtn.addEventListener('click', e => {
+      this.saveConnection({ button: this.buttons.saveConnectionBtn });
+    });
   }
 
   _testingConnectionFunction() {
@@ -73,28 +76,27 @@ export class ConnectionOption extends Fieldset {
       });
   }
 
-  // saveConnection({ button }) {
-  //   console.log('save connection', button, this);
-  //   const messageElem = getMessageElement(this.id, button);
+  saveConnection({ button }) {
+    const messageElem = getMessageElement(this.id, button);
 
-  //   // get activeFieldset of options
-  //   const activeFieldset = this.fieldset;
+    const optionFieldset = this._fieldset;
+    const id = this.id;
 
-  //   // save inputs names & values in localStorage with fieldset id as a key
-  //   const isSavedSuccessfully = saveInLocalStorage(
-  //     activeFieldset.id,
-  //     getInputs(activeFieldset)
-  //   );
+    // save inputs names & values in localStorage with fieldset id as a key
+    const isSavedSuccessfully = saveInLocalStorage(
+      id,
+      getInputs(optionFieldset)
+    );
 
-  //   if (isSavedSuccessfully) {
-  //     showItemMessage(messageElem, 'Connection options saved', 'success');
-  //     disableInput(testConnectionBtn, true);
-  //     disableInput(saveConnectionBtn, true);
-  //   } else {
-  //     showItemMessage(messageElem, 'Failed saving connection options', 'error');
-  //     disableInput(testConnectionBtn, false);
-  //   }
-  // }
+    if (isSavedSuccessfully) {
+      showItemMessage(messageElem, 'Connection options saved', 'success');
+      this.enableInput(this.buttons.testConnectionBtn, false);
+      this.enableInput(button, false);
+    } else {
+      showItemMessage(messageElem, 'Failed saving connection options', 'error');
+      this.enableInput(this.buttons.testConnectionBtn, true);
+    }
+  }
 
   testConnection({ button }) {
     // get(create if doesn't exist) element with id based on id of current option
