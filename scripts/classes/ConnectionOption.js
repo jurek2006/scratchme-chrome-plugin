@@ -39,6 +39,13 @@ export class ConnectionOption extends Fieldset {
     this._fieldsChangesHandler(); // invoke this._fieldsChangesHandler() to invoke this._actionOnInputwith passing buttons, elements etc.
   }
 
+  _registerFormActions() {
+    // assign action for test-connection
+    this.buttons.testConnectionBtn.addEventListener('click', e => {
+      this.testConnection({ button: this.buttons.testConnectionBtn });
+    });
+  }
+
   _testingConnectionFunction() {
     return Promise.reject(
       'No _testingConnectionFunction() defined for instance '
@@ -89,31 +96,25 @@ export class ConnectionOption extends Fieldset {
   //   }
   // }
 
-  // testConnection({ button }) {
-  //   // console.log('testConnection in class', this);
-  //   // this._testingConnectionFunction();
+  testConnection({ button }) {
+    // get(create if doesn't exist) element with id based on id of current option
+    const messageElem = getMessageElement(this.id, button);
 
-  //   // get(create if doesn't exist) element with id based on id of current option
-  //   const messageElem = getMessageElement(this.id, button);
+    // need to have here 'test-connection' button to disable/enable
+    const saveConnectionBtn = this.buttons.saveConnectionBtn;
 
-  //   // need to have here 'test-connection' button to disable/enable
-  //   const saveConnectionBtn = this.buttons.saveConnectionBtn.element;
-  //   console.log('saveConnectionBtn', saveConnectionBtn);
-
-  //   this._testingConnectionFunction()
-  //     .then(response => {
-  //       // connected successfully
-  //       showItemMessage(messageElem, response, 'success');
-  //       disableInput(saveConnectionBtn, false);
-  //     })
-  //     .catch(error => {
-  //       // connection error occured
-  //       // console.error('Error in testing connection', error);
-
-  //       showItemMessage(messageElem, `Connection failed: ${error}`, 'error');
-  //       disableInput(saveConnectionBtn, true);
-  //     });
-  // }
+    this._testingConnectionFunction()
+      .then(response => {
+        // connected successfully
+        showItemMessage(messageElem, response, 'success');
+        this.enableInput(saveConnectionBtn, true);
+      })
+      .catch(error => {
+        // connection error occured
+        showItemMessage(messageElem, `Connection failed: ${error}`, 'error');
+        this.enableInput(saveConnectionBtn, false);
+      });
+  }
 
   // _registerTestBtn() {
   //   const button = this.buttons.testConnectionBtn.element;
@@ -162,9 +163,9 @@ export class ConnectionOption extends Fieldset {
     }
   }
 
-  get sendFormBtn() {
-    return this.buttons.sendFormBtn.element;
-  }
+  // get sendFormBtn() {
+  //   return this.buttons.sendFormBtn.element;
+  // }
 
   _restoreFromLocalStorage() {
     // const areAllInputsEmpty =

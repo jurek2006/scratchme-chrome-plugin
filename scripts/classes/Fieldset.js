@@ -31,6 +31,8 @@ export class Fieldset {
       formElementsObj,
       propertyToStoreElementsIn: '_formButtons'
     });
+
+    this._formButtons && this._registerFormActions();
   }
 
   get buttons() {

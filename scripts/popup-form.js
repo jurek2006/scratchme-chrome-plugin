@@ -28,12 +28,13 @@ const googleSheetsMMM = new ConnectionOption({
   fieldsetElementInDom: document.getElementById('google-sheets')
 });
 googleSheetsMMM.registerNamedFormElements({
-  googleSpreadSheetIdInput: '#google-spreadsheet-id',
-  googleSpreadSheetTabNameInput: '#google-spreadsheet-tab-name'
+  sheetId: '#google-spreadsheet-id',
+  sheetTabName: '#google-spreadsheet-tab-name'
 });
 googleSheetsMMM.registerNamedFormButtons({
   sendFormBtn: '#send-to-google-sheets',
-  testConnectionBtn: '#test-connection-google-sheets'
+  testConnectionBtn: '#test-connection-google-sheets',
+  saveConnectionBtn: '#save-connection-google-sheets'
 });
 googleSheetsMMM.registerActionOnInput(function({
   buttons,
@@ -45,6 +46,10 @@ googleSheetsMMM.registerActionOnInput(function({
   this.enableInput(sendFormBtn, outputDataToSave && isFieldsetValid);
   this.enableInput(testConnectionBtn, isFieldsetValid);
 });
+googleSheetsMMM._testingConnectionFunction = function() {
+  console.log('testing', this.formOutput);
+  return googleSheetsModule.testConnection(this.formOutput);
+};
 
 const googleSheetsNNN = new ConnectionOption({
   _testingConnectionFunction() {
