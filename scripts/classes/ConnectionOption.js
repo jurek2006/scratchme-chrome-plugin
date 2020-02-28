@@ -65,8 +65,6 @@ export class ConnectionOption extends Fieldset {
     console.log('send data', button, this);
     const messageElem = getMessageElement(this.id, button);
 
-    // add additional form checking
-
     this._sendingDataFunction({
       outputDataToSave: this._outputDataToSave,
       connectionOptionDetails: this.formOutput
@@ -124,31 +122,6 @@ export class ConnectionOption extends Fieldset {
       });
   }
 
-  // _registerTestBtn() {
-  //   const button = this.buttons.testConnectionBtn.element;
-  //   button.addEventListener(
-  //     'click',
-  //     this.testConnection.bind(this, { button }),
-  //     false
-  //   );
-  // }
-  // _registerSaveBtn() {
-  //   const button = this.buttons.saveConnectionBtn.element;
-  //   button.addEventListener(
-  //     'click',
-  //     this.saveConnection.bind(this, { button }),
-  //     false
-  //   );
-  // }
-  // _registerSendBtn() {
-  //   const button = this.buttons.sendFormBtn.element;
-  //   button.addEventListener(
-  //     'click',
-  //     this.sendData.bind(this, { button }),
-  //     false
-  //   );
-  // }
-
   _addAllButtonsEventListeners() {
     if (this.buttons) {
       for (const currentButton in this.buttons) {
@@ -170,10 +143,6 @@ export class ConnectionOption extends Fieldset {
       });
     }
   }
-
-  // get sendFormBtn() {
-  //   return this.buttons.sendFormBtn.element;
-  // }
 
   _restoreFromLocalStorage() {
     // const areAllInputsEmpty =
