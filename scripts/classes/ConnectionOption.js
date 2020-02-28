@@ -67,9 +67,7 @@ export class ConnectionOption {
 
     this._sendingDataFunction({ outputDataToSave: this._outputDataToSave })
       .then(() => {
-        // TEMP
-        console.log(this);
-        // this.scratchMe.closeWindowOnSuccess();
+        this.scratchMe.closeWindowOnSuccess();
       })
       .catch(error => {
         showItemMessage(messageElem, error, 'error');

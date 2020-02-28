@@ -51,19 +51,12 @@ const googleSheetsNNN = new ConnectionOption({
     }
 
     const postDataToSave = convertToOrderedDataArray(outputDataToSave, [
-      'postIdInput',
-      'postAuthorInput',
-      'postContentTextarea',
-      'postDatetimeInput',
-      'postUrlInput'
+      'postId',
+      'postAuthor',
+      'postContent',
+      'postDatetime',
+      'postUrl'
     ]);
-
-    // const fromFacebook = this.scratchMe.fromFacebook;
-    console.log('sending data in instance', fromFacebook.formElements, {
-      sheetId: this.formElements.googleSpreadSheetIdInput.value,
-      sheetTabName: this.formElements.googleSpreadSheetTabNameInput.value
-    });
-    // return Promise.resolve('Success in sending in instance function');
 
     return googleSheetsModule.sendDataToSave(
       //   TEMP
@@ -110,10 +103,17 @@ const googleSheetsNNN = new ConnectionOption({
 });
 
 const dummyApiNNN = new ConnectionOption({
-  // testConnection() {
-  //   console.log('testConnection in instance', this);
-  //   this._testingConnectionFunction();
-  // },
+  _sendingDataFunction({ outputDataToSave }) {
+    console.log('testing saving in dummy api', outputDataToSave, {
+      userId: this.formElements.userId.value,
+      userName: this.formElements.userName.value
+    });
+
+    return dummyApiModule.sendDataToSave(outputDataToSave, {
+      userId: this.formElements.userId.value,
+      userName: this.formElements.userName.value
+    });
+  },
   _testingConnectionFunction() {
     console.log('testing connection', {
       userId: this.formElements.userId.value,
