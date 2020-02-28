@@ -4,14 +4,17 @@ export class Fieldset {
   constructor(fieldsetElementInDom) {
     this._fieldset = fieldsetElementInDom;
     this._setFieldsChangesWatcher();
-    //   TEMP
-    this.setNamedFormElements();
+  }
+
+  get formOutput() {
+    return this._formOutput;
   }
 
   get isValid() {
     return this._isValid;
   }
 
+  // defining custom action function in instance
   setActionOnInput(actionFunction) {
     this._actionOnInput = actionFunction;
   }
@@ -87,10 +90,6 @@ export class Fieldset {
     for (const formElement in this._formElements) {
       this._formOutput[formElement] = this._formElements[formElement].value;
     }
-  }
-
-  get formOutput() {
-    return this._formOutput;
   }
 
   // default action on input
