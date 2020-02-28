@@ -85,10 +85,7 @@ export class ConnectionOption extends Fieldset {
     const id = this.id;
 
     // save inputs names & values in localStorage with fieldset id as a key
-    const isSavedSuccessfully = saveInLocalStorage(
-      id,
-      getInputs(optionFieldset)
-    );
+    const isSavedSuccessfully = saveInLocalStorage(id, this.formOutput);
 
     if (isSavedSuccessfully) {
       showItemMessage(messageElem, 'Connection options saved', 'success');
@@ -122,13 +119,14 @@ export class ConnectionOption extends Fieldset {
       });
   }
 
-  _addAllButtonsEventListeners() {
-    if (this.buttons) {
-      for (const currentButton in this.buttons) {
-        this._addEventListener(this.buttons[currentButton]);
-      }
-    }
-  }
+  // STILL NEEDED ?
+  // _addAllButtonsEventListeners() {
+  //   if (this.buttons) {
+  //     for (const currentButton in this.buttons) {
+  //       this._addEventListener(this.buttons[currentButton]);
+  //     }
+  //   }
+  // }
 
   _addEventListener(button) {
     if (button.element && button.actions && button.actions.length > 0) {
@@ -144,27 +142,14 @@ export class ConnectionOption extends Fieldset {
     }
   }
 
+  // check if connection options fields are empty, if so populate them with values from localStorage
   _restoreFromLocalStorage() {
-    // const areAllInputsEmpty =
-    //   Object.values(this.formElements).filter(el => el.value).length === 0;
-    // if (areAllInputsEmpty) {
-    //   // console.log('All empty, possible load');
-    //   const connectionData = readFromLocalStorage(this.id);
-    //   if (!connectionData) return;
-    //   // set fields with retrieved connection data
-    //   Object.entries(connectionData).forEach(([key, value]) => {
-    //     // const inputElement = currentOptionFieldset.querySelector(
-    //     //   `input[name="${key}"]`
-    //     // );
-    //     // if (inputElement) {
-    //     //   inputElement.value = value;
-    //     // }
-    //     const inputElement = this.formElements;
-    //     // console.log('Set to element', inputElement, key, value);
-    //   });
-    // } else {
-    //   console.log('Not all empty');
-    // }
+    if (this.isEmpty()) {
+      const connectionData = readFromLocalStorage(this.id);
+      if (!connectionData) return;
+      console.log(`Restoring connection data for ${this.id}`);
+      this.setFieldsValues(connectionData);
+    }
   }
 
   setVisible() {

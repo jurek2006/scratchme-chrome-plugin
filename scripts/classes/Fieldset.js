@@ -131,6 +131,18 @@ export class Fieldset {
     }
   }
 
+  // verifies if all fields (formElements) are empty
+  // if so - returns true
+  isEmpty() {
+    if (!this._formElements) {
+      return;
+    }
+
+    return (
+      Object.values(this._formElements).filter(el => el.value).length === 0
+    );
+  }
+
   // default custom action on input (every change in input value)
   // can be overwritten with registerActionOnInput in instance
   // if deleted (commented) === no default action
