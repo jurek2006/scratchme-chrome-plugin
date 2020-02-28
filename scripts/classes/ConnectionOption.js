@@ -143,7 +143,7 @@ export class ConnectionOption extends Fieldset {
   }
 
   // check if connection options fields are empty, if so populate them with values from localStorage
-  _restoreFromLocalStorage() {
+  _restoreConnectionDetailsFromLocalStorage() {
     if (this.isEmpty()) {
       const connectionData = readFromLocalStorage(this.id);
       if (!connectionData) return;
@@ -152,10 +152,16 @@ export class ConnectionOption extends Fieldset {
     }
   }
 
+  _storeLastConnectionOption() {
+    if (!this.id) return;
+    saveInLocalStorage('last-connection-option', this.id);
+  }
+
   setVisible() {
     this.isActive = true;
     this._fieldset.classList.remove('disabled');
-    this._restoreFromLocalStorage();
+    this._storeLastConnectionOption();
+    this._restoreConnectionDetailsFromLocalStorage();
     return this; // return active connection option
   }
 
