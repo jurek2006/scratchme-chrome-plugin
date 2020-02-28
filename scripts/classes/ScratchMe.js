@@ -43,9 +43,9 @@ export class ScratchMe {
   }
 
   _setFromFacebook() {
-    this.scratchedDataFieldset = new Fieldset(
-      document.getElementById('from-facebook')
-    );
+    this.scratchedDataFieldset = new Fieldset({
+      fieldsetElementInDom: document.getElementById('from-facebook')
+    });
 
     this.scratchedDataFieldset.setActionOnInput(() => {
       this.outputDataToSave = this.scratchedDataFieldset.formOutput;
@@ -93,6 +93,7 @@ export class ScratchMe {
           this.connectionOptions.active.updateStatus({
             outputDataToSave: this.outputDataToSave
           });
+        console.log('change', this.connectionOptions);
       },
       false
     );

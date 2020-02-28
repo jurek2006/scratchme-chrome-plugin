@@ -1,7 +1,7 @@
 import { isTheFormIncorrect } from '../modules/helpers.js';
 
 export class Fieldset {
-  constructor(fieldsetElementInDom) {
+  constructor({ fieldsetElementInDom }) {
     this._fieldset = fieldsetElementInDom;
     this._setFieldsChangesWatcher();
   }

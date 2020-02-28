@@ -23,18 +23,14 @@ const closeWindow = () => {
   );
 };
 
-// CONST - to delete
-const fromFacebook = {
-  fieldset: document.getElementById('from-facebook'),
-  formElements: {
-    postAuthorInput: document.getElementById('post-author'),
-    postDatetimeInput: document.getElementById('post-datetime'),
-    postTitleInput: document.getElementById('post-title'),
-    postContentTextarea: document.getElementById('post-content'),
-    postUrlInput: document.getElementById('post-url'),
-    postIdInput: document.getElementById('post-id')
-  }
-};
+const googleSheetsMMM = new ConnectionOption({
+  id: 'google-sheets',
+  fieldsetElementInDom: document.getElementById('google-sheets')
+});
+googleSheetsMMM.setNamedFormElements({
+  googleSpreadSheetIdInput: '#google-spreadsheet-id',
+  googleSpreadSheetTabNameInput: '#google-spreadsheet-tab-name'
+});
 
 const googleSheetsNNN = new ConnectionOption({
   _testingConnectionFunction() {
@@ -100,6 +96,15 @@ const googleSheetsNNN = new ConnectionOption({
       element: document.getElementById('save-connection-google-sheets')
     }
   }
+});
+
+const dummyApiMMM = new ConnectionOption({
+  id: 'dummy-api',
+  fieldsetElementInDom: document.getElementById('dummy-api')
+});
+dummyApiMMM.setNamedFormElements({
+  userId: '#dummy-api-user-id',
+  userName: '#dummy-api-user-name'
 });
 
 const dummyApiNNN = new ConnectionOption({
@@ -187,8 +192,9 @@ const dummyApiNNN = new ConnectionOption({
 const scratchMe = new ScratchMe();
 // scratchMe.registerNew(googleSheetsNNN);
 // scratchMe.registerNew(dummyApiNNN);
-scratchMe.connectionOptions.registerNew(googleSheetsNNN);
-scratchMe.connectionOptions.registerNew(dummyApiNNN);
+// scratchMe.connectionOptions.registerNew(googleSheetsNNN);
+scratchMe.connectionOptions.registerNew(googleSheetsMMM);
+scratchMe.connectionOptions.registerNew(dummyApiMMM);
 // scratchMe.init();
 
 const showFormScratchMe = () => {
