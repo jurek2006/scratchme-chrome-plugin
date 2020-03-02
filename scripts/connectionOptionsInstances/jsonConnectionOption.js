@@ -4,14 +4,17 @@ export const jsonOptionConnectionOption = new ConnectionOption({
   id: 'code-json',
   fieldsetElementInDom: document.getElementById('code-json')
 });
+
 jsonOptionConnectionOption.registerNamedFormElements({
   jsonContent: '#code-area-content',
   copyToClipboardContent: '#copy-to-clipboard-content',
   copyToClipMessage: 'span.copy-clip-message'
 });
+
 jsonOptionConnectionOption.registerNamedFormButtons({
   copyToClipboardBtn: '#copy-to-clip-btn'
 });
+
 jsonOptionConnectionOption.registerActionOnInput(function({
   elements,
   outputDataToSave
@@ -38,6 +41,8 @@ jsonOptionConnectionOption.registerActionOnInput(function({
     jsonContent.innerHTML = 'Not valid post data form';
   }
 });
+
+// set event listener for 'copy to clipboard button
 jsonOptionConnectionOption.invokeFunction(function({
   elements,
   buttons,
