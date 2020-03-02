@@ -24,15 +24,6 @@ export class ConnectionOption extends Fieldset {
   get id() {
     return this._id;
   }
-  // TEMP - old
-  // constructor(fields) {
-  //   Object.assign(this, fields);
-  //   this._addAllButtonsEventListeners();
-  //   this._registerTestBtn();
-  //   this._registerSaveBtn();
-  //   this._registerSendBtn();
-  //   this._addFieldsValidation();
-  // }
 
   updateStatus({ outputDataToSave }) {
     this._outputDataToSave = outputDataToSave;
@@ -119,15 +110,6 @@ export class ConnectionOption extends Fieldset {
       });
   }
 
-  // STILL NEEDED ?
-  // _addAllButtonsEventListeners() {
-  //   if (this.buttons) {
-  //     for (const currentButton in this.buttons) {
-  //       this._addEventListener(this.buttons[currentButton]);
-  //     }
-  //   }
-  // }
-
   _addEventListener(button) {
     if (button.element && button.actions && button.actions.length > 0) {
       button.actions.forEach(action => {
@@ -168,6 +150,5 @@ export class ConnectionOption extends Fieldset {
   setHidden() {
     this.isActive = false;
     this._fieldset.classList.add('disabled');
-    console.log(`Hide connection option ${this.id}`, this._fieldset);
   }
 }

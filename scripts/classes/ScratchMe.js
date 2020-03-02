@@ -20,27 +20,6 @@ export class ScratchMe {
     };
   }
 
-  // init() {
-  //   this._restoreSelectedConnection();
-  // }
-
-  // _restoreSelectedConnection() {
-  //   const restoredConnectionOptionId = readFromLocalStorage(
-  //     'lastSelectedOption'
-  //   );
-  //   console.log('restore connection option', restoredConnectionOptionId);
-  //   this._changeCurrentConnectionOption(restoredConnectionOptionId);
-
-  //   // TEMP
-  //   const selectDataFormat = document.getElementById('select-data-format');
-  //   selectDataFormat.value = restoredConnectionOptionId; // set connection in select
-
-  //   // if (restoredConnectionId) {
-  //   //   selectDataFormat.value = restoredConnectionId; // set connection in select
-  //   //   changeConnectionOption(restoredConnectionId); // change connection for read one
-  //   // }
-  // }
-
   _setFromFacebook() {
     this.scratchedDataFieldset = new Fieldset({
       fieldsetElementInDom: document.getElementById('from-facebook')
