@@ -149,6 +149,33 @@ dummyApiMMM.registerNamedFormElements({
   userId: '#dummy-api-user-id',
   userName: '#dummy-api-user-name'
 });
+dummyApiMMM.registerNamedFormButtons({
+  sendFormBtn: '#send-to-dummy-api',
+  testConnectionBtn: '#test-connection-dummy-api',
+  saveConnectionBtn: '#save-connection-dummy-api'
+});
+dummyApiMMM.registerActionOnInput(function({
+  buttons,
+  elements,
+  isFieldsetValid,
+  outputDataToSave
+}) {
+  const { sendFormBtn, testConnectionBtn } = buttons;
+  this.enableInput(sendFormBtn, outputDataToSave && isFieldsetValid);
+  this.enableInput(testConnectionBtn, isFieldsetValid);
+});
+dummyApiMMM._testingConnectionFunction = function({ connectionOptionDetails }) {
+  return dummyApiModule.testConnection(connectionOptionDetails);
+};
+dummyApiMMM._sendingDataFunction = function({
+  outputDataToSave,
+  connectionOptionDetails
+}) {
+  return dummyApiModule.sendDataToSave(
+    outputDataToSave,
+    connectionOptionDetails
+  );
+};
 
 const dummyApiNNN = new ConnectionOption({
   _sendingDataFunction({ outputDataToSave }) {
