@@ -96,7 +96,11 @@ const jsonOption = new ConnectionOption({
   fieldsetElementInDom: document.getElementById('code-json')
 });
 jsonOption.registerNamedFormElements({
-  jsonContent: '#code-area-content'
+  jsonContent: '#code-area-content',
+  copyToClipboardContent: '#copy-to-clipboard-content'
+});
+jsonOption.registerNamedFormButtons({
+  copyToClipboardBtn: '#copy-to-clip-btn'
 });
 jsonOption.registerActionOnInput(function({ elements, outputDataToSave }) {
   console.log('action', elements, outputDataToSave);
@@ -122,6 +126,20 @@ jsonOption.registerActionOnInput(function({ elements, outputDataToSave }) {
   } else {
     jsonContent.innerHTML = 'Not valid post data form';
   }
+});
+jsonOption.invokeFunction(function({ elements, buttons, formOutput }) {
+  const { copyToClipboardBtn } = buttons;
+  const { jsonContent, copyToClipboardContent } = elements;
+  copyToClipboardBtn.addEventListener(
+    'click',
+    () => {
+      copyToClipboardContent.value = jsonContent.textContent;
+      copyToClipboardContent.select();
+      document.execCommand('copy');
+      copyToClipboardContent.blur();
+    },
+    false
+  );
 });
 
 const scratchMe = new ScratchMe();

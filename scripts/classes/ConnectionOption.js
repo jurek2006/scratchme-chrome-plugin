@@ -31,16 +31,24 @@ export class ConnectionOption extends Fieldset {
   }
 
   _registerFormActions() {
+    if (!this.buttons) return;
+
     // assign action for test-connection
-    this.buttons.testConnectionBtn.addEventListener('click', e => {
-      this.testConnection({ button: this.buttons.testConnectionBtn });
-    });
-    this.buttons.saveConnectionBtn.addEventListener('click', e => {
-      this.saveConnection({ button: this.buttons.saveConnectionBtn });
-    });
-    this.buttons.sendFormBtn.addEventListener('click', e => {
-      this.sendData({ button: this.buttons.sendFormBtn });
-    });
+    this.buttons.testConnectionBtn &&
+      this.buttons.testConnectionBtn.addEventListener('click', e => {
+        this.testConnection({ button: this.buttons.testConnectionBtn });
+      });
+
+    // assign action for save-connection
+    this.buttons.saveConnectionBtn &&
+      this.buttons.saveConnectionBtn.addEventListener('click', e => {
+        this.saveConnection({ button: this.buttons.saveConnectionBtn });
+      });
+    // assign action for send data
+    this.buttons.sendFormBtn &&
+      this.buttons.sendFormBtn.addEventListener('click', e => {
+        this.sendData({ button: this.buttons.sendFormBtn });
+      });
   }
 
   _testingConnectionFunction() {

@@ -113,7 +113,8 @@ export class Fieldset {
         buttons: this._formButtons,
         elements: this._formElements,
         isFieldsetValid: this.isValid,
-        outputDataToSave: this._outputDataToSave
+        outputDataToSave: this._outputDataToSave,
+        formOutput: this.formOutput
       });
   }
 
@@ -127,7 +128,9 @@ export class Fieldset {
     if (!this._formOutput) this._formOutput = {};
 
     for (const formElement in this._formElements) {
-      this._formOutput[formElement] = this._formElements[formElement].value;
+      this._formOutput[formElement] =
+        this._formElements[formElement].value ||
+        this._formElements[formElement].textContent;
     }
   }
 
@@ -139,8 +142,19 @@ export class Fieldset {
     }
 
     return (
-      Object.values(this._formElements).filter(el => el.value).length === 0
+      Object.values(this._formElements).filter(el => el.value || el.textContent)
+        .length === 0
     );
+  }
+
+  invokeFunction(functionToInvoke) {
+    const options = {
+      buttons: this._formButtons,
+      elements: this._formElements,
+      isFieldsetValid: this.isValid,
+      formOutput: this.formOutput
+    };
+    functionToInvoke.call(this, options);
   }
 
   // default custom action on input (every change in input value)
