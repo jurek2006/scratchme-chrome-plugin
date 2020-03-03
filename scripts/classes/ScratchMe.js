@@ -1,6 +1,6 @@
 import { ConnectionOptions } from './ConnectionOptions.js';
 import { Fieldset } from './Fieldset.js';
-import { setDateTimeValue } from '../modules/helpers.js';
+import { setDateTimeValue } from '../helpers/helpers.js';
 import chromeStorage from './../modules/chromeStorage.js';
 
 export class ScratchMe {

@@ -1,8 +1,7 @@
 import { Fieldset } from './Fieldset.js';
 
 // TEMP - delete not needed
-import { showItemMessage, getMessageElement } from '../modules/helpers.js';
-
+import { showItemMessage, getMessageElement } from '../helpers/formHelpers.js';
 import localStor from '../modules/localStorage.js';
 
 export class ConnectionOption extends Fieldset {

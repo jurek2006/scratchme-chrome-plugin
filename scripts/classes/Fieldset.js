@@ -1,4 +1,4 @@
-import { isTheFormIncorrect } from '../modules/helpers.js';
+import { isTheFormIncorrect } from '../helpers/formHelpers.js';
 
 export class Fieldset {
   constructor({ fieldsetElementInDom }) {
