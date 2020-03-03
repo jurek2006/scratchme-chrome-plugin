@@ -181,28 +181,6 @@ export const removeError = field => {
   message.style.visibility = 'hidden';
 };
 
-// stores data object in local storage - returns true if successfully
-export const saveInLocalStorage = (keyInLocalStorage, dataToSaveObject) => {
-  try {
-    localStorage.setItem(keyInLocalStorage, JSON.stringify(dataToSaveObject));
-    return true;
-  } catch (error) {
-    console.error(`Failed to save data in localStorage`, error);
-    return false;
-  }
-};
-
-// restores data object from local storage (for given keyInLocalStorage)
-export const readFromLocalStorage = keyInLocalStorage => {
-  try {
-    const retrievedObject = localStorage.getItem(keyInLocalStorage);
-    return JSON.parse(retrievedObject);
-  } catch (error) {
-    console.error(`Failed to read data from localStorage`, error);
-    return false;
-  }
-};
-
 export const setDateTimeValue = unixTime => {
   const date = unixTime ? new Date(unixTime * 1000) : new Date(Date.now());
 

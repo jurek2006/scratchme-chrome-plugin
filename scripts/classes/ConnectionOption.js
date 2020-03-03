@@ -1,12 +1,9 @@
 import { Fieldset } from './Fieldset.js';
 
 // TEMP - delete not needed
-import {
-  showItemMessage,
-  getMessageElement,
-  saveInLocalStorage,
-  readFromLocalStorage
-} from '../modules/helpers.js';
+import { showItemMessage, getMessageElement } from '../modules/helpers.js';
+
+import localStor from '../modules/localStorage.js';
 
 export class ConnectionOption extends Fieldset {
   constructor(configProps) {
@@ -78,7 +75,7 @@ export class ConnectionOption extends Fieldset {
     const id = this.id;
 
     // save inputs names & values in localStorage with fieldset id as a key
-    const isSavedSuccessfully = saveInLocalStorage(id, this.formOutput);
+    const isSavedSuccessfully = localStor.save(id, this.formOutput);
 
     if (isSavedSuccessfully) {
       showItemMessage(messageElem, 'Connection options saved', 'success');
@@ -129,7 +126,7 @@ export class ConnectionOption extends Fieldset {
   // check if connection options fields are empty, if so populate them with values from localStorage
   _restoreConnectionDetailsFromLocalStorage() {
     if (this.isEmpty()) {
-      const connectionData = readFromLocalStorage(this.id);
+      const connectionData = localStor.read(this.id);
       if (!connectionData) return;
       console.log(`Restoring connection data for ${this.id}`);
       this.setFieldsValues(connectionData);
@@ -138,7 +135,7 @@ export class ConnectionOption extends Fieldset {
 
   _storeLastConnectionOption() {
     if (!this.id) return;
-    saveInLocalStorage('last-connection-option', this.id);
+    localStor.save('last-connection-option', this.id);
   }
 
   setVisible() {

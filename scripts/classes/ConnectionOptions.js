@@ -1,4 +1,4 @@
-import { readFromLocalStorage } from '../modules/helpers.js';
+import localStor from '../modules/localStorage.js';
 
 export class ConnectionOptions {
   constructor(scratchMeReference) {
@@ -39,7 +39,7 @@ export class ConnectionOptions {
     this._restoreLastConnectionOption();
   }
   _restoreLastConnectionOption() {
-    const lastConnectionOption = readFromLocalStorage('last-connection-option');
+    const lastConnectionOption = localStor.read('last-connection-option');
     if (this._selectOptionsSwitcher && lastConnectionOption) {
       this._selectOptionsSwitcher.value = lastConnectionOption;
       // fire select change event
