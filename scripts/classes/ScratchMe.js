@@ -1,6 +1,7 @@
 import { ConnectionOptions } from './ConnectionOptions.js';
 import { Fieldset } from './Fieldset.js';
 import { setDateTimeValue } from '../modules/helpers.js';
+import chromeStorage from './../modules/chromeStorage.js';
 
 export class ScratchMe {
   constructor() {
@@ -31,7 +32,8 @@ export class ScratchMe {
       postId: '#post-id'
     });
 
-    this._getPostData()
+    chromeStorage
+      .get(['postData'])
       .then(({ postId, author, url, content, uTime }) => {
         this.scratchedDataFieldset.setFieldsValues({
           postAuthor: author,
@@ -55,13 +57,5 @@ export class ScratchMe {
     chrome.windows.getCurrent(win =>
       setTimeout(() => chrome.windows.remove(win.id), 3000)
     );
-  }
-
-  _getPostData() {
-    return new Promise(resolve => {
-      chrome.storage.sync.get(['postData'], storage => {
-        resolve(storage.postData);
-      });
-    });
   }
 }
