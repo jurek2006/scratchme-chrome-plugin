@@ -2,16 +2,10 @@ import { Fieldset } from './Fieldset.js';
 
 // TEMP - delete not needed
 import {
-  disableInput,
   showItemMessage,
-  isTheFormIncorrect,
   getMessageElement,
-  getInputs,
   saveInLocalStorage,
-  readFromLocalStorage,
-  loadConnection,
-  validateForm,
-  getMessageElementNew
+  readFromLocalStorage
 } from '../modules/helpers.js';
 
 export class ConnectionOption extends Fieldset {

@@ -1,12 +1,3 @@
-// disables/enables inputElement if is defined
-export const disableInput = (inputElement, isDisabled) => {
-  if (inputElement) {
-    inputElement.disabled = isDisabled;
-  }
-};
-
-// shows and hides passed messageElement after defined time
-// toggles messageElement success and error classes due to passed successOrError
 export const showItemMessage = (
   messageElem,
   text,
@@ -122,10 +113,9 @@ export const isTheFormIncorrect = formItem => {
     }
   }
 
-  // formItem.isValid = hasErrors ? false : true; // not really needed ?
   return hasErrors;
 };
-// TEMP - old version
+
 export const getMessageElement = (id, targetElem, isErrorMessage = false) => {
   let messageElem = targetElem.form.querySelector(
     (isErrorMessage
@@ -139,30 +129,6 @@ export const getMessageElement = (id, targetElem, isErrorMessage = false) => {
     messageElem.id = (isErrorMessage ? 'error-for-' : 'message-for-') + id;
 
     targetElem.parentNode.insertBefore(messageElem, targetElem.parent);
-  }
-
-  return messageElem;
-};
-
-// TEMP - experimental, rather not neede at the moment
-export const getMessageElementNew = (
-  id,
-  targetElem,
-  isErrorMessage = false
-) => {
-  let messageElem = targetElem.querySelector(
-    (isErrorMessage
-      ? '.error-message#error-for-'
-      : '.result-message#message-for-') + id
-  );
-
-  if (!messageElem) {
-    messageElem = document.createElement('div');
-    messageElem.className = isErrorMessage ? 'error-message' : 'result-message';
-    messageElem.id = (isErrorMessage ? 'error-for-' : 'message-for-') + id;
-
-    // targetElem.parentNode.insertBefore(messageElem, targetElem.parent);
-    targetElem.appendChild(messageElem);
   }
 
   return messageElem;
@@ -215,18 +181,6 @@ export const removeError = field => {
   message.style.visibility = 'hidden';
 };
 
-// for all inputs in form grab input's name and value and put it in associative array
-export const getInputs = form => {
-  const inputsArray = form.querySelectorAll('input');
-
-  const inputsObj = {};
-  inputsArray.forEach(input => {
-    Object.assign(inputsObj, { [input.name]: input.value });
-  });
-
-  return inputsObj;
-};
-
 // stores data object in local storage - returns true if successfully
 export const saveInLocalStorage = (keyInLocalStorage, dataToSaveObject) => {
   try {
@@ -247,66 +201,6 @@ export const readFromLocalStorage = keyInLocalStorage => {
     console.error(`Failed to read data from localStorage`, error);
     return false;
   }
-};
-
-// loads selected connection settings from local storage
-// and sets values in connecion options fieldset
-export const loadConnection = currentOptionFieldset => {
-  const connectionData = readFromLocalStorage(currentOptionFieldset.id);
-
-  if (!connectionData) return;
-
-  // set fields with retrieved connection data
-  Object.entries(connectionData).forEach(([key, value]) => {
-    const inputElement = currentOptionFieldset.querySelector(
-      `input[name="${key}"]`
-    );
-    if (inputElement) {
-      inputElement.value = value;
-    }
-  });
-};
-
-// Validates the form
-// receives object with elements required for validation
-// shows visual indicators on fields with error in isTheFormIncorrect()
-// disables/enables buttons
-export const validateForm = formElementsObj => {
-  const {
-    sendFormBtn,
-    testConnectionBtn,
-    fromFacebookFieldset,
-    connectionOptionsFieldset
-  } = formElementsObj;
-
-  let isfromFacebookFieldsetIncorrect;
-  let isConnectionOptionsFieldsetIncorrect;
-
-  if (!fromFacebookFieldset) {
-    // fromFacebookFieldset should be always checked (thus given here)
-    // if not, something went wrong and validation won't work
-    throw new Error(
-      'not passed fromFacebookFieldset to validateForm, neccessary for proper form validation'
-    );
-  }
-  isfromFacebookFieldsetIncorrect = Boolean(
-    isTheFormIncorrect(fromFacebookFieldset)
-  );
-
-  // connectionOptionsFieldset is given (to be validated) only if user selected any option
-  if (connectionOptionsFieldset) {
-    isConnectionOptionsFieldsetIncorrect = Boolean(
-      isTheFormIncorrect(connectionOptionsFieldset)
-    );
-  }
-
-  // DISABLING / ENABLING BUTTONS
-  disableInput(
-    sendFormBtn,
-    isfromFacebookFieldsetIncorrect || isConnectionOptionsFieldsetIncorrect
-  );
-
-  disableInput(testConnectionBtn, isConnectionOptionsFieldsetIncorrect);
 };
 
 export const setDateTimeValue = unixTime => {

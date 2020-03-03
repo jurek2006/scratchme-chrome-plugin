@@ -1,4 +1,4 @@
-import { isTheFormIncorrect, disableInput } from '../modules/helpers.js';
+import { isTheFormIncorrect } from '../modules/helpers.js';
 
 export class Fieldset {
   constructor({ fieldsetElementInDom }) {
@@ -39,38 +39,9 @@ export class Fieldset {
     return this._formButtons;
   }
 
-  // TEMP - refactor
+  // enables/disables inputElement
   enableInput(inputElement, isEnabled) {
-    disableInput(inputElement, !isEnabled);
-  }
-
-  _registerElements({ formElementsObj, propertyToStoreElementsIn }) {
-    // propertyToStoreElementsIn is i.e. this._formElements, this._formButtons
-    // if the property doesn't exist is created
-
-    if (!this[propertyToStoreElementsIn]) this[propertyToStoreElementsIn] = {};
-
-    for (const formElementName in formElementsObj) {
-      // if (!propertyToStoreElementsIn) propertyToStoreElementsIn = {};
-
-      const foundDomElement =
-        this._fieldset &&
-        this._fieldset.querySelector(formElementsObj[formElementName]);
-      // assign Dom Element (if exists) to as element in property
-      // create element's property in propertyToStoreElementsIn for given name if found DOM
-      // i.e. if passed propertyToStoreElementsIn === '._formElements' and formElementsObj
-      // is { postAuthor: '#post-author'} stores in this._formElements.postAuthor reference
-      // to #post - author element (found in current fieldset (this._fieldset))
-      if (foundDomElement) {
-        this[propertyToStoreElementsIn][formElementName] = foundDomElement;
-      } else {
-        console.log(
-          `There is no element for ${formElementsObj[formElementName]} in fieldset`
-        );
-      }
-    }
-
-    this._fieldsChangesHandler && this._fieldsChangesHandler();
+    if (inputElement) inputElement.disabled = !isEnabled;
   }
 
   setFieldsValues(propertiesValuesObj) {
@@ -88,6 +59,29 @@ export class Fieldset {
     }
 
     this._fieldsChangesHandler && this._fieldsChangesHandler();
+  }
+
+  // verifies if all fields (formElements) are empty
+  // if so - returns true
+  isEmpty() {
+    if (!this._formElements) {
+      return;
+    }
+
+    return (
+      Object.values(this._formElements).filter(el => el.value || el.textContent)
+        .length === 0
+    );
+  }
+
+  invokeFunction(functionToInvoke) {
+    const options = {
+      buttons: this._formButtons,
+      elements: this._formElements,
+      isFieldsetValid: this.isValid,
+      formOutput: this.formOutput
+    };
+    functionToInvoke.call(this, options);
   }
 
   _setFieldsChangesWatcher() {
@@ -134,27 +128,33 @@ export class Fieldset {
     }
   }
 
-  // verifies if all fields (formElements) are empty
-  // if so - returns true
-  isEmpty() {
-    if (!this._formElements) {
-      return;
+  _registerElements({ formElementsObj, propertyToStoreElementsIn }) {
+    // propertyToStoreElementsIn is i.e. this._formElements, this._formButtons
+    // if the property doesn't exist is created
+
+    if (!this[propertyToStoreElementsIn]) this[propertyToStoreElementsIn] = {};
+
+    for (const formElementName in formElementsObj) {
+      // if (!propertyToStoreElementsIn) propertyToStoreElementsIn = {};
+
+      const foundDomElement =
+        this._fieldset &&
+        this._fieldset.querySelector(formElementsObj[formElementName]);
+      // assign Dom Element (if exists) to as element in property
+      // create element's property in propertyToStoreElementsIn for given name if found DOM
+      // i.e. if passed propertyToStoreElementsIn === '._formElements' and formElementsObj
+      // is { postAuthor: '#post-author'} stores in this._formElements.postAuthor reference
+      // to #post - author element (found in current fieldset (this._fieldset))
+      if (foundDomElement) {
+        this[propertyToStoreElementsIn][formElementName] = foundDomElement;
+      } else {
+        console.log(
+          `There is no element for ${formElementsObj[formElementName]} in fieldset`
+        );
+      }
     }
 
-    return (
-      Object.values(this._formElements).filter(el => el.value || el.textContent)
-        .length === 0
-    );
-  }
-
-  invokeFunction(functionToInvoke) {
-    const options = {
-      buttons: this._formButtons,
-      elements: this._formElements,
-      isFieldsetValid: this.isValid,
-      formOutput: this.formOutput
-    };
-    functionToInvoke.call(this, options);
+    this._fieldsChangesHandler && this._fieldsChangesHandler();
   }
 
   // default custom action on input (every change in input value)
