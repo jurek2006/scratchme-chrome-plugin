@@ -1,5 +1,5 @@
-import dummyApiModule from './../modules/dummyApiModule.js';
-import { ConnectionOption } from './../classes/ConnectionOption.js';
+import dummyApiModule from '../modules/dummyApiModule.js';
+import { ConnectionOption } from '../classes/ConnectionOption.js';
 
 export const dummyApiConnectionOption = new ConnectionOption({
   id: 'dummy-api',
