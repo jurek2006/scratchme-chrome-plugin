@@ -4,7 +4,7 @@ export const save = (keyInLocalStorage, dataToSaveObject) => {
     localStorage.setItem(keyInLocalStorage, JSON.stringify(dataToSaveObject));
     return true;
   } catch (error) {
-    console.error(`Failed to save data in localStorage`, error);
+    console.log(`Failed to save data in localStorage`, error);
     return false;
   }
 };
@@ -15,7 +15,7 @@ export const read = keyInLocalStorage => {
     const retrievedObject = localStorage.getItem(keyInLocalStorage);
     return JSON.parse(retrievedObject);
   } catch (error) {
-    console.error(`Failed to read data from localStorage`, error);
+    console.log(`Failed to read data from localStorage`, error);
     return false;
   }
 };

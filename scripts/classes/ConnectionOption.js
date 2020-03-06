@@ -1,6 +1,5 @@
 import { Fieldset } from './Fieldset.js';
 
-// TEMP - delete not needed
 import { showItemMessage, getMessageElement } from '../helpers/formHelpers.js';
 import localStor from '../modules/localStorage.js';
 
@@ -51,7 +50,6 @@ export class ConnectionOption extends Fieldset {
   }
 
   sendData({ button }) {
-    console.log('send data', button, this);
     const messageElem = getMessageElement(this.id, button);
 
     this._sendingDataFunction({
@@ -106,20 +104,6 @@ export class ConnectionOption extends Fieldset {
         showItemMessage(messageElem, `Connection failed: ${error}`, 'error');
         this.enableInput(saveConnectionBtn, false);
       });
-  }
-
-  _addEventListener(button) {
-    if (button.element && button.actions && button.actions.length > 0) {
-      button.actions.forEach(action => {
-        if (!action.event || !action.actionFunction) return;
-        console.log(`adding handler to ${action.event}`);
-        button.element.addEventListener(
-          action.event,
-          action.actionFunction.bind(this), // sets whole option as this
-          false
-        );
-      });
-    }
   }
 
   // check if connection options fields are empty, if so populate them with values from localStorage

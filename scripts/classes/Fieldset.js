@@ -161,7 +161,6 @@ export class Fieldset {
   // can be overwritten with registerActionOnInput in instance
   // if deleted (commented) === no default action
   // _actionOnInput() {
-  //   // ... placeholder
   //   console.log('Not defined actionOnInput function for:', this);
   // }
 }
