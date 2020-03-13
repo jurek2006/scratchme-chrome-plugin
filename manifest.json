@@ -2,8 +2,8 @@
     "manifest_version": 2,
     "name": "JS Scratch Me",
     "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAumPaxyGXXeBM8LJX3UkrCbatfr9oIrtWpOw2w++ZjDmzNLpVlWpPlzeUnvDeMcS8DspnkuR2wCtiUGYxtid0xpwgxOwl2CFzaP4djBwdvteFFrF9bOfRaHa2nBTyP3R9o1KmsymOnqv+WUNR4FjX53/mcJH9iVZijt5KRxNk8ADmVpD4u6Jj30kwAa13lITW6BrxIb/arg0vQjEQ0X3snzE278eoUkqE1gXCasFdg8/Hyog8CJGX+U6y+MBioVfgpcyjRwP3NDQXbBamLU5zrS8NVlGaAU4sKxVYEl7YqptDth65cNt6zBM1KCvSAz3LhYdAUOHA9IT6Ks303r5qKQIDAQAB",
-    "short_name": "JS Scratch Me",
-    "description": "Save any Facebook Post to simple JSON form",
+    "short_name": "JS Scratch LinkedIn",
+    "description": "Save any LinkedIn Person",
     "version": "2.0",
     "homepage_url": "https://github.com/bravelab/scratchme-chrome-plugin",
     "permissions": [
@@ -14,7 +14,7 @@
     ],
     "browser_action": {
         "default_popup": "popup.html",
-        "default_title": "Scratch Me"
+        "default_title": "Scratch LinkedIn"
     },
     "icons": {
         "16": "img/icon16.png",
@@ -32,7 +32,7 @@
         {
             "run_at": "document_end",
             "matches": [
-                "*://www.facebook.com/*"
+                "*://www.linkedin.com/*"
             ],
             "all_frames": true,
             "js": [
