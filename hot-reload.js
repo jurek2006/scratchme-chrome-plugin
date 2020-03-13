@@ -23,7 +23,8 @@ const timestampForFilesInDirectory = dir =>
 // reloads all chrome tabs with facebook host
 // if current window is popup - closes it and then reloads tabs
 const reload = () => {
-  chrome.tabs.query({ url: '*://*.facebook.com/*' }, tabs => {
+  console.log('reload');
+  chrome.tabs.query({ url: '*://*.linkedin.com/*' }, tabs => {
     chrome.windows.getCurrent(currentWindow => {
       if (currentWindow.type === 'popup') {
         // if current window is popup - close it
@@ -32,7 +33,7 @@ const reload = () => {
         });
       } else {
         tabs.forEach(tab => {
-          console.log('reload facebook tab', tab.url);
+          console.log('reload linkedin tab', tab.url);
           chrome.tabs.reload(tab.id);
         });
         chrome.runtime.reload();
