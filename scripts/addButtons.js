@@ -62,11 +62,14 @@ const addButtons = () => {
   //   const reg = /in/;
   //   if (!reg.test(window.location.pathname)) return;
 
-  const box = document.querySelector('#ember65');
   const topCard = document.querySelector('.pv-top-card');
 
-  console.log(box);
-  if (box && topCard) {
+  const actionBtnsBox =
+    topCard &&
+    topCard.querySelector('.pv-s-profile-actions--connect').parentNode
+      .parentNode.parentNode;
+
+  if (actionBtnsBox) {
     const saveButton = document.createElement('button');
     saveButton.classList.add('scratch-me-btn');
     saveButton.setAttribute('title', 'ScratchMe');
@@ -77,7 +80,7 @@ const addButtons = () => {
     saveButton.appendChild(strongText);
     saveButton.appendChild(lightText);
     console.log('adding', saveButton);
-    box.appendChild(saveButton);
+    actionBtnsBox.insertBefore(saveButton, actionBtnsBox.firstElementChild);
     saveButton.addEventListener('click', () => showMessage(topCard));
   }
 };

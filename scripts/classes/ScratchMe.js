@@ -34,19 +34,22 @@ export class ScratchMe {
 
     chromeStorage
       .get(['postData'])
-      .then(({ postId, author, url, content, uTime }) => {
-        this.scratchedDataFieldset.setFieldsValues({
-          postAuthor: author,
-          postDatetime: setDateTimeValue(uTime),
-          postTitle: `${postId ? postId + ' - ' : ''}${content.slice(
-            0,
-            20
-          )}... - ${author}`,
-          postContent: content,
-          postUrl: url,
-          postId: postId || '0'
-        });
+      .then(result => {
+        console.log(result);
       })
+      // .then(({ postId, author, url, content, uTime }) => {
+      //   this.scratchedDataFieldset.setFieldsValues({
+      //     postAuthor: author,
+      //     postDatetime: setDateTimeValue(uTime),
+      //     postTitle: `${postId ? postId + ' - ' : ''}${content.slice(
+      //       0,
+      //       20
+      //     )}... - ${author}`,
+      //     postContent: content,
+      //     postUrl: url,
+      //     postId: postId || '0'
+      //   });
+      // })
       .catch(error => {
         console.log('Failed to read data from chrome storage', error);
       });

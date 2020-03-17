@@ -1,30 +1,34 @@
 chrome.runtime.onMessage.addListener((req, sender) => {
+  if (req.isClickedButton) {
+    chrome.browserAction.setBadgeText({ text: 'New' });
 
-    if (req.isClickedButton) {
-        chrome.browserAction.setBadgeText({ text: 'New' });
+    chrome.windows.create({
+      url: chrome.extension.getURL('popup-form.html'),
+      type: 'popup',
+      top: 10,
+      left: 10,
+      width: 435,
+      height: 700
+    });
 
+    setTimeout(() => {
+      chrome.browserAction.setBadgeText({ text: '' });
+    }, 5000);
 
-        chrome.windows.create({
-            url: chrome.extension.getURL("popup-form.html"),
-            type: "popup",
-            top: 10,
-            left: 10,
-            width: 435,
-            height: 700
-        });
+    const { name, company, position, url } = req;
 
-        setTimeout(() => {
-            chrome.browserAction.setBadgeText({ text: '' });
-        }, 5000);
-
-        const { postId, author, url, content, time, uTime } = req;
-
-        chrome.storage.sync.set({
-            postData: {
-                postId, author, url, content, time, uTime
-            }
-        }, () => {
-            console.log('Data was saved to local.sync');
-        });
-    }
+    chrome.storage.sync.set(
+      {
+        postData: {
+          name,
+          company,
+          position,
+          url
+        }
+      },
+      () => {
+        console.log('Data was saved to local.sync');
+      }
+    );
+  }
 });
