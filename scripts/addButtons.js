@@ -62,26 +62,38 @@ const addButtons = () => {
   //   const reg = /in/;
   //   if (!reg.test(window.location.pathname)) return;
 
-  const topCard = document.querySelector('.pv-top-card');
-
-  const actionBtnsBox =
-    topCard &&
-    topCard.querySelector('.pv-s-profile-actions--connect').parentNode
-      .parentNode.parentNode;
-
-  if (actionBtnsBox) {
-    const saveButton = document.createElement('button');
-    saveButton.classList.add('scratch-me-btn');
-    saveButton.setAttribute('title', 'ScratchMe');
+  const createScratchBtn = () => {
+    const scratchButton = document.createElement('button');
+    scratchButton.classList.add('scratch-me-btn');
+    scratchButton.setAttribute('title', 'ScratchIn');
     const strongText = document.createElement('strong');
     strongText.innerText = 'Scratch';
     strongText.classList.add('strong-text');
     const lightText = document.createTextNode('IN');
-    saveButton.appendChild(strongText);
-    saveButton.appendChild(lightText);
-    console.log('adding', saveButton);
-    actionBtnsBox.insertBefore(saveButton, actionBtnsBox.firstElementChild);
-    saveButton.addEventListener('click', () => showMessage(topCard));
+    scratchButton.appendChild(strongText);
+    scratchButton.appendChild(lightText);
+    return scratchButton;
+  };
+
+  const topCard = document.querySelector('.pv-top-card');
+
+  const connectBtn =
+    topCard && topCard.querySelector('.pv-s-profile-actions--connect');
+
+  if (!connectBtn) return;
+
+  // for some profiles (e.g. Bill Gates) "connect" button is nested in dropdown (in an element <artdeco-dropdown>)
+  const dropdown = connectBtn.closest('artdeco-dropdown');
+
+  // actionBtnsBox is an element containing buttons "connect", "send message", "more..." (sometimes follow)
+  const actionBtnsBox = dropdown
+    ? dropdown.parentNode.parentNode.parentNode
+    : connectBtn.parentNode.parentNode.parentNode;
+
+  if (actionBtnsBox) {
+    const scratchBtn = createScratchBtn();
+    actionBtnsBox.insertBefore(scratchBtn, actionBtnsBox.firstElementChild);
+    scratchBtn.addEventListener('click', () => showMessage(topCard));
   }
 };
 
