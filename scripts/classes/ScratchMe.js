@@ -24,32 +24,22 @@ export class ScratchMe {
     });
 
     this.scratchedDataFieldset.registerNamedFormElements({
-      postAuthor: '#post-author',
-      postDatetime: '#post-datetime',
-      postTitle: '#post-title',
-      postContent: '#post-content',
-      postUrl: '#post-url',
-      postId: '#post-id'
+      personName: '#person-name',
+      personCompany: '#person-company',
+      personPosition: '#person-position',
+      personProfileUrl: '#person-profile-url'
     });
 
     chromeStorage
       .get(['postData'])
-      .then(result => {
-        console.log(result);
+      .then(({ name, company, position, url }) => {
+        this.scratchedDataFieldset.setFieldsValues({
+          personName: name,
+          personCompany: company,
+          personPosition: position,
+          personProfileUrl: url
+        });
       })
-      // .then(({ postId, author, url, content, uTime }) => {
-      //   this.scratchedDataFieldset.setFieldsValues({
-      //     postAuthor: author,
-      //     postDatetime: setDateTimeValue(uTime),
-      //     postTitle: `${postId ? postId + ' - ' : ''}${content.slice(
-      //       0,
-      //       20
-      //     )}... - ${author}`,
-      //     postContent: content,
-      //     postUrl: url,
-      //     postId: postId || '0'
-      //   });
-      // })
       .catch(error => {
         console.log('Failed to read data from chrome storage', error);
       });
