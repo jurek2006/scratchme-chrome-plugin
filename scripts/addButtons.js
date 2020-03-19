@@ -57,20 +57,25 @@ const showMessage = element => {
   });
 };
 
-const addTopCardButton = btn => {
+const addTopCardButton = () => {
+  const buttonClass = 'scratch-me-btn';
+
   const topCard = document.querySelector('.pv-top-card');
-  // stop if there's no topCard - there is no person LinkedIn data and space to add button
+
+  // if there's no topCard - there is no person LinkedIn data and space to add button
   if (!topCard) return;
 
   // stop if there's already button in topCard
-  const isButtonAlready = topCard.querySelector('.scratch-me-btn'); // TEMP get class from button ?
+  const isButtonAlready = !!topCard.querySelector(`.${buttonClass}`);
   if (isButtonAlready) return;
 
   // create button with handler opening popup & passing profile data (element topCard to extract data from)
-  btn.addEventListener('click', () => showMessage(topCard));
+  const scratchBtn = createScratchBtn({
+    buttonClass,
+    domElementToScratch: topCard
+  });
 
   const connectBtn = topCard.querySelector('.pv-s-profile-actions--connect');
-
   if (!connectBtn) return;
 
   // for some profiles (e.g. Bill Gates) "connect" button is nested in dropdown (in an element <artdeco-dropdown>)
@@ -82,14 +87,12 @@ const addTopCardButton = btn => {
     : connectBtn.parentNode.parentNode.parentNode;
 
   if (actionBtnsBox) {
-    actionBtnsBox.insertBefore(btn, actionBtnsBox.firstElementChild);
+    actionBtnsBox.insertBefore(scratchBtn, actionBtnsBox.firstElementChild);
   }
 };
 
 const addStickyHeaderButton = btn => {
-  // Does not add a button when pathname does not contain "groups"
-  //   const reg = /in/;
-  //   if (!reg.test(window.location.pathname)) return;
+  const buttonClass = 'scratch-me-btn';
 
   const topCard = document.querySelector('.pv-top-card');
   const stickyHeaderBox = document.querySelector(
@@ -100,15 +103,20 @@ const addStickyHeaderButton = btn => {
   // if there's no stkickyHeader Box - page is not scrolled to show sticky header
   if (!topCard || !stickyHeaderBox) return;
 
-  const isButtonAlready = stickyHeaderBox.querySelector('.scratch-me-btn');
+  const isButtonAlready = stickyHeaderBox.querySelector(`.${buttonClass}`);
   if (!isButtonAlready) {
+    // create button with handler opening popup & passing profile data (element topCard to extract data from)
+    const scratchBtn = createScratchBtn({
+      buttonClass,
+      domElementToScratch: topCard
+    });
     stickyHeaderBox.insertBefore(scratchBtn, stickyHeaderBox.firstElementChild);
   }
 };
 
-const createScratchBtn = () => {
+const createScratchBtn = ({ buttonClass, domElementToScratch }) => {
   const scratchButton = document.createElement('button');
-  scratchButton.classList.add('scratch-me-btn');
+  scratchButton.classList.add(buttonClass);
   scratchButton.setAttribute('title', 'ScratchIn');
   const strongText = document.createElement('strong');
   strongText.innerText = 'Scratch';
@@ -116,25 +124,34 @@ const createScratchBtn = () => {
   const lightText = document.createTextNode('IN');
   scratchButton.appendChild(strongText);
   scratchButton.appendChild(lightText);
+  if (domElementToScratch) {
+    scratchButton.addEventListener('click', () =>
+      showMessage(domElementToScratch)
+    );
+  }
   return scratchButton;
 };
 
-const scratchBtn = createScratchBtn();
+const addButtons = () => {
+  // Does not add a button when pathname does not contain "groups"
+  //   const reg = /in/;
+  //   if (!reg.test(window.location.pathname)) return;
 
-const scrollWindow = () => {
-  addTopCardButton(scratchBtn);
-  addStickyHeaderButton(scratchBtn);
+  addTopCardButton();
+  addStickyHeaderButton();
   let timer;
 
+  // sticky header is destroyed if not visible and then recreated again - so adding the button if needed after scroll
   window.addEventListener('scroll', () => {
     if (timer) window.clearTimeout(timer);
-
-    timer = window.setTimeout(() => addStickyHeaderButton(scratchBtn), 100);
+    timer = window.setTimeout(() => {
+      addStickyHeaderButton();
+    }, 100);
   });
 };
 
 if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', scrollWindow);
+  document.addEventListener('DOMContentLoaded', addButtons);
 } else {
-  scrollWindow();
+  addButtons();
 }
