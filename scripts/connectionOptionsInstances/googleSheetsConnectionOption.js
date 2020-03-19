@@ -44,11 +44,10 @@ googleSheetsConnectionOption._sendingDataFunction = function({
   }
 
   const postDataToSave = convertToOrderedDataArray(outputDataToSave, [
-    'postId',
-    'postAuthor',
-    'postContent',
-    'postDatetime',
-    'postUrl'
+    'personName',
+    'personCompany',
+    'personPosition',
+    'personProfileUrl'
   ]);
 
   return googleSheetsModule.sendDataToSave(

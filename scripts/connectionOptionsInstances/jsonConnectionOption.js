@@ -22,20 +22,16 @@ jsonOptionConnectionOption.registerActionOnInput(function({
   const { jsonContent } = elements;
   if (outputDataToSave) {
     const {
-      postId,
-      postTitle,
-      postAuthor,
-      postContent,
-      postDatetime,
-      postUrl
+      personName,
+      personCompany,
+      personPosition,
+      personProfileUrl
     } = outputDataToSave;
     jsonContent.innerHTML = `<code class="json-language"><span class="code-line">{</span>
-  <span class="code-line">  <span class="key">"id":</span> <span class="number">${postId}</span>,</span>
-  <span class="code-line">  <span class="key">"title":</span> <span class="string">"${postTitle}"</span>,</span>
-  <span class="code-line">  <span class="key">"author":</span> <span class="string">"${postAuthor}"</span>,</span>
-  <span class="code-line">  <span class="key">"content":</span> <span class="string">"${postContent}"</span>,</span>
-  <span class="code-line">  <span class="key">"date":</span> <span class="string">"${postDatetime}"</span>,</span>
-  <span class="code-line">  <span class="key">"post_url":</span> <span class="string">"${postUrl}"</span></span> 
+  <span class="code-line">  <span class="key">"name":</span> <span class="string">"${personName}"</span>,</span>
+  <span class="code-line">  <span class="key">"company":</span> <span class="string">"${personCompany}"</span>,</span>
+  <span class="code-line">  <span class="key">"position":</span> <span class="string">"${personPosition}"</span>,</span>
+  <span class="code-line">  <span class="key">"profile_url":</span> <span class="string">"${personProfileUrl}"</span>,</span>
   <span class="code-line">}</span></code>`;
   } else {
     jsonContent.innerHTML = 'Not valid post data form';
