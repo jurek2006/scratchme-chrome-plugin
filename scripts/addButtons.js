@@ -117,6 +117,12 @@ const addStickyHeaderButton = btn => {
 const createScratchBtn = ({ buttonClass, domElementToScratch }) => {
   const scratchButton = document.createElement('button');
   scratchButton.classList.add(buttonClass);
+  // add classes from LinkedIn
+  scratchButton.classList.add(
+    'artdeco-button',
+    'artdeco-button--2',
+    'artdeco-button--primary'
+  );
   scratchButton.setAttribute('title', 'ScratchIn');
   const strongText = document.createElement('strong');
   strongText.innerText = 'Scratch';
