@@ -1,20 +1,6 @@
 'use strict';
 
 const showMessage = element => {
-  //   const timestamp = element.querySelector('._5ptz');
-  //   let time, uTime;
-
-  //   if (timestamp) {
-  //     time = timestamp.title || '';
-  //     uTime = timestamp.dataset.utime || '';
-  //   } else {
-  //     time = '';
-  //     uTime = '';
-  //   }
-
-  //   const { origin, pathname } = document.location;
-
-  //   let url = document.location.origin;
   const url = document.location.href;
   const name = element
     .querySelector('.pv-top-card--list li.t-24')
@@ -27,27 +13,7 @@ const showMessage = element => {
   const position = element.querySelector('h2.t-18').textContent.trim();
 
   console.log({ url, name, company, position });
-  //   let postId = Number(element.offsetParent.id.slice(10, -4));
 
-  //   if (!!postId) {
-  //     url = `${origin}${pathname}permalink/${postId}`;
-  //   }
-
-  //   const author = element.querySelector('span.fcg a').textContent || '';
-
-  //   const stripTags = str => {
-  //     if (!str) {
-  //       return '';
-  //     } else {
-  //       const reg = /<([^>]+>)/gi;
-  //       return str.replace(reg, '');
-  //     }
-  //   };
-
-  //   let content = element.querySelector('.userContent') || '';
-  //   content = stripTags(content.innerHTML);
-
-  // Save data to background.js. The data are save in background and read in popup.js
   chrome.runtime.sendMessage({
     isClickedButton: true,
     name,
