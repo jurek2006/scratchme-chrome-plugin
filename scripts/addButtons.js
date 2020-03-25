@@ -12,8 +12,6 @@ const showMessage = element => {
 
   const position = element.querySelector('h2.t-18').textContent.trim();
 
-  console.log({ url, name, company, position });
-
   chrome.runtime.sendMessage({
     isClickedButton: true,
     name,
