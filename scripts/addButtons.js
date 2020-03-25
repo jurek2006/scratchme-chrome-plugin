@@ -41,16 +41,20 @@ const addTopCardButton = () => {
     domElementToScratch: topCard
   });
 
-  const connectBtn = topCard.querySelector('.pv-s-profile-actions--connect');
-  if (!connectBtn) return;
+  // targetBtn helps to get element where to insert scratchBtn
+  // for not-connected person profile it is "connect" button, for connected person profile "message" button
+  const targetBtn =
+    topCard.querySelector('.pv-s-profile-actions--connect') ||
+    topCard.querySelector('.pv-s-profile-actions--message');
+  if (!targetBtn) return;
 
   // for some profiles (e.g. Bill Gates) "connect" button is nested in dropdown (in an element <artdeco-dropdown>)
-  const dropdown = connectBtn.closest('artdeco-dropdown');
+  const dropdown = targetBtn.closest('artdeco-dropdown');
 
   // actionBtnsBox is an element containing buttons (in topCard element) "connect", "send message", "more..." (sometimes follow)
   const actionBtnsBox = dropdown
     ? dropdown.parentNode.parentNode.parentNode
-    : connectBtn.parentNode.parentNode.parentNode;
+    : targetBtn.parentNode.parentNode.parentNode;
 
   if (actionBtnsBox) {
     actionBtnsBox.insertBefore(scratchBtn, actionBtnsBox.firstElementChild);
@@ -117,6 +121,10 @@ const addButtons = () => {
   window.addEventListener('scroll', () => {
     if (timer) window.clearTimeout(timer);
     timer = window.setTimeout(() => {
+      // top card element is created just once (when LinkedIn page is being created)
+      // after clicking other person profile page is usually not rerendered, thus when previous profile didn't have button added - opened one won't have it
+      // calling addTopCardButton() here solves the issue
+      addTopCardButton();
       addStickyHeaderButton();
     }, 100);
   });
